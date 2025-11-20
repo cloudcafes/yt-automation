@@ -1,0 +1,29 @@
+I will provide you with two items:
+1> The original story text
+2> My fully filled NARRATION FRAMEWORK TEMPLATE
+
+Your task is to use the story as the source material, and use the framework as the set of mandatory creative instructions.
+You MUST follow these rules:
+1> Follow the narration framework EXACTLY as written.
+2> Use the story only as the plot foundation.
+3> Do NOT retell the story verbatim—rewrite it as per NARRATION FRAMEWORK TEMPLATE for YouTube narration.
+4> Maintain the required tone, pacing, emotional range, and vocabulary level.
+5> Include all structural elements from the framework (hooks, sensory details, transitions, questions, etc).
+6> Avoid repetition, filler, or unnecessary complexity.
+7> Ensure the narration feels like a professionally written YouTube Kids storytime video.
+
+Your output should be:
+1> A polished narration script
+2> Ready for voiceover recording
+3> Optimized as defined in the NARRATION FRAMEWORK TEMPLATE
+4> 100% aligned with the template’s tone, pacing, and structure
+
+After reading the story and template, generate:
+A complete, final narration script
+(Do NOT describe what you’re doing. Output only the narration.)
+
+Here is the story:
+[PASTE FULL STORY TEXT HERE]
+
+Here is the filled NARRATION FRAMEWORK TEMPLATE:
+[PASTE YOUR COMPLETED TEMPLATE HERE]

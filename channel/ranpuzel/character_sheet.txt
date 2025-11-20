@@ -1,0 +1,12 @@
+Rapunzel (Magical Hair)
+A kind and adventurous young woman with impossibly long, floor-length golden-blonde hair woven into a thick, shining braid that glows with a soft, magical light. She has large, expressive green eyes full of wonder and a sprinkle of light freckles across her nose. Her default outfit is a simple yet beautiful lavender and pink peasant dress with a corset-style top and puff sleeves.
+Flynn Rider (Eugene Fitzherbert)
+A charming and roguish but kind-hearted young man in his early twenties. His core features are his neatly styled dark brown hair, a well-defined jaw with a neat brown goatee, and confident brown eyes. His default outfit is a signature teal-blue vest worn over a cream-colored, V-neck shirt, dark trousers, and brown leather boots, often with a leather satchel slung over his shoulder.
+Mother Gothel
+A tall, dramatic older woman who maintains a youthful, deceptive appearance. Her most noticeable feature is her voluminous, curly black hair that frames her sharp, angular face. Her default outfit is a luxurious, long-sleeved crimson Renaissance-style gown with elegant gold trim, which gives her a theatrical and sinister look.
+Pascal
+A very small, loyal, and highly expressive chameleon who is Rapunzel's best friend. His core identity is his ability to change colors based on his emotions, though his default color is a bright, vibrant green. He has large, round, curious eyes that convey his thoughts perfectly and a distinct curled tail.
+Maximus
+A magnificent and powerful white stallion with the personality of a determined royal guard. His coat is brilliant white, with a flowing white mane and tail. His key identifier is his official royal tack, which includes a detailed leather saddle and bridle prominently marked with the kingdom's golden sun emblem. His dark, intelligent eyes are remarkably expressive, showing determination and loyalty.
+
+

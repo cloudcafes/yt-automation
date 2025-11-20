@@ -1,0 +1,108 @@
+You are now a professional prompt engineer. Your task is to generate multiple but complete image generation prompt for each shot of the scene: '[your scene description]'
+RULES OF ENGAGEMENT:
+You MUST use the Universal Image Generation Prompt Framework EXACTLY as provided
+You MUST output the complete filled framework, not just a summary
+You MUST include ALL four parts (A, B, C, D)
+You MUST use concrete, specific values from the options lists
+You MUST maintain the exact section structure and hierarchy
+FAILURE TO COMPLY WILL RESULT IN REJECTION.
+
+After completing the framework, CONVERT IT INTO A SINGLE, FLOWING PARAGRAPH suitable for image AI generators. Maintain all the details but present them in natural language.
+
+Universal Image Generation Prompt Framework
+
+PART A: THE FOUNDATION (The First Sentence):
+This is your "elevator pitch" to the AI. It should be a single, powerful sentence.
+Formula: A [detailed description of subject] is [performing a key action] in/at [a specific environment], [scale/scope], evoking a sense of [mood], in the style of [art style/medium].
+Subject Options: If no subject then "Override the rule and allow no subject and modify Part A to match an environment-only shot” else choose from young woman, old man, warrior, scientist, child, animal, robot, fantasy creature, businessman, explorer, knight, astronaut, detective, musician, chef, cyborg, monk, farmer, engineer, doctor, student, king, queen, pirate, samurai
+Action Options: If no action then choose observing as action else choose from standing, sitting, running, walking, fighting, dancing, reading, writing, observing, creating, casting spell, driving, flying, teaching, learning, meditating, negotiating, celebrating, mourning, searching, building, destroying, healing, protecting, attacking
+Environment Options: forest, city street, office, classroom, spaceship, castle, beach, mountains, laboratory, library, marketplace, bedroom, garden, cave, temple, waterfall, iceberg, jungle, warehouse, spaceship bridge, throne room, operating room, concert hall, dojo, cyberpunk alley
+Scale Options: extreme closeup, intimate portrait, medium view, wide shot, epic landscape, cinematic scope, tight crop, fullbody view
+Mood Options: joy, sadness, anger, peace, excitement, fear, curiosity, determination, love, loneliness, wonder, tension, serenity, power, vulnerability, awe, nostalgia, triumph, despair, anticipation, confusion, pride, shame, amusement, terror
+Style Options: photorealistic, oil painting, watercolor, digital art, anime, comic book, sketch, concept art, impressionistic, surrealistic, fantasy art, scifi
+
+PART B: THE GRANULAR DETAILS (Structured by Priority)
+1. SUBJECT & FOCUS (The "Star" of the Image)
+Character/Entity:
+ Species: human, elf, dwarf, alien, cat, dog, dragon, robot, ghost, fairy
+ Age: child, teenager, young adult, middleaged, elderly, ancient
+ Gender: male, female, nonbinary, androgynous
+ Physique: athletic, slender, muscular, heavyset, tall, short, average
+ Face: sharp features, soft features, angular, round, square, heartshaped
+ Expression: smiling, frowning, neutral, angry, surprised, thoughtful, determined, happy, sad, confused, focused, relaxed
+ Eyes: bright, dull, piercing, gentle, wide, narrow, sparkling, tired
+ Gaze: direct at viewer, looking up, looking down, looking sideways, looking into distance
+ Hair: long, short, medium, curly, straight, wavy, braided, messy, neat, colorful, natural
+ Facial Hair: cleanshaven, stubble, goatee, full beard, mustache, sideburns, braided beard, wellgroomed, wild
+Pose & Action:
+ Posture: standing straight, slouching, leaning, crouching, kneeling, sitting, lying down
+ Movement: running, jumping, falling, dancing, fighting, floating, swimming
+ Action: holding object, using tool, gesturing, pointing, reaching, pushing, pulling, carrying, throwing, catching
+ Interaction: with another character, with animal, with object, with environment
+ Hand Positions: resting on hips, crossed, clasped, pointing, holding object, gesturing, typing, praying, fighting stance, relaxed at sides
+Attire & Gear:
+ Clothing: modern, historical, fantasy, scifi, casual, formal, uniform, armor, robes, dress, suit, tshirt, jeans
+ Materials: leather, cloth, metal, silk, wool, cotton, denim, plastic, rubber, crystal
+ Condition: new, old, clean, dirty, torn, repaired, worn, pristine
+ Accessories: jewelry, glasses, hat, backpack, weapon, tool, book, phone, musical instrument
+
+2. ENVIRONMENT & CONTEXT (The "Stage")
+Setting:
+ Location Type: indoor, outdoor, urban, rural, natural, built, fantasy, scifi, historical, modern
+ Specific Places: living room, kitchen, bedroom, office, classroom, store, restaurant, park, forest, beach, mountain, river, desert, space station, castle, dungeon, spaceship, street, alley, plaza
+ Architecture: modern, traditional, futuristic, medieval, ancient, rustic, industrial, art deco, gothic, contemporary, brutalist, victorian, neoclassical, bamboo, tent, underground, floating, ruined, pristine
+ Nature: trees, flowers, grass, rocks, water, sky, clouds, stars, moon, sun
+ Floors/Ground: marble, wooden, carpet, grass, dirt, sand, water, ice, metal, concrete, mosaic, cracked
+Atmosphere & Time:
+ Time: morning, noon, afternoon, evening, night, midnight, dawn, dusk, golden hour, blue hour
+ Weather: sunny, cloudy, rainy, snowy, stormy, foggy, windy, clear, overcast
+ Season: spring, summer, autumn, winter
+ Atmosphere: clear, hazy, misty, smoky, dusty, dreamy, ethereal, realistic
+Key Objects:
+ Foreground: rocks, plants, furniture, tools, weapons, everyday items
+ Midground: buildings, vehicles, trees, people, animals
+ Background: mountains, sky, horizon, cityscape, landscape
+ Props: keys, weapons, books, food, drinks, electronics, magical items, scientific equipment
+
+3. VISUAL STYLE: LIGHTING, COLOR & COMPOSITION
+Lighting:
+ Type: natural, artificial, studio, ambient, directional, point, spot, area, volumetric lighting, Rembrandt lighting, global illumination
+ Quality: hard, soft, direct, diffused, dramatic, subtle, high contrast, low contrast
+ Source: sun, moon, lamps, candles, neon, fire, bioluminescence, magic, moonlight, flashlight, searchlight, firelight, candlelight, neon signs, computer screens, bioluminescence, magical glow, nuclear glow
+ Direction: front, back, side, top, bottom, threepoint lighting
+ Color: warm, cool, neutral, colored, white, yellow, blue, red, green
+ Shadow Types: sharp shadows, soft shadows, long shadows, short shadows, multiple shadows, cast shadows, form shadows, core shadows
+Color Palette:
+ Scheme: monochromatic, complementary, analogous, triadic, tetradic, warm, cool, pastel, vibrant, muted, saturated, desaturated
+ Colors: red, orange, yellow, green, blue, purple, pink, brown, black, white, gray, metallic, neon
+ Mood: happy, sad, calm, energetic, mysterious, romantic, dangerous, safe
+Composition:
+ Framing: rule of thirds, golden ratio, centered, symmetrical, asymmetrical, diagonal, horizontal, vertical
+ Shot: extreme closeup, closeup, medium shot, full shot, long shot, extreme long shot, establishing shot
+ Angle: eyelevel, high angle, low angle, bird's eye, worm's eye, Dutch angle
+ Focus: sharp, soft, deep, shallow, selective, rack focus, tiltshift
+
+4. ARTISTIC EXECUTION
+Medium & Style:
+ Medium: oil painting, watercolor, acrylic, digital painting, photography, 3D render, sketch, charcoal, pencil, ink
+ Style: realistic, photorealistic, semirealistic, stylized, cartoon, anime, comic, fantasy, scifi, impressionistic, expressionistic, surrealistic, abstract, minimalist
+ Rendering Engines: Octane Render, Unreal Engine 5, VRay, Arnold, Cycles
+ Art Styles: line art, vector art, low poly, pixel art, claymation, stained glass, mosaic, tapestry, graffiti, airbrush
+Detail & Texture:
+ Detail Level: highly detailed, detailed, moderate, simple, minimalist
+ Texture: smooth, rough, glossy, matte, metallic, wooden, fabric, skin, hair, water, fire
+Artist/Genre Influence:
+ Artists: classic painters, modern artists, digital artists, photographers, filmmakers
+ Movements: Renaissance, Baroque, Romanticism, Impressionism, Expressionism, Cubism, Surrealism, Pop Art, Contemporary
+ Genres: fantasy, scifi, horror, romance, adventure, mystery, historical, modern
+
+PART C: TECHNICAL EXECUTION & CONSTRAINTS
+Quality Boosters: high resolution, 4K, 8K, detailed, sharp, clear, professional, masterpiece, best quality, high quality, ray tracing, path tracing, global illumination, subsurface scattering, physicallybased rendering
+Camera Effects: depth of field, motion blur, lens flare, chromatic aberration, film grain, vignette
+Negative Prompts: blurry, pixelated, distorted, deformed, ugly, bad anatomy, extra limbs, missing limbs, disfigured, malformed, watermark, signature, text, words, letters
+Weighting Options: light emphasis, medium emphasis, strong emphasis, deemphasis
+
+PART D: THE ITERATIVE CONTROLS
+Enhance Options: more detail, better lighting, improved colors, sharper focus, better composition, more atmosphere, better textures, more dynamic pose, improved expression
+Suppress Options: less noise, fewer artifacts, reduced distortion, better proportions, improved anatomy, cleaner image, less clutter, simpler background
+Common Fixes: "fix hand anatomy", "correct perspective", "balance composition", "improve color harmony", "add more atmospheric depth", "refine facial expression", "clean up artifacts"

@@ -1,0 +1,57 @@
+I have given a text book story above. 
+
+Based on the story above, I am trying to create a separate narration text. Purpose of this narration is to use in youtube story video made specifically for  USA kids. You need to fill the following relevant details which can be later used to generate the narration.
+
+Fill the following details-
+
+STORY IDENTITY -->
+Original Title: [ ]
+Working Title: [ ]
+Core Moral: [ ]
+Genre: [ ]
+Character Profiles: [Character Name: personality, role, emotional traits], [ ], [ ]
+
+AUDIENCE STRATEGY -->
+Target Viewer-
+Primary Age: [ ]
+Viewing Context: [ ] (e.g., bedtime, school storytime, YouTube Kids autoplay)
+Desired Length: [ ] minutes
+Parent/Teacher Needs: [ ] (e.g., simple vocabulary, emotional development, kindness, bravery, safe themes)
+
+YOUTUBE OPTIMIZATION-->
+Platform Requirements-
+Primary Keywords: [ ]
+Retention Strategy: High engagement throughout, Emotional shifts every 12–20 seconds, Scene change every 10–20 seconds, Visual “wow” moments
+Shareability Factors: [ ], (e.g., strong visuals, heartwarming ending, exciting adventure moments)
+Series Potential: [Yes/No — if yes, how?]
+Thumbnail Moment Indicators: Moment 1: [ ], Moment 2: [ ], Moment 3 (optional): [ ]
+
+NARRATION SPECIFICS-->
+Voice & Style-
+Narrator Persona: [ ], (e.g., warm storyteller, playful teacher, magical Disneystyle narrator)
+Tone Reference: (optional but powerful) “Narration style similar to [show/character], with the warmth of [reference].” , Add here: [ ]
+Emotional Range: [ ], (e.g., curious ? excited ? gentle ? suspenseful ? heartwarming)
+Pace Variations: Fast during [ ], Medium during [ ], Slow during [ ], 
+Vocabulary Level:[ ] (e.g., 2nd–4th grade U.S. reading level)
+Cultural Neutrality: [Yes/No — avoid slang, keep universal]
+Interactive Level: [High/Medium/Low] (frequency of questions, direct address)
+
+STRUCTURAL REQUIREMENTS-->
+Opening Hook: Must grab attention in first 10 seconds with curiosity, magic, or sensory detail.
+Example starter: “Have you ever…?”
+Hook style: [ ]
+Scene Density: New scene every 10–20 seconds, Emotional shift every 12 seconds, No monologue longer than 8 seconds
+Engagement Points: Include [number] audience questions (e.g., “What would YOU do?”)
+Sensory Anchors: 
+Include 1 sensory detail per major scene- Sight: [ ], Sound: [ ], Touch: [ ], Light/Motion: [ ] 
+Character Voice Cues:  Character 1: [ ],  Character 2: [ ],  Character 3: [ ]
+Transitions: Use smooth, childfriendly transitions such as: “But little did they know…”, “Meanwhile…”, “As the sun began to rise…”
+Required transition style: [ ]
+Educational Elements: [ ] (e.g., emotions, problemsolving, bravery, kindness)
+Moral Reinforcement: [How obvious/subtle?] (e.g., moderately obvious line near the end)
+Optional CTA: [ ] (e.g., “Tell us which moment you loved the most!” — optional)
+
+
+
+
+
