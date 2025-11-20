@@ -10,8 +10,10 @@ import time
 import chardet
 
 # ===== CONFIGURATION VARIABLES =====
-BASE_PATH = r"C:\dev\Youtube\channel"
-STORY_FOLDER = "ranpuzel"
+# These will work on both Windows and Linux
+BASE_PROJECT = "yt-automation"  # Root project folder
+CHANNEL_FOLDER = "channel"      # Fixed channel folder
+STORY_FOLDER = "ranpuzel"       # This changes per story
 RUN_NARRATION = True
 
 # API Configuration
@@ -23,6 +25,48 @@ DEEPSEEK_TEMPERATURE = 0.7
 # File Names
 PROMPT_FILE = "step-1_narration_prompt_1.txt"
 HISTORY_FILE = "ai_history.txt"
+
+# ===== CROSS-PLATFORM PATH HANDLING =====
+def build_paths(base_project: str, channel_folder: str, story_folder: str) -> Dict[str, Path]:
+    """
+    Build paths that work on both Windows and Linux with the exact structure:
+    yt-automation/
+    ├── channel/
+    │   └── ranpuzel/
+    └── yt-python/
+    """
+    # Get the directory where this script is located
+    script_dir = Path(__file__).parent
+    
+    # Navigate to project root (yt-automation)
+    if script_dir.name == "yt-python":
+        project_root = script_dir.parent
+    else:
+        # If running from different location, assume current directory is project root
+        project_root = Path.cwd()
+        # Try to find yt-automation structure
+        if (project_root / "channel").exists() and (project_root / "yt-python").exists():
+            pass  # We're already in yt-automation
+        else:
+            # Look for yt-automation in parent directories
+            for parent in project_root.parents:
+                if (parent / "channel").exists() and (parent / "yt-python").exists():
+                    project_root = parent
+                    break
+    
+    # Build the exact directory structure
+    channel_dir = project_root / channel_folder
+    story_dir = channel_dir / story_folder
+    
+    return {
+        'project_root': project_root,
+        'channel_dir': channel_dir,
+        'story_dir': story_dir,
+        'story_file': story_dir / "story.txt",
+        'prompt_file': channel_dir / PROMPT_FILE,  # In channel folder
+        'output_file': story_dir / "narration.txt",
+        'history_file': channel_dir / HISTORY_FILE  # In channel folder
+    }
 
 # ===== ENCODING DETECTION =====
 def detect_encoding(file_path: Path) -> str:
@@ -46,21 +90,6 @@ def detect_encoding(file_path: Path) -> str:
     except Exception as e:
         logger.warning(f"⚠️ Could not detect encoding for {file_path}, defaulting to utf-8: {e}")
         return 'utf-8'
-
-# ===== PATH HANDLING =====
-def build_paths(base_path: str, story_folder: str) -> Dict[str, Path]:
-    """Build cross-platform paths that work on both Windows and Linux"""
-    base = Path(base_path)
-    story_dir = base / story_folder
-    
-    return {
-        'base': base,
-        'story_dir': story_dir,
-        'story_file': story_dir / "story.txt",
-        'prompt_file': base / PROMPT_FILE,
-        'output_file': story_dir / "narration.txt",
-        'history_file': base / HISTORY_FILE
-    }
 
 # ===== LOGGING SETUP =====
 def setup_logging():
@@ -207,7 +236,7 @@ class DeepSeekNarrator:
         except Exception as e:
             logger.error(f"⚠️ Failed to log interaction: {e}")
 
-# ===== FILE OPERATIONS WITH ENCODING FIX =====
+# ===== FILE OPERATIONS =====
 def read_file(file_path: Path) -> Optional[str]:
     """Read file content with automatic encoding detection"""
     try:
@@ -267,9 +296,9 @@ def write_file(file_path: Path, content: str) -> bool:
 # ===== VALIDATION =====
 def validate_paths(paths: Dict[str, Path]) -> bool:
     """Validate that all required paths and files exist"""
-    # Check that base directory exists
-    if not paths['base'].exists():
-        logger.error(f"❌ Base path does not exist: {paths['base']}")
+    # Check that project structure exists
+    if not paths['project_root'].exists():
+        logger.error(f"❌ Project root does not exist: {paths['project_root']}")
         return False
     
     # Check that required input files exist
@@ -326,11 +355,12 @@ def main():
         return 0
 
     try:
-        # Build paths using the fixed base + variable story folder structure
-        paths = build_paths(BASE_PATH, STORY_FOLDER)
+        # Build paths using the exact directory structure
+        paths = build_paths(BASE_PROJECT, CHANNEL_FOLDER, STORY_FOLDER)
         
         logger.info(" Starting story narration generation...")
-        logger.info(f" Base path: {paths['base']}")
+        logger.info(f" Project root: {paths['project_root']}")
+        logger.info(f" Channel folder: {paths['channel_dir']}")
         logger.info(f" Story folder: {paths['story_dir']}")
         logger.info(f" Story file: {paths['story_file']}")
         logger.info(f" Prompt file: {paths['prompt_file']}")
