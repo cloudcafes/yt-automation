@@ -229,7 +229,7 @@ class DeepSeekNarrator:
             messages = []
             
             # Build the complete message with history clearly marked as attachment
-            user_content = f"""Please generate narration for the following story.
+            user_content = f"""
 
 === CURRENT PROMPT INSTRUCTIONS ===
 {prompt}
@@ -240,7 +240,7 @@ class DeepSeekNarrator:
 === ATTACHMENT: CONVERSATION HISTORY ===
 {conversation_history}
 
-Please provide a clean narration based on the current story and prompt instructions, while maintaining consistency with the conversation history provided above."""
+"""
 
             messages.append({"role": "user", "content": user_content})
 
