@@ -8,6 +8,7 @@ from typing import Optional, List, Dict
 import logging
 import time
 import chardet
+import re
 
 # ===== CONFIGURATION VARIABLES =====
 # These will work on both Windows and Linux
@@ -25,6 +26,57 @@ DEEPSEEK_TEMPERATURE = 0.7
 # File Names
 PROMPT_FILE = "step-1_narration_prompt_1.txt"
 HISTORY_FILE = "ai_history.txt"
+
+# ===== TEXT CLEANING CONFIGURATION =====
+# Characters to remove from AI output
+SPECIAL_CHARS_TO_REMOVE = r'[*#`~^_\\|@]'  # Remove these special characters
+# Characters to replace with spaces
+SPECIAL_CHARS_TO_REPLACE = r'[\[\]{}()<>]'  # Replace these with spaces
+
+# ===== TEXT CLEANING FUNCTIONS =====
+def clean_ai_output(text: str) -> str:
+    """
+    Clean special characters from AI output while preserving readability
+    """
+    if not text:
+        return text
+    
+    # Remove markdown code blocks and formatting
+    text = re.sub(r'```[\s\S]*?```', '', text)  # Remove code blocks
+    text = re.sub(r'`[^`]*`', '', text)  # Remove inline code
+    text = re.sub(r'\*\*([^*]+)\*\*', r'\1', text)  # Remove bold
+    text = re.sub(r'\*([^*]+)\*', r'\1', text)  # Remove italic
+    
+    # Remove specific special characters
+    text = re.sub(SPECIAL_CHARS_TO_REMOVE, '', text)
+    
+    # Replace other special characters with spaces
+    text = re.sub(SPECIAL_CHARS_TO_REPLACE, ' ', text)
+    
+    # Clean up extra whitespace
+    text = re.sub(r'\s+', ' ', text)  # Replace multiple spaces with single space
+    text = re.sub(r'\n\s*\n', '\n\n', text)  # Clean up multiple newlines
+    text = text.strip()
+    
+    return text
+
+def clean_text_preserve_punctuation(text: str) -> str:
+    """
+    Clean text while preserving essential punctuation for narration
+    """
+    if not text:
+        return text
+    
+    # Keep essential punctuation: . , ! ? : ; " ' - 
+    # Remove other special characters
+    text = re.sub(r'[*#`~^_\\|@\[\]{}()<>]', '', text)
+    
+    # Clean up whitespace
+    text = re.sub(r' +', ' ', text)
+    text = re.sub(r'\n\s*\n', '\n\n', text)
+    text = text.strip()
+    
+    return text
 
 # ===== CROSS-PLATFORM PATH HANDLING =====
 def build_paths(base_project: str, channel_folder: str, story_folder: str) -> Dict[str, Path]:
@@ -198,19 +250,23 @@ class DeepSeekNarrator:
             
             narration = response.choices[0].message.content.strip()
             
+            # Clean the narration output before using it
+            cleaned_narration = clean_text_preserve_punctuation(narration)
+            logger.info(f"粒 Cleaned {len(narration) - len(cleaned_narration)} special characters from narration")
+            
             # Log this interaction (both to file and to memory for future context)
-            self._log_interaction(prompt, story_content, narration)
+            self._log_interaction(prompt, story_content, cleaned_narration)
             
             # Add to conversation history for future context
             self.conversation_history.append({"role": "user", "content": user_content})
-            self.conversation_history.append({"role": "assistant", "content": narration})
+            self.conversation_history.append({"role": "assistant", "content": cleaned_narration})
             
             # Keep history manageable (last 6 interactions)
             if len(self.conversation_history) > 12:
                 self.conversation_history = self.conversation_history[-12:]
             
-            logger.info(f"✅ Successfully generated narration ({len(narration)} characters)")
-            return narration
+            logger.info(f"✅ Successfully generated and cleaned narration ({len(cleaned_narration)} characters)")
+            return cleaned_narration
             
         except Exception as e:
             logger.error(f"❌ Failed to generate narration: {e}")
@@ -339,10 +395,10 @@ def generate_story_narration(paths: Dict[str, Path]) -> bool:
         logger.error("❌ Failed to generate narration")
         return False
 
-    # Write narration to output file (overwrite or create new as required)
+    # Write cleaned narration to output file
     success = write_file(paths['output_file'], narration_result)
     if success:
-        logger.info(f" Narration successfully saved to {paths['output_file']}")
+        logger.info(f" Cleaned narration successfully saved to {paths['output_file']}")
         return True
     
     return False
