@@ -1,3 +1,4 @@
+(Do NOT describe what you’re doing. Output only the answer.)
 I will provide you with two items:
 1> The original story text
 2> My fully filled NARRATION FRAMEWORK TEMPLATE
@@ -20,7 +21,7 @@ Your output should be:
 
 After reading the story and template, generate:
 A complete, final narration script
-(Do NOT describe what you’re doing. Output only the narration.)
+(Do NOT describe what you’re doing. Output only the answer.)
 
 Here is the story:
 [PASTE FULL STORY TEXT HERE]

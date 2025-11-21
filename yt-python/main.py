@@ -14,14 +14,26 @@ import re
 BASE_PROJECT = "yt-automation"
 CHANNEL_FOLDER = "channel"
 STORY_FOLDER = "ranpuzel"
-RUN_NARRATION = True
+
+# Step control - enable/disable each step independently
+RUN_STEP1_NARRATION = False  # Already completed
+RUN_STEP2_NARRATION = True   # Current step - Final narration
+RUN_STEP3_NARRATION = False  # Character sheet
+RUN_STEP4_NARRATION = False  # Scenes
+RUN_STEP5_NARRATION = False  # Image prompts
 
 DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY', 'sk-df60b28326444de6859976f6e603fd9c')
 DEEPSEEK_MODEL = "deepseek-chat"
 DEEPSEEK_MAX_TOKENS = 4000
 DEEPSEEK_TEMPERATURE = 0.7
 
-PROMPT_FILE = "step-1_narration_framework_prompt.txt"
+# Step-specific prompt files
+STEP1_PROMPT = "step-1_narration_framework_prompt.txt"
+STEP2_PROMPT = "step-2_narration_prompt.txt"  # Current step
+STEP3_PROMPT = "step-3_charactersheet_prompt.txt"
+STEP4_PROMPT = "step-4_scene_prompt.txt"
+STEP5_PROMPT = "step-5_image_prompt.txt"
+
 HISTORY_FILE = "ai_history.txt"
 
 # ===== TEXT CLEANING =====
@@ -36,17 +48,14 @@ def clean_text_preserve_punctuation(text: str) -> str:
 
 # ===== PATH HANDLING =====
 def build_paths(base_project: str, channel_folder: str, story_folder: str) -> Dict[str, Path]:
-    """Build cross-platform paths"""
+    """Build cross-platform paths for all steps"""
     script_dir = Path(__file__).parent
     
+    # Find project root (handles both yt-python and direct execution)
     if script_dir.name == "yt-python":
         project_root = script_dir.parent
     else:
         project_root = Path.cwd()
-        for parent in project_root.parents:
-            if (parent / "channel").exists() and (parent / "yt-python").exists():
-                project_root = parent
-                break
     
     channel_dir = project_root / channel_folder
     story_dir = channel_dir / story_folder
@@ -55,9 +64,26 @@ def build_paths(base_project: str, channel_folder: str, story_folder: str) -> Di
         'project_root': project_root,
         'channel_dir': channel_dir,
         'story_dir': story_dir,
+        
+        # Input files
         'story_file': story_dir / "story.txt",
-        'prompt_file': channel_dir / PROMPT_FILE,
-        'output_file': story_dir / "narration_framework.txt",
+        'narration_framework_file': story_dir / "narration_framework.txt",  # Step 1 output
+        
+        # Prompt files for each step
+        'step1_prompt_file': channel_dir / STEP1_PROMPT,
+        'step2_prompt_file': channel_dir / STEP2_PROMPT,  # Current step
+        'step3_prompt_file': channel_dir / STEP3_PROMPT,
+        'step4_prompt_file': channel_dir / STEP4_PROMPT,
+        'step5_prompt_file': channel_dir / STEP5_PROMPT,
+        
+        # Output files
+        'step1_output_file': story_dir / "narration_framework.txt",
+        'step2_output_file': story_dir / "narration.txt",  # Current step output
+        'step3_output_file': story_dir / "character_sheet.txt",
+        'step4_output_file': story_dir / "scenes.txt", 
+        'step5_output_file': story_dir / "image_prompt.txt",
+        
+        # History
         'history_file': channel_dir / HISTORY_FILE
     }
 
@@ -78,7 +104,11 @@ def detect_encoding(file_path: Path) -> str:
 
 # ===== LOGGING SETUP =====
 def setup_logging():
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    logging.basicConfig(
+        level=logging.INFO, 
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
 
 setup_logging()
 logger = logging.getLogger(__name__)
@@ -137,7 +167,7 @@ class DeepSeekNarrator:
                     f.write(f"LLM_RESPONSE: PENDING...\n")
                 f.write(f"{'='*80}\n")
                 
-            logger.debug(f" Interaction logged to {self.history_file}")
+            logger.debug(" Interaction logged to history file")
             
         except Exception as e:
             logger.error(f"⚠️ Failed to log interaction: {e}")
@@ -282,7 +312,7 @@ def read_file(file_path: Path) -> Optional[str]:
         with open(file_path, 'r', encoding=encoding) as f:
             content = f.read().strip()
             
-        logger.info(f" Read {len(content)} chars from {file_path}")
+        logger.info(f" Read {len(content)} chars from {file_path.name}")
         return content
         
     except UnicodeDecodeError:
@@ -290,7 +320,9 @@ def read_file(file_path: Path) -> Optional[str]:
         for encoding in fallback_encodings:
             try:
                 with open(file_path, 'r', encoding=encoding) as f:
-                    return f.read().strip()
+                    content = f.read().strip()
+                    logger.info(f" Read {len(content)} chars from {file_path.name} (encoding: {encoding})")
+                    return content
             except UnicodeDecodeError:
                 continue
         logger.error(f"❌ All encoding attempts failed for {file_path}")
@@ -305,83 +337,199 @@ def write_file(file_path: Path, content: str) -> bool:
         file_path.parent.mkdir(parents=True, exist_ok=True)
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(content)
-        logger.info(f" Wrote {len(content)} chars to {file_path}")
+        logger.info(f" Wrote {len(content)} chars to {file_path.name}")
         return True
     except Exception as e:
         logger.error(f"❌ Error writing to {file_path}: {e}")
         return False
 
-# ===== VALIDATION =====
-def validate_paths(paths: Dict[str, Path]) -> bool:
-    """Validate required paths and files"""
-    if not paths['project_root'].exists():
-        logger.error(f"❌ Project root missing: {paths['project_root']}")
-        return False
+# ===== STEP 2 NARRATION GENERATION =====
+def validate_step2_paths(paths: Dict[str, Path]) -> bool:
+    """Validate all files required for Step 2 exist"""
+    required_files = {
+        'Step 2 Prompt': paths['step2_prompt_file'],
+        'Story File': paths['story_file'],
+        'Narration Framework': paths['narration_framework_file']  # From Step 1
+    }
     
-    for file_key in ['prompt_file', 'story_file']:
-        file_path = paths[file_key]
+    all_valid = True
+    for file_desc, file_path in required_files.items():
         if not file_path.exists():
-            logger.error(f"❌ Required file missing: {file_path}")
-            return False
+            logger.error(f"❌ {file_desc} missing: {file_path}")
+            all_valid = False
+        else:
+            logger.info(f"✅ {file_desc}: {file_path.name}")
     
-    logger.info("✅ All paths validated")
-    return True
+    return all_valid
 
-# ===== MAIN NARRATION FUNCTION =====
-def generate_story_narration(paths: Dict[str, Path]) -> bool:
-    """Generate narration for a story"""
-    prompt_content = read_file(paths['prompt_file'])
-    story_content = read_file(paths['story_file'])
+def generate_step2_narration(paths: Dict[str, Path]) -> bool:
+    """Generate final narration using story + framework + step2 prompt"""
     
-    if not prompt_content or not story_content:
-        logger.error("❌ Failed to read prompt or story")
+    # Read all required inputs
+    step2_prompt = read_file(paths['step2_prompt_file'])
+    story_content = read_file(paths['story_file']) 
+    framework_content = read_file(paths['narration_framework_file'])
+    
+    if not all([step2_prompt, story_content, framework_content]):
+        logger.error("❌ Missing required files for Step 2")
         return False
 
+    # Build the combined content exactly as specified
+    combined_content = f"""
+{step2_prompt}
+
+=== CURRENT STORY: ===
+{story_content}
+
+=== NARRATION FRAMEWORK: ===
+{framework_content}
+"""
+    
+    logger.info(f" Combined content prepared: {len(combined_content)} chars")
+    
+    # Initialize narrator
     narrator = DeepSeekNarrator(DEEPSEEK_API_KEY, paths['history_file'])
     if not narrator.is_available:
         logger.error("❌ DeepSeek client unavailable")
         return False
 
-    logger.info(" Generating narration...")
-    narration_result = narrator.generate_narration(prompt_content, story_content)
+    # Generate narration
+    logger.info(" Generating final narration (Step 2)...")
+    narration_result = narrator.generate_narration(step2_prompt, combined_content)
+    
     if not narration_result:
         logger.error("❌ Failed to generate narration")
         return False
 
-    success = write_file(paths['output_file'], narration_result)
+    # Save to narration.txt
+    success = write_file(paths['step2_output_file'], narration_result)
     if success:
-        logger.info(f" Narration saved to {paths['output_file']}")
+        logger.info(f" Final narration saved to {paths['step2_output_file'].name}")
         return True
+    
+    return False
+
+# ===== STEP 1 NARRATION FRAMEWORK (Existing) =====
+def validate_step1_paths(paths: Dict[str, Path]) -> bool:
+    """Validate all files required for Step 1 exist"""
+    required_files = {
+        'Step 1 Prompt': paths['step1_prompt_file'],
+        'Story File': paths['story_file'],
+    }
+    
+    all_valid = True
+    for file_desc, file_path in required_files.items():
+        if not file_path.exists():
+            logger.error(f"❌ {file_desc} missing: {file_path}")
+            all_valid = False
+        else:
+            logger.info(f"✅ {file_desc}: {file_path.name}")
+    
+    return all_valid
+
+def generate_step1_narration(paths: Dict[str, Path]) -> bool:
+    """Generate narration framework (Step 1)"""
+    
+    # Read all required inputs
+    step1_prompt = read_file(paths['step1_prompt_file'])
+    story_content = read_file(paths['story_file'])
+    
+    if not all([step1_prompt, story_content]):
+        logger.error("❌ Missing required files for Step 1")
+        return False
+
+    # Initialize narrator
+    narrator = DeepSeekNarrator(DEEPSEEK_API_KEY, paths['history_file'])
+    if not narrator.is_available:
+        logger.error("❌ DeepSeek client unavailable")
+        return False
+
+    # Generate narration framework
+    logger.info("️ Generating narration framework (Step 1)...")
+    framework_result = narrator.generate_narration(step1_prompt, story_content)
+    
+    if not framework_result:
+        logger.error("❌ Failed to generate narration framework")
+        return False
+
+    # Save to narration_framework.txt
+    success = write_file(paths['step1_output_file'], framework_result)
+    if success:
+        logger.info(f" Narration framework saved to {paths['step1_output_file'].name}")
+        return True
+    
     return False
 
 # ===== MAIN EXECUTION =====
 def main():
-    if not RUN_NARRATION:
-        logger.info("⏸️ Narration disabled")
-        return 0
+    """Main execution with step-based control"""
+    paths = build_paths(BASE_PROJECT, CHANNEL_FOLDER, STORY_FOLDER)
+    logger.info(" Starting YT Automation Pipeline...")
+    
+    # Log available files
+    logger.info(" File Status:")
+    for key, path in paths.items():
+        if 'file' in key and path.exists():
+            logger.info(f"   ✅ {key}: {path.name}")
+        elif 'file' in key:
+            logger.warning(f"   ❌ {key}: {path.name}")
 
-    try:
-        paths = build_paths(BASE_PROJECT, CHANNEL_FOLDER, STORY_FOLDER)
-        logger.info(" Starting narration generation...")
+    # Step 1: Narration Framework Generation
+    if RUN_STEP1_NARRATION:
+        logger.info("=" * 60)
+        logger.info(" PROCESSING STEP 1: Narration Framework")
+        logger.info("=" * 60)
         
-        for key, path in paths.items():
-            if key != 'project_root':  # Don't log project root as it's too long
-                logger.info(f"   {key}: {path.name}")
-
-        if not validate_paths(paths):
-            return 1
-
-        success = generate_story_narration(paths)
-        if success:
-            logger.info("✅ Narration completed!")
-            return 0
-        else:
-            logger.error("❌ Narration failed!")
+        if not validate_step1_paths(paths):
+            logger.error("❌ Step 1 validation failed")
             return 1
             
-    except Exception as e:
-        logger.error(f" Unexpected error: {e}")
-        return 1
+        success = generate_step1_narration(paths)
+        if not success:
+            logger.error("❌ Step 1 failed!")
+            return 1
+        logger.info("✅ Step 1 completed successfully!")
+
+    # Step 2: Final Narration Generation
+    if RUN_STEP2_NARRATION:
+        logger.info("=" * 60)
+        logger.info(" PROCESSING STEP 2: Final Narration")
+        logger.info("=" * 60)
+        
+        if not validate_step2_paths(paths):
+            logger.error("❌ Step 2 validation failed")
+            return 1
+            
+        success = generate_step2_narration(paths)
+        if not success:
+            logger.error("❌ Step 2 failed!")
+            return 1
+        logger.info("✅ Step 2 completed successfully!")
+
+    # Future steps can be added here similarly
+    if RUN_STEP3_NARRATION:
+        logger.info("=" * 60)
+        logger.info(" PROCESSING STEP 3: Character Sheet")
+        logger.info("=" * 60)
+        # Implement step 3 here
+        logger.warning("⚠️ Step 3 not implemented yet")
+        
+    if RUN_STEP4_NARRATION:
+        logger.info("=" * 60)
+        logger.info(" PROCESSING STEP 4: Scenes")
+        logger.info("=" * 60)
+        # Implement step 4 here
+        logger.warning("⚠️ Step 4 not implemented yet")
+        
+    if RUN_STEP5_NARRATION:
+        logger.info("=" * 60)
+        logger.info(" PROCESSING STEP 5: Image Prompts")
+        logger.info("=" * 60)
+        # Implement step 5 here
+        logger.warning("⚠️ Step 5 not implemented yet")
+        
+    logger.info(" All enabled steps completed!")
+    return 0
 
 if __name__ == "__main__":
     exit_code = main()
