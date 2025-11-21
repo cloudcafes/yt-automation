@@ -1,4 +1,5 @@
-You are now a professional prompt engineer. Your task is to generate multiple but complete image generation prompt for each shot of the scene: '[your scene description]'
+You are now a professional prompt engineer. Your task is to generate multiple but complete image generation prompt for each shot of the scene, provided at the end:
+
 RULES OF ENGAGEMENT:
 You MUST use the Universal Image Generation Prompt Framework EXACTLY as provided
 You MUST output the complete filled framework, not just a summary
@@ -9,12 +10,12 @@ FAILURE TO COMPLY WILL RESULT IN REJECTION.
 
 After completing the framework, CONVERT IT INTO A SINGLE, FLOWING PARAGRAPH suitable for image AI generators. Maintain all the details but present them in natural language.
 
-Universal Image Generation Prompt Framework
+Image Generation Prompt Framework
 
 PART A: THE FOUNDATION (The First Sentence):
 This is your "elevator pitch" to the AI. It should be a single, powerful sentence.
 Formula: A [detailed description of subject] is [performing a key action] in/at [a specific environment], [scale/scope], evoking a sense of [mood], in the style of [art style/medium].
-Subject Options: If no subject then "Override the rule and allow no subject and modify Part A to match an environment-only shot” else choose from young woman, old man, warrior, scientist, child, animal, robot, fantasy creature, businessman, explorer, knight, astronaut, detective, musician, chef, cyborg, monk, farmer, engineer, doctor, student, king, queen, pirate, samurai
+Subject Options: If no subject then "Override the rule and allow no subject and modify Part A to match an environment-only shotï¿½ else choose from young woman, old man, warrior, scientist, child, animal, robot, fantasy creature, businessman, explorer, knight, astronaut, detective, musician, chef, cyborg, monk, farmer, engineer, doctor, student, king, queen, pirate, samurai
 Action Options: If no action then choose observing as action else choose from standing, sitting, running, walking, fighting, dancing, reading, writing, observing, creating, casting spell, driving, flying, teaching, learning, meditating, negotiating, celebrating, mourning, searching, building, destroying, healing, protecting, attacking
 Environment Options: forest, city street, office, classroom, spaceship, castle, beach, mountains, laboratory, library, marketplace, bedroom, garden, cave, temple, waterfall, iceberg, jungle, warehouse, spaceship bridge, throne room, operating room, concert hall, dojo, cyberpunk alley
 Scale Options: extreme closeup, intimate portrait, medium view, wide shot, epic landscape, cinematic scope, tight crop, fullbody view
@@ -106,3 +107,5 @@ PART D: THE ITERATIVE CONTROLS
 Enhance Options: more detail, better lighting, improved colors, sharper focus, better composition, more atmosphere, better textures, more dynamic pose, improved expression
 Suppress Options: less noise, fewer artifacts, reduced distortion, better proportions, improved anatomy, cleaner image, less clutter, simpler background
 Common Fixes: "fix hand anatomy", "correct perspective", "balance composition", "improve color harmony", "add more atmospheric depth", "refine facial expression", "clean up artifacts"
+
+[Your Scene Description]:
