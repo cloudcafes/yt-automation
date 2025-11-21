@@ -21,7 +21,7 @@ DEEPSEEK_MODEL = "deepseek-chat"
 DEEPSEEK_MAX_TOKENS = 4000
 DEEPSEEK_TEMPERATURE = 0.7
 
-PROMPT_FILE = "step-1_narration_prompt_1.txt"
+PROMPT_FILE = "step-1_narration_framework_prompt.txt"
 HISTORY_FILE = "ai_history.txt"
 
 # ===== TEXT CLEANING =====
@@ -57,7 +57,7 @@ def build_paths(base_project: str, channel_folder: str, story_folder: str) -> Di
         'story_dir': story_dir,
         'story_file': story_dir / "story.txt",
         'prompt_file': channel_dir / PROMPT_FILE,
-        'output_file': story_dir / "narration.txt",
+        'output_file': story_dir / "narration_framework.txt",
         'history_file': channel_dir / HISTORY_FILE
     }
 
