@@ -604,3 +604,206 @@ Radhita finally had her family, her freedom, and her very best friends. They liv
 
 What was your favorite part of Radhita's adventure? Tell us in the comments
 ================================================================================
+
+================================================================================
+TIMESTAMP: 2025-11-21T22:20:25.579431
+STORY_FOLDER: ranpuzel
+PROMPT:
+You are a Character Design Analyst for animated storytelling.
+You will be given a story, and your task is to extract every character mentioned or implied and produce cinematic, visually rich, image-generation-ready character descriptions in paragraph format, one paragraph per character.
+
+Your descriptions must be accurate to the story, visually aesthetic, and expressed using evocative, image-friendly language, without inventing any new factual details.
+
+GLOBAL RULES
+No hallucinations.
+You may beautify language, but you are NOT allowed to add new facts not supported or strongly implied by the story.
+Merge references that clearly point to the same character (e.g., the girl, the child, Mira).
+
+Categorize characters into:
+Main Characters
+Supporting Characters
+Background Characters / Groups
+
+Use aesthetic, cinematic language, focusing on:
+Rich, vivid colors (sunlit gold, moonlit silver, forest green, twilight purple)
+Textures (silky, feathery, shimmering, weathered, velvet-soft)
+Atmosphere (soft glow, floating particles, storybook light, dreamlike mood)
+Emotional expressiveness (wide-eyed wonder, quiet determination)
+Avoid dull, generic descriptors such as: normal, ordinary, simple, regular, typical.
+Maintain strict visual continuity, as if these character designs will be reused in animation.
+Every characters final profile MUST be delivered as one continuous paragraph, with smooth narrative flow (no bullet points, no labels).
+
+ANALYSIS STEPS
+STEP 1: Identify Characters
+
+Extract:
+All named characters
+Described unnamed characters
+Background groups (villagers, guards, magical creatures, crowds)
+Symbolic or magical entities
+Family roles and relational ties
+
+STEP 2: Extract Visual Traits
+For each character, organically weave these into the paragraph:
+
+Physical Appearance
+Age appearance, body type, silhouette, face shape, expressive eyes, hair color/texture, skin tone with aesthetic warmth, distinctive markings.
+
+Costume & Accessories
+Clothing style, fabrics, color palette, motifs, symbolic items, props.
+
+Behavioral & Expressive Traits
+Gesture patterns, movement style, emotional aura, posture, signature expressions.
+Magical / Supernatural Elements
+Auras, glows, particles, elemental powers, transformations, luminescent details.
+
+Story Importance & Symbolism
+How their visual traits relate to their role, meaning, or emotional arc.
+
+Aesthetic Enhancement
+Integrate image-friendly phrases naturally (not as tags), such as:
+storybook glow, soft cinematic lighting, floating sparks, dreamlike softness.
+
+OUTPUT FORMAT (Paragraph Only)
+Organize your final answer under three headers:
+
+MAIN CHARACTERS
+Write one beautifully written paragraph per character, blending physical traits, costume, behavior, magical elements, and symbolism into a cohesive cinematic portrait.
+
+SUPPORTING CHARACTERS
+Write one paragraph per character, slightly simpler but still aesthetic and cinematic.
+
+BACKGROUND CHARACTERS / GROUPS
+Write one paragraph describing each groups collective appearance, variations, atmosphere, and story function.
+
+FINAL REQUIREMENTS
+Each character or group = exactly one paragraph
+No bullet points, no enumeration, no subheadings inside paragraphs
+No missing characters
+No invented information
+Must be cinematic, aesthetic, and ready for image generation
+STORY_CONTENT:
+
+You are a Character Design Analyst for animated storytelling.
+You will be given a story, and your task is to extract every character mentioned or implied and produce cinematic, visually rich, image-generation-ready character descriptions in paragraph format, one paragraph per character.
+
+Your descriptions must be accurate to the story, visually aesthetic, and expressed using evocative, image-friendly language, without inventing any new factual details.
+
+GLOBAL RULES
+No hallucinations.
+You may beautify language, but you are NOT allowed to add new facts not supported or strongly implied by the story.
+Merge references that clearly point to the same character (e.g., the girl, the child, Mira).
+
+Categorize characters into:
+Main Characters
+Supporting Characters
+Background Characters / Groups
+
+Use aesthetic, cinematic language, focusing on:
+Rich, vivid colors (sunlit gold, moonlit silver, forest green, twilight purple)
+Textures (silky, feathery, shimmering, weathered, velvet-soft)
+Atmosphere (soft glow, floating particles, storybook light, dreamlike mood)
+Emotional expressiveness (wide-eyed wonder, quiet determination)
+Avoid dull, generic descriptors such as: normal, ordinary, simple, regular, typical.
+Maintain strict visual continuity, as if these character designs will be reused in animation.
+Every characters final profile MUST be delivered as one continuous paragraph, with smooth narrative flow (no bullet points, no labels).
+
+ANALYSIS STEPS
+STEP 1: Identify Characters
+
+Extract:
+All named characters
+Described unnamed characters
+Background groups (villagers, guards, magical creatures, crowds)
+Symbolic or magical entities
+Family roles and relational ties
+
+STEP 2: Extract Visual Traits
+For each character, organically weave these into the paragraph:
+
+Physical Appearance
+Age appearance, body type, silhouette, face shape, expressive eyes, hair color/texture, skin tone with aesthetic warmth, distinctive markings.
+
+Costume & Accessories
+Clothing style, fabrics, color palette, motifs, symbolic items, props.
+
+Behavioral & Expressive Traits
+Gesture patterns, movement style, emotional aura, posture, signature expressions.
+Magical / Supernatural Elements
+Auras, glows, particles, elemental powers, transformations, luminescent details.
+
+Story Importance & Symbolism
+How their visual traits relate to their role, meaning, or emotional arc.
+
+Aesthetic Enhancement
+Integrate image-friendly phrases naturally (not as tags), such as:
+storybook glow, soft cinematic lighting, floating sparks, dreamlike softness.
+
+OUTPUT FORMAT (Paragraph Only)
+Organize your final answer under three headers:
+
+MAIN CHARACTERS
+Write one beautifully written paragraph per character, blending physical traits, costume, behavior, magical elements, and symbolism into a cohesive cinematic portrait.
+
+SUPPORTING CHARACTERS
+Write one paragraph per character, slightly simpler but still aesthetic and cinematic.
+
+BACKGROUND CHARACTERS / GROUPS
+Write one paragraph describing each groups collective appearance, variations, atmosphere, and story function.
+
+FINAL REQUIREMENTS
+Each character or group = exactly one paragraph
+No bullet points, no enumeration, no subheadings inside paragraphs
+No missing characters
+No invented information
+Must be cinematic, aesthetic, and ready for image generation
+
+Radhita Story
+
+In a sunny kingdom that looked a lot like a big, beautiful playground, there was a tall, tall tower. It was so tall it almost tickled the clouds! This tower had no doors and no stairs. At the very top, in a cozy room, lived a girl named Radhita.
+
+Radhita wasn't like other kids. She had the longest, most magical hair you've ever seen! It was golden and shiny, and when she sang her special song, "Flower, gleam and glow," it sparkled like sunshine.
+
+But Radhita was lonely. She spent her days talking to her best friends, a little chameleon named Pascal and a brave horse named Maximus. She dreamed of going outside to see the floating lights that appeared in the sky every year on her birthday.
+
+The person who kept her in the tower was a woman named Mother Gothel. Mother Gothel told Radhita the outside world was a scary place, but she really just wanted to keep Radhita's magical hair all to herself to stay young.
+
+One day, a funny and kind young man named Flynn Rider climbed up the tower! He wasn't supposed to be there, but he was on an adventure. Radhita was scared at first, but she was also brave. She made a deal with him. She would give back a sparkly crown he had if he would take her to see the floating lights.
+
+So began the best field trip ever! Flynn, who secretly liked to be called by his real name, Eugene, took Radhita to a wonderful meadow. Radhita felt the soft grass under her feet for the first time! She laughed and danced and rolled around. It felt amazing!
+
+Later, they went to a big, fun party in the kingdom with lots of music. Everyone was singing and dancing! Radhita joined in, and she was a natural. She even used a frying pan like a drum! She made so many new friends and realized the world wasn't scary at all—it was wonderful.
+
+Finally, as the sky grew dark, they got into a little boat on a calm lake. All around them, hundreds of beautiful floating lights (which were actually lanterns!) rose into the sky. It was the most magical sight Radhita had ever seen. She was so happy, and she and Eugene became the best of friends.
+
+But Mother Gothel was angry! She tricked Radhita and took her back to the tower. It seemed like the adventure was over.
+
+However, Eugene was a true hero. He loved Radhita and wanted her to be free. He climbed the tower to rescue her, but Mother Gothel tried to stop him. In the struggle, Radhita's long, magical hair was accidentally cut! It lost its magic and turned brown.
+
+For a moment, everything was still. But then, Radhita's love for Eugene was so strong that it created a new kind of magic—a magic of the heart. It healed him, proving that true love is the most powerful magic of all.
+
+Eugene took Radhita's hand, and they left the tower forever. Radhita was reunited with her real family, the King and Queen, who had been sending the floating lights into the sky every year hoping their lost daughter would see them.
+
+Radhita finally had the family and the freedom she had always dreamed of. She, Eugene, Pascal, and Maximus lived happily ever after, going on new adventures every single day. And Radhita's favorite thing to do was paint pictures of the big, beautiful, and wonderfully un-scary world she now called home.
+
+LLM_RESPONSE:
+MAIN CHARACTERS
+
+Radhita is a vision of sunlit innocence, with a delicate frame and wide, expressive eyes that hold a universe of curiosity and longing. Her most breathtaking feature is the impossibly long, flowing hair that cascades around her like a river of spun gold, shimmering with a soft, internal light that pulses gently when she sings, releasing floating particles of sunshine that illuminate her cozy tower room. She is often dressed in a simple, lavender dress of soft, worn cotton that speaks of her secluded life, her movements a blend of graceful caution and sudden, joyful bursts of energy as she paints her dreams onto the walls, her entire being a portrait of hopeful isolation waiting to bloom.
+
+Eugene, who first appears as the roguish Flynn Rider, carries the confident swagger of a charming adventurer, with a lean, agile build, rakishly disheveled chestnut hair, and a playful smirk that easily softens into a look of genuine warmth. His practical, earth-toned tunic and leather vest are subtly accented by the stolen crown he carries, a sparkly, ornate piece that catches the light, reflecting his hidden desire for a more meaningful life beyond his thieving persona. His movement is a fluid combination of agile climbing and theatrical gestures, but his true heroism shines through in his protective stance and the tender, unwavering gaze he reserves for Radhita, revealing the kind heart beneath the bravado.
+
+Mother Gothel presents an imposing figure of false comfort, with a tall, commanding silhouette often wrapped in rich, velvet robes of deep plum and wine red that seem to absorb the light around her. Her dark, elaborately coiffed hair frames a face that can shift in an instant from a mask of sweet, matronly affection to sharp, calculating severity, her eyes gleaming with a possessive hunger she tries to hide. She moves with a deliberate, almost gliding grace, her gestures often clasping Radhita's magical hair not with love, but with a covetous desperation, her entire presence serving as a dark, elegant cage meant to keep the radiant magic of youth for herself.
+
+SUPPORTING CHARACTERS
+
+Pascal the chameleon is a tiny, vibrant companion whose scales constantly shift through a kaleidoscope of jewel tones—emerald green, sapphire blue, and amethyst purple—matching not just his surroundings but also his sassy, expressive moods. His bulbous, inquisitive eyes dart about with intelligent curiosity, and his slight, agile body can puff up with defiant bravery or blend seamlessly into Radhita's golden hair, a loyal speck of color and personality always perched on her shoulder, offering silent, steadfast friendship.
+
+Maximus is a horse of noble and powerful stature, his sleek white coat gleaming like moonlit silver and his strong, muscular build conveying an air of unwavering duty and courage. His intelligent, dark eyes miss nothing, and his movements are a captivating mix of powerful, thunderous charges when in pursuit and surprisingly gentle, precise steps when comforting a friend, his loyalty and bravery making him a steadfast guardian on their journey, a living symbol of protective strength.
+
+The King and Queen are a regal pair emanating a gentle, sorrowful grace, the King with a kind, weathered face and a short, well-kept beard, dressed in royal robes of deep azure and silver thread, while the Queen possesses a serene beauty, her elegant gowns in shades of ivory and gold, her eyes holding a profound, hopeful sadness. They are often seen standing together on a palace balcony, their postures united in a shared, decades-long vigil, their hands releasing glowing lanterns into the twilight sky, their very presence a symbol of a kingdom's enduring love and a family's patient, waiting heart.
+
+BACKGROUND CHARACTERS / GROUPS
+
+The Kingdom's Citizens form a vibrant and joyful tapestry of life, a diverse crowd of villagers and party-goers dressed in a cheerful riot of festival colors—sunflower yellows, berry reds, and meadow greens—their simple, comfortable clothing moving freely as they dance and sing. Their faces are alight with laughter and communal celebration, creating a whirl of motion and music at the grand party, where they welcome Radhita with open arms, their collective joy and acceptance representing the wonderfully un-scary world she had been promised was a lie, a community whose warmth instantly makes her feel at home.
+================================================================================
