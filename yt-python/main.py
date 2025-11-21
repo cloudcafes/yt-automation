@@ -9,7 +9,6 @@ import logging
 import time
 import chardet
 import re
-import base64
 
 # ===== CONFIGURATION VARIABLES =====
 BASE_PROJECT = "yt-automation"
@@ -190,30 +189,26 @@ class DeepSeekNarrator:
         except Exception as e:
             logger.error(f"⚠️ Failed to update pending response: {e}")
 
-    def _prepare_attachments(self) -> List[Dict]:
-        """Prepare history file as attachment for DeepSeek API"""
-        attachments = []
-        
+    def _get_conversation_history_for_llm(self) -> str:
+        """Get conversation history for LLM context"""
         try:
-            if self.history_file.exists():
-                # Read history file content
-                with open(self.history_file, 'r', encoding='utf-8') as f:
-                    history_content = f.read()
-                
-                # Create attachment for history file
-                history_attachment = {
-                    "file_name": "conversation_history.txt",
-                    "data": history_content
-                }
-                attachments.append(history_attachment)
-                logger.info(f" Prepared history file as attachment ({len(history_content)} chars)")
-            else:
-                logger.info(" No history file found for attachment")
-                
+            if not self.history_file.exists():
+                return "No previous conversation history available."
+            
+            with open(self.history_file, 'r', encoding='utf-8') as f:
+                history_content = f.read()
+            
+            # Return recent history (excluding current pending request)
+            entries = history_content.split('=' * 80)
+            # Get entries that have complete responses (no PENDING)
+            complete_entries = [entry for entry in entries if "LLM_RESPONSE:" in entry and "PENDING..." not in entry]
+            recent_complete = complete_entries[-3:]  # Last 3 complete interactions
+            
+            return "\n".join(recent_complete) if recent_complete else "No complete conversation history available."
+            
         except Exception as e:
-            logger.error(f"⚠️ Failed to prepare history attachment: {e}")
-        
-        return attachments
+            logger.error(f"⚠️ Failed to read conversation history: {e}")
+            return "Error reading conversation history."
 
     def generate_narration(self, prompt: str, story_content: str) -> Optional[str]:
         """Generate narration for the provided story"""
@@ -226,45 +221,32 @@ class DeepSeekNarrator:
             self._log_interaction(prompt, story_content)
             logger.info(" Full prompt and story logged to history (appended)")
 
-            # 2. Prepare attachments (history file)
-            attachments = self._prepare_attachments()
+            # 2. Get conversation history
+            conversation_history = self._get_conversation_history_for_llm()
+            logger.info(f" Loaded conversation history ({len(conversation_history)} chars)")
 
-            # 3. Build messages with attachments
+            # 3. Build messages with history as clearly marked "attachment"
             messages = []
             
-            # Main prompt without history content embedded
-            user_content = {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": f"""Please generate narration for the following story.
+            # Build the complete message with history clearly marked as attachment
+            user_content = f"""Please generate narration for the following story.
 
-PROMPT INSTRUCTIONS:
+=== CURRENT PROMPT INSTRUCTIONS ===
 {prompt}
 
-STORY TO NARRATE:
+=== CURRENT STORY TO NARRATE ===
 {story_content}
 
-Please refer to the attached conversation history file for context on previous interactions and maintain consistency with the narration style."""
-                    }
-                ]
-            }
+=== ATTACHMENT: CONVERSATION HISTORY ===
+{conversation_history}
 
-            # Add file attachments if available
-            if attachments:
-                for attachment in attachments:
-                    user_content["content"].append({
-                        "type": "file",
-                        "file_name": attachment["file_name"],
-                        "data": attachment["data"]
-                    })
+Please provide a clean narration based on the current story and prompt instructions, while maintaining consistency with the conversation history provided above."""
 
-            messages.append(user_content)
+            messages.append({"role": "user", "content": user_content})
 
-            logger.info(" Sending request to DeepSeek AI with history file attachment...")
+            logger.info(" Sending request to DeepSeek AI with history as attachment...")
             
-            # 4. Call API with attachments
+            # 4. Call API
             response = self.client.chat.completions.create(
                 model=DEEPSEEK_MODEL,
                 messages=messages,
