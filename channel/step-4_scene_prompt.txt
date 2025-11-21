@@ -5,7 +5,7 @@ BEHAVIOR RULES:
 Do NOT rewrite the story. Only analyze and extract scenes.
 Use simple, child friendly tone in visual descriptions.
 
-All scenes must follow emotional logic, not pagelength logic.
+All scenes must follow emotional logic, not page length logic.
 Keep visual continuity (props, lighting, character appearance).
 
 1. SCENE SEGMENTATION RULES
@@ -40,7 +40,7 @@ Each shot must explicitly show:
 2. Specific action or decision
 3. Visual symbolism (light, color, props, motion)
 4. Camera perspective (long shot, closeup, low angle, etc.)
-5. Kidsfriendly clarity
+5. Kids friendly clarity
 Only create multiple shots if the emotion or action changes.
 
 4. CHARACTER CONTINUITY CHECKLIST
@@ -53,12 +53,12 @@ For every scene:
    Props they carry
    Injuries, stains, magical effects, etc.
 
-5. VISUAL WORLDBUILDING
+5. VISUAL WORLD BUILDING
 Include:
  Lighting mood (soft, warm, glowing, dim, magical)
  Color palette
  Atmosphere cues (rain, sparkles, haze, etc.)
- Childfriendly symbolic motifs
+ Child friendly symbolic motifs
    Light vs dark
    Freedom vs confinement
    Growth
@@ -77,16 +77,15 @@ VISUAL CONTINUITY NOTES:
  Character appearance:
  Symbolic motif:
  Color palette:
-```
+
 (Repeat for every scene)
 
-7. STORY INPUT
-STORY:
-[Paste full story here]
-
-8. VISUAL STYLE INPUT
+7. VISUAL STYLE INPUT
 VISUAL STYLE: [e.g., Soft 3D Pixar style  warm, magical, emotional, Hand-drawn pastel storybook  gentle, dreamy, childlike, Watercolor  light, floating, soft-motion fantasy, Claymation  tactile, playful, textured, Paper-cut collage  bold shapes, whimsical motion, 
 3D Painterly (Spider-Verse light)  expressive strokes, glowing highlights]
+
+8. STORY INPUT
+STORY:
 
 
 
