@@ -11,102 +11,43 @@ import chardet
 import re
 
 # ===== CONFIGURATION VARIABLES =====
-# These will work on both Windows and Linux
-BASE_PROJECT = "yt-automation"  # Root project folder
-CHANNEL_FOLDER = "channel"      # Fixed channel folder
-STORY_FOLDER = "ranpuzel"       # This changes per story
+BASE_PROJECT = "yt-automation"
+CHANNEL_FOLDER = "channel"
+STORY_FOLDER = "ranpuzel"
 RUN_NARRATION = True
 
-# API Configuration
 DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY', 'sk-df60b28326444de6859976f6e603fd9c')
 DEEPSEEK_MODEL = "deepseek-chat"
 DEEPSEEK_MAX_TOKENS = 4000
 DEEPSEEK_TEMPERATURE = 0.7
 
-# File Names
 PROMPT_FILE = "step-1_narration_prompt_1.txt"
 HISTORY_FILE = "ai_history.txt"
 
-# ===== TEXT CLEANING CONFIGURATION =====
-# Characters to remove from AI output
-SPECIAL_CHARS_TO_REMOVE = r'[*#`~^_\\|@]'  # Remove these special characters
-# Characters to replace with spaces
-SPECIAL_CHARS_TO_REPLACE = r'[\[\]{}()<>]'  # Replace these with spaces
-
-# ===== TEXT CLEANING FUNCTIONS =====
-def clean_ai_output(text: str) -> str:
-    """
-    Clean special characters from AI output while preserving readability
-    """
-    if not text:
-        return text
-    
-    # Remove markdown code blocks and formatting
-    text = re.sub(r'```[\s\S]*?```', '', text)  # Remove code blocks
-    text = re.sub(r'`[^`]*`', '', text)  # Remove inline code
-    text = re.sub(r'\*\*([^*]+)\*\*', r'\1', text)  # Remove bold
-    text = re.sub(r'\*([^*]+)\*', r'\1', text)  # Remove italic
-    
-    # Remove specific special characters
-    text = re.sub(SPECIAL_CHARS_TO_REMOVE, '', text)
-    
-    # Replace other special characters with spaces
-    text = re.sub(SPECIAL_CHARS_TO_REPLACE, ' ', text)
-    
-    # Clean up extra whitespace
-    text = re.sub(r'\s+', ' ', text)  # Replace multiple spaces with single space
-    text = re.sub(r'\n\s*\n', '\n\n', text)  # Clean up multiple newlines
-    text = text.strip()
-    
-    return text
-
+# ===== TEXT CLEANING =====
 def clean_text_preserve_punctuation(text: str) -> str:
-    """
-    Clean text while preserving essential punctuation for narration
-    """
+    """Clean text while preserving essential punctuation for narration"""
     if not text:
         return text
-    
-    # Keep essential punctuation: . , ! ? : ; " ' - 
-    # Remove other special characters
     text = re.sub(r'[*#`~^_\\|@\[\]{}()<>]', '', text)
-    
-    # Clean up whitespace
     text = re.sub(r' +', ' ', text)
     text = re.sub(r'\n\s*\n', '\n\n', text)
-    text = text.strip()
-    
-    return text
+    return text.strip()
 
-# ===== CROSS-PLATFORM PATH HANDLING =====
+# ===== PATH HANDLING =====
 def build_paths(base_project: str, channel_folder: str, story_folder: str) -> Dict[str, Path]:
-    """
-    Build paths that work on both Windows and Linux with the exact structure:
-    yt-automation/
-    ├── channel/
-    │   └── ranpuzel/
-    └── yt-python/
-    """
-    # Get the directory where this script is located
+    """Build cross-platform paths"""
     script_dir = Path(__file__).parent
     
-    # Navigate to project root (yt-automation)
     if script_dir.name == "yt-python":
         project_root = script_dir.parent
     else:
-        # If running from different location, assume current directory is project root
         project_root = Path.cwd()
-        # Try to find yt-automation structure
-        if (project_root / "channel").exists() and (project_root / "yt-python").exists():
-            pass  # We're already in yt-automation
-        else:
-            # Look for yt-automation in parent directories
-            for parent in project_root.parents:
-                if (parent / "channel").exists() and (parent / "yt-python").exists():
-                    project_root = parent
-                    break
+        for parent in project_root.parents:
+            if (parent / "channel").exists() and (parent / "yt-python").exists():
+                project_root = parent
+                break
     
-    # Build the exact directory structure
     channel_dir = project_root / channel_folder
     story_dir = channel_dir / story_folder
     
@@ -115,9 +56,9 @@ def build_paths(base_project: str, channel_folder: str, story_folder: str) -> Di
         'channel_dir': channel_dir,
         'story_dir': story_dir,
         'story_file': story_dir / "story.txt",
-        'prompt_file': channel_dir / PROMPT_FILE,  # In channel folder
+        'prompt_file': channel_dir / PROMPT_FILE,
         'output_file': story_dir / "narration.txt",
-        'history_file': channel_dir / HISTORY_FILE  # In channel folder
+        'history_file': channel_dir / HISTORY_FILE
     }
 
 # ===== ENCODING DETECTION =====
@@ -128,28 +69,16 @@ def detect_encoding(file_path: Path) -> str:
             raw_data = f.read()
             result = chardet.detect(raw_data)
             encoding = result['encoding'] or 'utf-8'
-            confidence = result['confidence']
-            
-            # Common encoding fallbacks for Windows
-            if confidence < 0.7:
-                if b'\x96' in raw_data or b'\x97' in raw_data or b'\x91' in raw_data or b'\x92' in raw_data:
+            if result['confidence'] < 0.7:
+                if any(char in raw_data for char in [b'\x96', b'\x97', b'\x91', b'\x92']):
                     encoding = 'windows-1252'
-                else:
-                    encoding = 'utf-8'
-            
-            logger.info(f" Detected encoding for {file_path.name}: {encoding} (confidence: {confidence:.2f})")
             return encoding
-    except Exception as e:
-        logger.warning(f"⚠️ Could not detect encoding for {file_path}, defaulting to utf-8: {e}")
+    except Exception:
         return 'utf-8'
 
 # ===== LOGGING SETUP =====
 def setup_logging():
-    """Setup basic logging"""
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s'
-    )
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 setup_logging()
 logger = logging.getLogger(__name__)
@@ -162,14 +91,10 @@ class DeepSeekNarrator:
         self.client = None
         self.is_available = False
         self._initialize_client()
-        
-        # Load previous interactions to maintain context
-        self.conversation_history = self._load_conversation_history()
 
     def _initialize_client(self):
-        """Initialize DeepSeek API client with SSL disabled as required"""
+        """Initialize DeepSeek API client with SSL disabled"""
         try:
-            # Disable SSL certificate verification as required
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
             http_client = httpx.Client(verify=False, timeout=60.0)
             
@@ -180,8 +105,8 @@ class DeepSeekNarrator:
                 max_retries=2
             )
             
-            # Simple connection test
-            test_response = self.client.chat.completions.create(
+            # Test connection
+            self.client.chat.completions.create(
                 model=DEEPSEEK_MODEL,
                 messages=[{"role": "user", "content": "Test"}],
                 max_tokens=5
@@ -195,31 +120,89 @@ class DeepSeekNarrator:
             self.client = None
             self.is_available = False
 
-    def _load_conversation_history(self) -> List[Dict[str, str]]:
-        """Load previous interactions to maintain context with DeepSeek AI"""
-        history = []
+    def _log_interaction(self, prompt: str, story_content: str, narration: str = None):
+        """Log COMPLETE interaction to history file (APPEND only)"""
         try:
-            if self.history_file.exists():
-                # Use encoding detection for history file too
-                encoding = detect_encoding(self.history_file)
-                with open(self.history_file, 'r', encoding=encoding) as f:
-                    content = f.read()
+            self.history_file.parent.mkdir(parents=True, exist_ok=True)
+            
+            with open(self.history_file, "a", encoding="utf-8") as f:
+                f.write(f"\n{'='*80}\n")
+                f.write(f"TIMESTAMP: {datetime.datetime.now().isoformat()}\n")
+                f.write(f"STORY_FOLDER: {STORY_FOLDER}\n")
+                f.write(f"PROMPT:\n{prompt}\n")
+                f.write(f"STORY_CONTENT:\n{story_content}\n")
+                if narration:
+                    f.write(f"LLM_RESPONSE:\n{narration}\n")
+                else:
+                    f.write(f"LLM_RESPONSE: PENDING...\n")
+                f.write(f"{'='*80}\n")
                 
-                # Parse history entries (simplified parsing)
-                entries = content.split('=' * 50)
-                for entry in entries[-10:]:  # Last 10 interactions to avoid token limits
-                    if "User:" in entry and "Assistant:" in entry:
-                        user_part = entry.split("User:")[1].split("Assistant:")[0].strip()
-                        assistant_part = entry.split("Assistant:")[1].strip()
-                        
-                        history.append({"role": "user", "content": user_part})
-                        history.append({"role": "assistant", "content": assistant_part})
-                
-                logger.info(f" Loaded {len(history)//2} previous interactions from history")
+            logger.debug(f" Interaction logged to {self.history_file}")
+            
         except Exception as e:
-            logger.warning(f"Could not load conversation history: {e}")
-        
-        return history
+            logger.error(f"⚠️ Failed to log interaction: {e}")
+
+    def _update_pending_response(self, narration: str):
+        """Update only the PENDING response in the history file without overwriting"""
+        try:
+            if not self.history_file.exists():
+                return
+            
+            # Read entire file
+            with open(self.history_file, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            # Find the last "PENDING..." and replace only that part
+            if "LLM_RESPONSE: PENDING..." in content:
+                # Split by the separator to find entries
+                entries = content.split('=' * 80)
+                if len(entries) >= 2:
+                    # Get the last complete entry (before the current pending one)
+                    last_entry = entries[-2] if len(entries) > 1 else entries[-1]
+                    
+                    # Check if the last entry has PENDING
+                    if "LLM_RESPONSE: PENDING..." in last_entry:
+                        # Replace PENDING with actual response in this entry only
+                        updated_entry = last_entry.replace("LLM_RESPONSE: PENDING...", f"LLM_RESPONSE:\n{narration}")
+                        
+                        # Rebuild content with updated entry
+                        if len(entries) > 1:
+                            updated_content = '=' * 80.join(entries[:-2] + [updated_entry] + entries[-1:])
+                        else:
+                            updated_content = updated_entry
+                        
+                        # Write back updated content
+                        with open(self.history_file, 'w', encoding='utf-8') as f:
+                            f.write(updated_content)
+                        
+                        logger.debug("✅ Updated pending response in history file")
+                        return
+            
+            logger.warning("No pending response found to update")
+                
+        except Exception as e:
+            logger.error(f"⚠️ Failed to update pending response: {e}")
+
+    def _get_conversation_history_for_llm(self) -> str:
+        """Get conversation history for LLM context"""
+        try:
+            if not self.history_file.exists():
+                return "No previous conversation history available."
+            
+            with open(self.history_file, 'r', encoding='utf-8') as f:
+                history_content = f.read()
+            
+            # Return recent history (excluding current pending request)
+            entries = history_content.split('=' * 80)
+            # Get entries that have complete responses (no PENDING)
+            complete_entries = [entry for entry in entries if "LLM_RESPONSE:" in entry and "PENDING..." not in entry]
+            recent_complete = complete_entries[-3:]  # Last 3 complete interactions
+            
+            return "\n".join(recent_complete) if recent_complete else "No complete conversation history available."
+            
+        except Exception as e:
+            logger.error(f"⚠️ Failed to read conversation history: {e}")
+            return "Error reading conversation history."
 
     def generate_narration(self, prompt: str, story_content: str) -> Optional[str]:
         """Generate narration for the provided story"""
@@ -228,18 +211,34 @@ class DeepSeekNarrator:
             return None
 
         try:
-            # Build messages with history + new request
+            # 1. Log FULL interaction with PENDING response (APPENDS)
+            self._log_interaction(prompt, story_content)
+            logger.info(" Full prompt and story logged to history (appended)")
+
+            # 2. Get conversation history
+            conversation_history = self._get_conversation_history_for_llm()
+            logger.info(f" Loaded conversation history ({len(conversation_history)} chars)")
+
+            # 3. Build messages with history reference
             messages = []
-            
-            # Add conversation history to maintain context
-            messages.extend(self.conversation_history)
-            
-            # Add current request with story as attachment
-            user_content = f"{prompt}\n\nSTORY TO NARRATE:\n{story_content}"
+            user_content = f"""Please generate narration for the following story.
+
+CONVERSATION HISTORY FOR CONTEXT:
+{conversation_history}
+
+PROMPT INSTRUCTIONS:
+{prompt}
+
+STORY TO NARRATE:
+{story_content}
+
+Please provide a clean narration based on the story and prompt instructions."""
+
             messages.append({"role": "user", "content": user_content})
 
-            logger.info(" Sending narration request to DeepSeek AI...")
+            logger.info(" Sending request to DeepSeek AI...")
             
+            # 4. Call API
             response = self.client.chat.completions.create(
                 model=DEEPSEEK_MODEL,
                 messages=messages,
@@ -250,191 +249,127 @@ class DeepSeekNarrator:
             
             narration = response.choices[0].message.content.strip()
             
-            # Clean the narration output before using it
+            # 5. Clean the narration
             cleaned_narration = clean_text_preserve_punctuation(narration)
-            logger.info(f"粒 Cleaned {len(narration) - len(cleaned_narration)} special characters from narration")
+            logger.info(f"粒 Cleaned {len(narration) - len(cleaned_narration)} special chars")
+
+            # 6. Update the PENDING response with actual response
+            self._update_pending_response(cleaned_narration)
+            logger.info("✅ LLM response updated in history file")
             
-            # Log this interaction (both to file and to memory for future context)
-            self._log_interaction(prompt, story_content, cleaned_narration)
-            
-            # Add to conversation history for future context
-            self.conversation_history.append({"role": "user", "content": user_content})
-            self.conversation_history.append({"role": "assistant", "content": cleaned_narration})
-            
-            # Keep history manageable (last 6 interactions)
-            if len(self.conversation_history) > 12:
-                self.conversation_history = self.conversation_history[-12:]
-            
-            logger.info(f"✅ Successfully generated and cleaned narration ({len(cleaned_narration)} characters)")
+            logger.info(f"✅ Successfully generated narration ({len(cleaned_narration)} chars)")
             return cleaned_narration
             
         except Exception as e:
             logger.error(f"❌ Failed to generate narration: {e}")
             return None
 
-    def _log_interaction(self, prompt: str, story_content: str, narration: str):
-        """Log all interactions to history file as required"""
-        try:
-            # Ensure directory exists
-            self.history_file.parent.mkdir(parents=True, exist_ok=True)
-            
-            with open(self.history_file, "a", encoding="utf-8") as f:
-                f.write(f"\n{'='*50}\n")
-                f.write(f"Timestamp: {datetime.datetime.now().isoformat()}\n")
-                f.write(f"Story Folder: {STORY_FOLDER}\n")
-                f.write(f"User: {prompt}\n")
-                f.write(f"Story Content: {story_content[:500]}...\n")  # Preview only
-                f.write(f"Assistant: {narration}\n")
-                f.write(f"{'='*50}\n")
-                
-            logger.debug(f" Interaction logged to {self.history_file}")
-            
-        except Exception as e:
-            logger.error(f"⚠️ Failed to log interaction: {e}")
-
 # ===== FILE OPERATIONS =====
 def read_file(file_path: Path) -> Optional[str]:
-    """Read file content with automatic encoding detection"""
+    """Read file content with encoding detection"""
     try:
         if not file_path.exists():
             raise FileNotFoundError(f"File not found: {file_path}")
             
-        # Detect encoding first
         encoding = detect_encoding(file_path)
-        
-        # Try reading with detected encoding
         with open(file_path, 'r', encoding=encoding) as f:
             content = f.read().strip()
             
-        if not content:
-            logger.warning(f"File is empty: {file_path}")
-            
-        logger.info(f" Read {len(content)} characters from {file_path} (encoding: {encoding})")
+        logger.info(f" Read {len(content)} chars from {file_path}")
         return content
         
-    except UnicodeDecodeError as e:
-        # Fallback to common Windows encodings
-        logger.warning(f"UTF-8 failed, trying fallback encodings for {file_path}")
+    except UnicodeDecodeError:
         fallback_encodings = ['windows-1252', 'latin-1', 'cp1252', 'iso-8859-1']
-        
         for encoding in fallback_encodings:
             try:
                 with open(file_path, 'r', encoding=encoding) as f:
-                    content = f.read().strip()
-                logger.info(f" Successfully read with {encoding} encoding")
-                return content
+                    return f.read().strip()
             except UnicodeDecodeError:
                 continue
-                
         logger.error(f"❌ All encoding attempts failed for {file_path}")
         return None
-        
     except Exception as e:
-        logger.error(f"❌ Error reading file {file_path}: {e}")
+        logger.error(f"❌ Error reading {file_path}: {e}")
         return None
 
 def write_file(file_path: Path, content: str) -> bool:
-    """Write content to file, overwriting if exists or creating new"""
+    """Write content to file (overwrite or create)"""
     try:
-        # Create directory if it doesn't exist
         file_path.parent.mkdir(parents=True, exist_ok=True)
-        
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(content)
-            
-        logger.info(f" Successfully wrote {len(content)} characters to {file_path}")
+        logger.info(f" Wrote {len(content)} chars to {file_path}")
         return True
-        
     except Exception as e:
-        logger.error(f"❌ Error writing to file {file_path}: {e}")
+        logger.error(f"❌ Error writing to {file_path}: {e}")
         return False
 
 # ===== VALIDATION =====
 def validate_paths(paths: Dict[str, Path]) -> bool:
-    """Validate that all required paths and files exist"""
-    # Check that project structure exists
+    """Validate required paths and files"""
     if not paths['project_root'].exists():
-        logger.error(f"❌ Project root does not exist: {paths['project_root']}")
+        logger.error(f"❌ Project root missing: {paths['project_root']}")
         return False
     
-    # Check that required input files exist
-    required_files = ['prompt_file', 'story_file']
-    for file_key in required_files:
+    for file_key in ['prompt_file', 'story_file']:
         file_path = paths[file_key]
         if not file_path.exists():
-            logger.error(f"❌ Required file not found: {file_path}")
+            logger.error(f"❌ Required file missing: {file_path}")
             return False
     
-    logger.info("✅ All paths and files validated successfully")
+    logger.info("✅ All paths validated")
     return True
 
 # ===== MAIN NARRATION FUNCTION =====
 def generate_story_narration(paths: Dict[str, Path]) -> bool:
-    """Main function to generate narration for a story"""
-    
-    # Read prompt and story content
+    """Generate narration for a story"""
     prompt_content = read_file(paths['prompt_file'])
     story_content = read_file(paths['story_file'])
     
     if not prompt_content or not story_content:
-        logger.error("❌ Failed to read prompt or story content")
+        logger.error("❌ Failed to read prompt or story")
         return False
 
-    # Initialize DeepSeek narrator
     narrator = DeepSeekNarrator(DEEPSEEK_API_KEY, paths['history_file'])
-
     if not narrator.is_available:
-        logger.error("❌ DeepSeek client not available")
+        logger.error("❌ DeepSeek client unavailable")
         return False
 
-    # Generate narration
     logger.info(" Generating narration...")
     narration_result = narrator.generate_narration(prompt_content, story_content)
-
     if not narration_result:
         logger.error("❌ Failed to generate narration")
         return False
 
-    # Write cleaned narration to output file
     success = write_file(paths['output_file'], narration_result)
     if success:
-        logger.info(f" Cleaned narration successfully saved to {paths['output_file']}")
+        logger.info(f" Narration saved to {paths['output_file']}")
         return True
-    
     return False
 
 # ===== MAIN EXECUTION =====
 def main():
-    """Main execution function"""
     if not RUN_NARRATION:
-        logger.info("⏸️ Narration generation is disabled (RUN_NARRATION = False)")
+        logger.info("⏸️ Narration disabled")
         return 0
 
     try:
-        # Build paths using the exact directory structure
         paths = build_paths(BASE_PROJECT, CHANNEL_FOLDER, STORY_FOLDER)
+        logger.info(" Starting narration generation...")
         
-        logger.info(" Starting story narration generation...")
-        logger.info(f" Project root: {paths['project_root']}")
-        logger.info(f" Channel folder: {paths['channel_dir']}")
-        logger.info(f" Story folder: {paths['story_dir']}")
-        logger.info(f" Story file: {paths['story_file']}")
-        logger.info(f" Prompt file: {paths['prompt_file']}")
-        logger.info(f" Output file: {paths['output_file']}")
-        logger.info(f" History file: {paths['history_file']}")
+        for key, path in paths.items():
+            if key != 'project_root':  # Don't log project root as it's too long
+                logger.info(f"   {key}: {path.name}")
 
-        # Validate paths
         if not validate_paths(paths):
             return 1
 
-        # Generate narration
         success = generate_story_narration(paths)
-        
         if success:
-            logger.info("✅ Story narration completed successfully!")
+            logger.info("✅ Narration completed!")
             return 0
         else:
-            logger.error("❌ Story narration failed!")
+            logger.error("❌ Narration failed!")
             return 1
             
     except Exception as e:
