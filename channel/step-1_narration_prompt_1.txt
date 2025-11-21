@@ -1,8 +1,7 @@
-I have given a text book story above. 
-
-Based on the story above, I am trying to create a separate narration text. Purpose of this narration is to use in youtube story video made specifically for  USA kids. You need to fill the following relevant details which can be later used to generate the narration.
-
-Fill the following details-
+You Job is to fill the following relevant details which can be later used to generate the narration to use in youtube story video made specifically for  USA kids.
+You have to only fill the following exact asked details based on the given "=== CURRENT STORY ===" section.
+Also you will find below "=== ATTACHMENT: CONVERSATION HISTORY ===" for any previous requests regarding this work.
+(Do NOT describe what you’re doing. Output only the answer.)
 
 STORY IDENTITY -->
 Original Title: [ ]

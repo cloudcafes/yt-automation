@@ -231,13 +231,12 @@ class DeepSeekNarrator:
             # Build the complete message with history clearly marked as attachment
             user_content = f"""
 
-=== CURRENT PROMPT INSTRUCTIONS ===
 {prompt}
 
-=== CURRENT STORY TO NARRATE ===
+=== CURRENT STORY: ===
 {story_content}
 
-=== ATTACHMENT: CONVERSATION HISTORY ===
+=== AI LLM CONVERSATION HISTORY ===
 {conversation_history}
 
 """
