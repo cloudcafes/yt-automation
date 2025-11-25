@@ -13,7 +13,6 @@ import logging
 
 # --- Path and API Configuration (Adjust as needed) ---
 # CRITICAL: Load API Key from environment variable or set here.
-# NOTE: The provided key is a sample. Ensure it is replaced with a working key.
 STABILITY_API_KEY = os.getenv('STABILITY_API_KEY', 'sk-eR8zO8lXv8lglgjUz4O8ttX2yi9ftieJ9i2ZCheQd92KsGFS')
 
 STABILITY_API_URL = "https://api.stability.ai/v2beta/stable-image/generate/core"
@@ -26,11 +25,10 @@ PROMPTS_FILE = BASE_PROJECT_DIR / "channel" / "ranpuzel" / "image_prompt.txt"
 # --- Generation Parameters ---
 MAX_WORKERS = 5
 TESTING_MODE_FLAG = True 
-TEST_LIMIT = 2
-# Consistent Style: Using a style_preset saves prompt token space and guides the model.
+TEST_LIMIT = 2 # Set to None to generate all images
 DEFAULT_STYLE_PRESET = "cinematic"
-# Using a fixed seed for testing helps confirm consistency. Use 0 for random.
 DEFAULT_SEED = 12345 
+OUTPUT_FORMAT = "webp" # Efficient format for pipeline processing
 
 # --- Logging Setup ---
 logging.basicConfig(
@@ -107,15 +105,13 @@ def parse_image_prompts(prompts_file_path: Path, limit: Optional[int] = None) ->
 # ==============================================================================
 
 def generate_single_image(job_data: Dict[str, Any], api_key: str) -> Optional[Dict[str, Any]]:
-    """Handles the API call for one image."""
-    
-    output_format = "webp"
+    """Handles the API call for one image and ensures multipart/form-data encoding."""
     
     # CRITICAL FIX: Preparing the payload for multipart/form-data
     # Use the tuple format (None, value) to ensure 'requests' sends form-data without a filename.
     payload = {
         "prompt": (None, job_data['prompt']),
-        "output_format": (None, output_format),
+        "output_format": (None, OUTPUT_FORMAT),
         "aspect_ratio": (None, job_data['aspect_ratio']),
         "style_preset": (None, DEFAULT_STYLE_PRESET),
         "seed": (None, str(DEFAULT_SEED))
@@ -124,7 +120,7 @@ def generate_single_image(job_data: Dict[str, Any], api_key: str) -> Optional[Di
     # Optional: Set client IDs for Stability AI tracking/support
     headers = {
         "authorization": f"Bearer {api_key}",
-        "accept": "image/*", # Requesting raw image bytes for speed
+        "accept": "image/*", 
         "stability-client-id": "yt-automation-pipeline",
         "stability-client-user-id": job_data['id']
     }
@@ -140,17 +136,18 @@ def generate_single_image(job_data: Dict[str, Any], api_key: str) -> Optional[Di
         
         if response.status_code == 200:
             job_data['image_bytes'] = response.content
-            job_data['output_format'] = output_format
+            job_data['output_format'] = OUTPUT_FORMAT
             job_data['success'] = True
             logger.info(f"✨ Successfully generated: {job_data['id']}")
             return job_data
         
         else:
             # Handle non-200 errors (e.g., 400 Bad Request, 429 Rate Limit)
+            error_details = "Unknown Error"
             try:
                 error_details = response.json()
             except requests.exceptions.JSONDecodeError:
-                error_details = response.text[:100] # Grab text if JSON fails
+                error_details = response.text[:100] # Grab text if JSON fails (e.g., if error page is returned)
             
             logger.error(f"❌ API Failure for {job_data['id']} (Code: {response.status_code}): {error_details}")
             job_data['success'] = False
@@ -209,8 +206,7 @@ def main():
         if not result.get('image_bytes') or not result.get('success', False):
             continue
             
-        # Create robust, sequentially numbered filename (e.g., S01_SH01_TheTowerEst.webp)
-        # Sanitizes the name to prevent illegal characters in the filename
+        # Create robust, sequentially numbered filename (e.g., S01_SH01_TowerEst.webp)
         sanitized_name = re.sub(r'[^a-zA-Z0-9_]', '', result['scene_name_short'])
         filename = (
             f"{result['id']}_"
