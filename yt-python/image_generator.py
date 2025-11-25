@@ -13,15 +13,19 @@ import logging
 
 STABILITY_API_KEY = os.getenv('STABILITY_API_KEY', 'sk-eR8zO8lXv8lglgjUz4O8ttX2yi9ftieJ9i2ZCheQd92KsGFS')
 STABILITY_API_URL = "https://api.stability.ai/v2beta/stable-image/generate/core"
-OUTPUT_DIR = "generated_images"
 
 BASE_PROJECT_DIR = Path(__file__).parent.parent.resolve() 
 
 MAX_WORKERS = 5
-TESTING_MODE_FLAG = False # Set to False to generate ALL images
 DEFAULT_STYLE_PRESET = "cinematic"
 DEFAULT_SEED = 12345 
 OUTPUT_FORMAT = "webp"
+
+# --- SAFETY: TESTING MODE ---
+# Set to True to generate only a few images (saves credits)
+# Set to False to generate the whole story
+TESTING_MODE_FLAG = True 
+TEST_LIMIT = 2 
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -51,12 +55,10 @@ def parse_image_prompts(prompts_file_path: Path, limit: Optional[int] = None) ->
             full_header = match.group(1).strip()
             raw_prompt = match.group(2).strip()
             
-            # --- FIX: CLEANING FOR STABILITY AI ---
-            # 1. Remove Midjourney Parameters (--ar, --stylize)
-            clean_prompt = re.sub(r'--ar\s+[\d:]+|--stylize\s+\d+', '', raw_prompt)
-            # 2. Replace Midjourney Separators (::) with commas
-            clean_prompt = clean_prompt.replace('::', ',')
-            # 3. Clean up extra spaces/newlines
+            # --- MINIMAL CLEANING (Relying on Prompt Template for Syntax) ---
+            # We only strip parameters that go into the API payload (--ar, --stylize)
+            # We do NOT replace '::' or change text structure anymore.
+            clean_prompt = re.sub(r'--ar\s+[\d:]+|--stylize\s+\d+|--v\s+\d+(\.\d+)?', '', raw_prompt)
             clean_prompt = " ".join(clean_prompt.split()).strip()
 
             # Naming Logic
@@ -77,7 +79,10 @@ def parse_image_prompts(prompts_file_path: Path, limit: Optional[int] = None) ->
                 'original_index': len(prompts_list) 
             })
             
-        if limit is not None and len(prompts_list) >= limit: break
+        # Apply Testing Limit
+        if limit is not None and len(prompts_list) >= limit:
+            logger.info(f"🛑 Testing Limit Reached: Stopping parsing after {limit} prompts.")
+            break
             
     return prompts_list
 
@@ -86,6 +91,11 @@ def parse_image_prompts(prompts_file_path: Path, limit: Optional[int] = None) ->
 # ==============================================================================
 
 def generate_single_image(job_data: Dict[str, Any], api_key: str) -> Optional[Dict[str, Any]]:
+    # --- CONSOLE PREVIEW ---
+    print(f"\n🎨 [PREVIEW] Generating {job_data['id']}:")
+    print(f"   Prompt: {job_data['prompt'][:150]}...") 
+    print(f"   Aspect Ratio: {job_data['aspect_ratio']}")
+    
     payload = {
         "prompt": (None, job_data['prompt']),
         "output_format": (None, OUTPUT_FORMAT),
@@ -103,7 +113,7 @@ def generate_single_image(job_data: Dict[str, Any], api_key: str) -> Optional[Di
         if response.status_code == 200:
             job_data['image_bytes'] = response.content
             job_data['success'] = True
-            logger.info(f"✨ Generated: {job_data['id']}")
+            logger.info(f"✨ Success: {job_data['id']}")
             return job_data
         else:
             logger.error(f"❌ API Error {job_data['id']}: {response.text[:200]}")
@@ -120,24 +130,33 @@ def generate_single_image(job_data: Dict[str, Any], api_key: str) -> Optional[Di
 
 def main():
     parser = argparse.ArgumentParser()
-    # --- FIX: DYNAMIC STORY ARGUMENT ---
-    parser.add_argument('--story', type=str, default="ranpuzel", help="Name of the story folder (e.g. ranpuzel)")
+    parser.add_argument('--channel', type=str, default="channel", help="The channel folder name")
+    parser.add_argument('--story', type=str, default="ranpuzel", help="The story folder name")
     args = parser.parse_args()
 
-    # Dynamic Path Construction
-    prompts_file = BASE_PROJECT_DIR / "channel" / args.story / "image_prompt.txt"
-    output_dir = BASE_PROJECT_DIR / "channel" / args.story / "images"
+    # 1. Path Setup
+    story_dir = BASE_PROJECT_DIR / args.channel / args.story
+    prompts_file = story_dir / "image_prompt.txt"
+    output_dir = story_dir / "images"
     
-    output_dir.mkdir(parents=True, exist_ok=True)
+    if not output_dir.exists():
+        logger.info(f"📁 Creating directory: {output_dir}")
+        output_dir.mkdir(parents=True, exist_ok=True)
     
-    logger.info(f"📂 Reading from: {prompts_file}")
+    # 2. Determine Limit
+    job_limit = TEST_LIMIT if TESTING_MODE_FLAG else None
+    if TESTING_MODE_FLAG:
+        logger.warning(f"🧪 TESTING MODE ACTIVE: Only generating first {TEST_LIMIT} images.")
     
-    jobs = parse_image_prompts(prompts_file, limit=None) # Set limit=2 for testing
+    # 3. Parse with Limit
+    jobs = parse_image_prompts(prompts_file, limit=job_limit)
     
     if not jobs:
-        logger.warning("No jobs found. Check file path.")
+        logger.warning("No jobs found.")
         return
 
+    # 4. Execute
+    logger.info(f"🚀 Starting generation for {len(jobs)} images...")
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
         future_to_job = {executor.submit(generate_single_image, job, STABILITY_API_KEY): job for job in jobs}
         
@@ -145,16 +164,21 @@ def main():
         for future in as_completed(future_to_job):
             if future.result(): results.append(future.result())
 
+    # 5. Save
     results.sort(key=lambda x: x['original_index'])
     
     for result in results:
         if not result.get('success'): continue
         sanitized_name = re.sub(r'[^a-zA-Z0-9_]', '', result['scene_name_short'])
         filename = f"{result['id']}_{sanitized_name}.{OUTPUT_FORMAT}"
-        with open(output_dir / filename, 'wb') as f:
-            f.write(result['image_bytes'])
+        
+        try:
+            with open(output_dir / filename, 'wb') as f:
+                f.write(result['image_bytes'])
+        except Exception as e:
+            logger.error(f"❌ Save Error: {e}")
             
-    logger.info(f"✅ Images saved to: {output_dir}")
+    logger.info(f"✅ Pipeline Complete. Check {output_dir}")
 
 if __name__ == "__main__":
     main()
