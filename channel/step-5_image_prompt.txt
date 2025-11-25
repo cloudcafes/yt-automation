@@ -4,33 +4,41 @@ YOUR TASK:
 Convert the provided SCENE SHOT DATA into a single, high-fidelity image generation prompt.
 
 INPUT DATA STRUCTURE:
-1. CONTEXT: The Scene Name
-2. VISUAL ANCHOR: The persistent background/setting description.
-3. SPECIFIC SHOT DETAILS: The characters, frozen keyframe action, camera angle, and lighting.
+1. CHARACTER VISUALS: The Master Definitions of all characters (Visual Laws).
+2. CONTEXT: The Scene Name
+3. VISUAL ANCHOR: The persistent background/setting description.
+4. SPECIFIC SHOT DETAILS: The characters, frozen keyframe action, camera angle, and lighting.
 
 INSTRUCTIONS:
 You must synthesize these inputs into a "Subject + Environment + Style" format.
-Do NOT invent new visual elements. Use exactly what is described in the input.
+
+CRITICAL RULE: "THE ACTOR REPLACEMENT PROTOCOL"
+1. Identify which characters are in the shot (e.g., "Radhita").
+2. LOOK UP their "Master Visual Definition" from the provided CHARACTER VISUALS section.
+3. REPLACE their name with that visual definition in your final prompt.
+   (Example: If text says "Radhita smiles", and her definition is "Girl in lavender dress", you write: "A girl in a lavender dress smiling").
+4. Do NOT use the character's proper name in the final prompt (Midjourney does not know who "Radhita" is).
 
 ---
 OUTPUT FORMAT (Strictly follow this structure):
 
-[Art Style] :: [Camera/Shot Type] of [Main Subject & Action] :: [Detailed Environment/Visual Anchor] :: [Lighting & Atmosphere] --ar 16:9 --stylize 250
+[Art Style] :: [Camera/Shot Type] of [Detailed Visual Description of Subjects & Action] :: [Detailed Environment/Visual Anchor] :: [Lighting & Atmosphere] --ar 16:9 --stylize 250
 
 ---
 EXAMPLE INPUT:
-CONTEXT: Scene 1
-VISUAL ANCHOR: A dark stone dungeon with wet mossy walls.
-SPECIFIC SHOT DETAILS: Shot 1. Subject: Arthur. Keyframe: Kneeling in prayer. Camera: Top-down. Lighting: Single shaft of light.
+CHARACTER VISUALS: Arthur = Knight, silver armor, red cape.
+VISUAL ANCHOR: A dark stone dungeon.
+SPECIFIC SHOT: Shot 1. Subject: Arthur. Action: Kneeling.
 
 EXAMPLE OUTPUT:
-Pixar 3D style, cinematic lighting :: Top-down high angle shot of Arthur kneeling in solemn prayer, head bowed :: A dark damp stone dungeon, wet mossy walls, cold atmosphere :: illuminated by a single dramatic shaft of holy light from above --ar 16:9 --stylize 250
+Pixar 3D style, cinematic lighting :: Top-down high angle shot of a Knight in silver armor and red cape kneeling in solemn prayer :: A dark damp stone dungeon, wet mossy walls :: illuminated by a single dramatic shaft of holy light --ar 16:9 --stylize 250
 ---
 
-CRITICAL RULES:
-1. OUTPUT ONLY THE PROMPT. No conversational filler ("Here is your prompt").
-2. Start with the Art Style (Default: "Cinematic 3D Disney/Pixar Style" if not specified).
-3. Ensure the "Visual Anchor" (Background) is included in every prompt to maintain consistency.
-4. Use the "Frozen Keyframe" description to describe the character's pose.
+FINAL RULES:
+1. OUTPUT ONLY THE PROMPT.
+2. Start with the Art Style.
+3. Use the VISUAL ANCHOR for the background.
+4. Use the CHARACTER VISUALS for the subjects.
+5. NO conversational filler.
 
 NOW, GENERATE THE PROMPT FOR THE FOLLOWING INPUT:

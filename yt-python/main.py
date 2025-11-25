@@ -9,7 +9,6 @@ from typing import Optional, List, Dict, Any
 import logging
 import time
 import chardet
-import re
 import json
 import argparse
 import threading
@@ -20,12 +19,13 @@ BASE_PROJECT = "yt-automation"
 CHANNEL_FOLDER = "channel"
 STORY_FOLDER = "ranpuzel"
 
+# Ensure you have your API Key set in environment variables or hardcoded here safely
 DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY', 'sk-df60b28326444de6859976f6e603fd9c')
 DEEPSEEK_MODEL = "deepseek-chat"
 DEEPSEEK_MAX_TOKENS = 4000
 DEEPSEEK_TEMPERATURE = 0.7
 
-# Prompt files
+# Prompt files mapping
 STEP_FILES = {
     1: {"prompt": "step-1_narration_framework_prompt.txt", "output": "narration_framework.txt", "desc": "Narration Framework"},
     2: {"prompt": "step-2_narration_prompt.txt", "output": "narration.txt", "desc": "Final Narration"},
@@ -34,7 +34,7 @@ STEP_FILES = {
     5: {"prompt": "step-5_image_prompt.txt", "output": "image_prompt.txt", "desc": "Image Prompts"}
 }
 
-HISTORY_FILE = "ai_history.json"  # Changed to JSON
+HISTORY_FILE = "ai_history.json"
 
 # ===== LOGGING SETUP =====
 logging.basicConfig(
@@ -47,7 +47,8 @@ logger = logging.getLogger(__name__)
 # ===== TEXT CLEANING =====
 def clean_text_preserve_punctuation(text: str) -> str:
     if not text: return text
-    text = re.sub(r'[*#`~^_\\|@\[\]{}()<>]', '', text)
+    # Clean some markdown artifacts but keep structure
+    text = re.sub(r'[*`~^_\\|@\[\]{}()<>]', '', text) 
     text = re.sub(r' +', ' ', text)
     text = re.sub(r'\n\s*\n', '\n\n', text)
     return text.strip()
@@ -82,7 +83,7 @@ class DeepSeekNarrator:
         self.history_file = history_file
         self.client = None
         self.is_available = False
-        self.lock = threading.Lock()  # For thread-safe file writing
+        self.lock = threading.Lock()
         self._initialize_client()
         self._migrate_legacy_history()
 
@@ -133,7 +134,6 @@ class DeepSeekNarrator:
         with self.lock:
             history = self._load_history()
             history.append(entry)
-            # Keep file size manageable (last 50 entries)
             if len(history) > 50:
                 history = history[-50:]
             
@@ -169,9 +169,7 @@ class DeepSeekNarrator:
             
             narration = clean_text_preserve_punctuation(response.choices[0].message.content.strip())
             
-            # Log successful interaction
             self._save_interaction(prompt, story_content, narration)
-            
             return narration
             
         except Exception as e:
@@ -182,10 +180,8 @@ class DeepSeekNarrator:
 def read_file(path: Path) -> Optional[str]:
     if not path.exists(): return None
     try:
-        # Try simple utf-8 first
         with open(path, 'r', encoding='utf-8') as f: return f.read().strip()
     except UnicodeDecodeError:
-        # Fallback using chardet
         try:
             raw = path.read_bytes()
             enc = chardet.detect(raw)['encoding'] or 'utf-8'
@@ -202,67 +198,100 @@ def write_file(path: Path, content: str) -> bool:
         logger.error(f"❌ Write error {path.name}: {e}")
         return False
 
-# ===== STEP LOGIC =====
-def parse_scenes_and_shots(content: str) -> List[Dict]:
+# ===== ROBUST PARSING LOGIC (FIXED) =====
+def parse_scenes_robust(content: str) -> List[Dict]:
     """
-    Parses the new hierarchical format:
-    SCENE X -> Setting Visual Anchor -> SHOT 1, SHOT 2, etc.
+    Robustly parses scenes using a state machine approach.
+    Handles variations like:
+    - "Scene 1" vs "SCENE 1" vs "## Scene 1"
+    - "Shot 1" vs "SHOT 1" vs "1. Shot"
     """
     structured_data = []
     
-    # Split by "SCENE" headers (using robust regex for "## SCENE 1" or "SCENE 1")
-    scene_blocks = re.split(r'(?=#{0,2}\s*SCENE\s+\d+)', content)
+    # Normalize line endings and split
+    lines = content.replace('\r\n', '\n').split('\n')
     
-    for block in scene_blocks:
-        if not block.strip(): continue
+    current_scene_header = "Unknown Scene"
+    current_visual_anchor = "A cinematic background."
+    current_shot_buffer = []
+    current_shot_header = ""
+    
+    # Regex patterns for flexibility
+    scene_pattern = re.compile(r'^(?:#+\s*)?(?:SCENE|Scene)\s+(\d+)', re.IGNORECASE)
+    anchor_pattern = re.compile(r'(?:Visual Anchor|Setting|Background):\s*(.*)', re.IGNORECASE)
+    shot_pattern = re.compile(r'^(?:#+\s*)?(?:SHOT|Shot)\s+(\d+)', re.IGNORECASE)
+
+    def save_current_shot():
+        if current_shot_header and current_shot_buffer:
+            # Flatten buffer to text
+            shot_text = "\n".join(current_shot_buffer).strip()
+            # Create composite input for Step 5
+            composite_input = (
+                f"CONTEXT: {current_scene_header}\n"
+                f"VISUAL ANCHOR: {current_visual_anchor}\n"
+                f"SPECIFIC SHOT DETAILS:\n{shot_text}"
+            )
+            structured_data.append({
+                'id': f"{current_scene_header} - {current_shot_header}",
+                'full_text': composite_input
+            })
+
+    for line in lines:
+        line_clean = line.strip().replace('*', '') # Remove bolding for checking
         
-        # 1. Extract Scene Header
-        header_match = re.search(r'(#{0,2}\s*SCENE\s+\d+.*)', block)
-        if not header_match: continue
-        scene_header = header_match.group(1).strip()
-        
-        # 2. Extract Visual Anchor (The constant background)
-        anchor_match = re.search(r'Setting Visual Anchor:\s*(.*?)(?=\*\*SHOT|\n\n|SHOT)', block, re.DOTALL | re.IGNORECASE)
-        visual_anchor = anchor_match.group(1).strip() if anchor_match else "A cinematic background."
-        
-        # 3. Extract Shots
-        # Split the block by "SHOT X" markers
-        shot_splits = re.split(r'(?=\*\*SHOT\s+\d+|\bSHOT\s+\d+)', block)
-        
-        for segment in shot_splits:
-            # Check if this segment is actually a shot
-            shot_header_match = re.search(r'(\*\*SHOT\s+\d+|SHOT\s+\d+).*', segment)
-            if shot_header_match:
-                shot_header = shot_header_match.group(0).strip().replace('*', '')
-                
-                # Create a composite input for the AI
-                # We combine the Scene Context + Visual Anchor + Specific Shot Details
-                composite_input = (
-                    f"CONTEXT: {scene_header}\n"
-                    f"VISUAL ANCHOR (BACKGROUND): {visual_anchor}\n"
-                    f"SPECIFIC SHOT DETAILS:\n{segment.strip()}"
-                )
-                
-                structured_data.append({
-                    'id': f"{scene_header} - {shot_header}",
-                    'full_text': composite_input
-                })
-                
+        # 1. Detect Scene Header
+        if scene_pattern.search(line_clean):
+            save_current_shot() # Save previous shot if exists
+            current_scene_header = line.strip().replace('*', '').replace('#', '')
+            # Reset for new scene
+            current_shot_buffer = []
+            current_shot_header = ""
+            current_visual_anchor = "A cinematic background." # Reset anchor
+            continue
+            
+        # 2. Detect Visual Anchor
+        anchor_match = anchor_pattern.search(line_clean)
+        if anchor_match:
+            current_visual_anchor = anchor_match.group(1).strip()
+            continue
+            
+        # 3. Detect Shot Header
+        shot_match = shot_pattern.search(line_clean)
+        if shot_match:
+            save_current_shot() # Save previous shot
+            current_shot_header = line.strip().replace('*', '')
+            current_shot_buffer = [] # Start new buffer
+            continue
+            
+        # 4. Accumulate Content (if inside a shot)
+        if current_shot_header:
+            current_shot_buffer.append(line)
+
+    # Save the very last shot
+    save_current_shot()
+    
     return structured_data
 
+# ===== STEP 5 LOGIC (FIXED) =====
 def process_step_5_parallel(paths: Dict[str, Path]) -> bool:
-    """Updated to handle Shot-level generation"""
+    """Updated to handle Shot-level generation with Character Consistency Injection"""
     narrator = DeepSeekNarrator(DEEPSEEK_API_KEY, paths['history_file'])
     if not narrator.is_available: return False
     
     prompt_template = read_file(paths['step5_prompt'])
     scenes_content = read_file(paths['step4_output'])
     
-    # USE THE NEW PARSER
-    shots_to_process = parse_scenes_and_shots(scenes_content)
+    # CRITICAL FIX 1: Read Character Sheet for visual consistency
+    character_sheet = read_file(paths['step3_output']) 
+    if not character_sheet:
+        logger.warning("⚠️ Character sheet not found. Visuals may be inconsistent.")
+        character_sheet = "No character definitions provided."
+    
+    # CRITICAL FIX 2: Use Robust Parser
+    shots_to_process = parse_scenes_robust(scenes_content)
     
     if not shots_to_process:
-        logger.error("❌ No shots found to process")
+        logger.error("❌ No shots found to process. Check Step 4 output format.")
         return False
         
     logger.info(f"🚀 Starting parallel generation for {len(shots_to_process)} shots...")
@@ -270,8 +299,15 @@ def process_step_5_parallel(paths: Dict[str, Path]) -> bool:
     results = {}
     
     def process_single_shot(shot_data):
-        # We send the specific prompt template + the specific shot data
-        prompt_input = f"{prompt_template}\n\n=== INPUT DATA ===\n{shot_data['full_text']}"
+        # CRITICAL FIX 3: Inject Character Data into the prompt
+        prompt_input = (
+            f"{prompt_template}\n\n"
+            f"=== REFERENCE: CHARACTER VISUALS (STRICT ADHERENCE) ===\n"
+            f"{character_sheet}\n\n"
+            f"=== INPUT DATA (SCENE & SHOT) ===\n"
+            f"{shot_data['full_text']}"
+        )
+        # We assume the Prompt Template instructs the AI to use this data
         result = narrator.generate_narration(prompt_template, prompt_input, use_history=False)
         return shot_data['id'], result
 

@@ -1,33 +1,46 @@
-Original Title: Radhita Story
-Working Title: The Girl with the Sunshine Hair
-Core Moral: True love and bravery can set you free, and the world is full of wonderful things to discover.
-Genre: Fantasy Adventure, Musical Friendship
-Character Profiles: Radhita: Curious, kind, artistic, brave, emotionally ranges from lonely to joyful, protagonist, Eugene/Flynn: Charming, funny, kind-hearted hero, secret soft side, ally, Mother Gothel: Deceitful, selfish, appears loving but is manipulative, antagonist
+STORY IDENTITY --
+Original Title: Tangled
+Working Title: Radhita and the Floating Lights
+Core Moral: Bravery leads to discovering a wonderful world, and true love is the most powerful magic.
+Genre: Fantasy Adventure
+Character Profiles: Radhita: curious, brave, artistic, kind, lonely but hopeful, Eugene/Flynn Rider: funny, kind, adventurous, secretly caring, Mother Gothel: selfish, manipulative, controlling
 
-Primary Age: 5-9 years old
-Viewing Context: YouTube Kids autoplay, after-school viewing
-Desired Length: 4-5 minutes
-Parent/Teacher Needs: Simple vocabulary, emotional development, bravery, kindness, critical thinking about deception, safe themes
+AUDIENCE STRATEGY --
+Target Viewer-
+Primary Age: 4-8
+Viewing Context: YouTube Kids autoplay, family viewing
+Desired Length: 8-10 minutes
+Parent/Teacher Needs: Simple vocabulary, themes of bravery, kindness, emotional recognition, problem-solving, safe and positive themes
 
-Primary Keywords: princess story, kids fairy tale, magical hair, adventure for kids, bravery story
-Shareability Factors: Heartwarming friendship, beautiful lantern scene, exciting escape, e.g., strong visuals, heartwarming ending, exciting adventure moments
-Series Potential: Yes – follow the new adventures of Radhita, Eugene, and their animal friends exploring the kingdom
-Thumbnail Moment Indicators: Moment 1: Radhita's long golden hair glowing from the tower window, Moment 2: Radhita and Eugene in the boat surrounded by floating lanterns, Moment 3 optional: Radhita laughing and dancing with a frying pan
+YOUTUBE OPTIMIZATION--
+Platform Requirements-
+Primary Keywords: kids story, fairy tale for kids, bravery story, Tangled for kids, magical hair story
+Retention Strategy: High engagement throughout, Emotional shifts every 12-20 seconds, Scene change every 10-20 seconds, Visual wow moments
+Shareability Factors: Heartwarming ending, exciting adventure, beautiful visuals, magical moments
+Series Potential: Yes - Further adventures of Radhita and Eugene exploring the kingdom
+Thumbnail Moment Indicators: Moment 1: Radhita's glowing hair in the tower, Moment 2: The boat surrounded by floating lanterns, Moment 3 optional: The family hug reunion on the balcony
 
-Narrator Persona: Warm, magical storyteller, like a friendly guide to a fairy tale
-Tone Reference: optional but powerful Narration style similar to show/character, with the warmth of reference., Add here: Narration style similar to a classic Disney storyteller, with the warmth of a favorite teacher reading a bedtime story.
-Emotional Range: Whimsical & curious - Lonely & hopeful - Excited & brave - Joyful & wondrous - Tense & worried - Heartwarming & triumphant
-Pace Variations: Fast during the escape and party scene, Medium during meeting Eugene and the journey, Slow during the lantern scene and the emotional ending,
-Vocabulary Level:2nd-3rd grade U.S. reading level e.g., 2nd,4th grade U.S. reading level
-Cultural Neutrality: Yes, avoid slang, keep universal
+NARRATION SPECIFICS--
+Voice & Style-
+Narrator Persona: Warm, magical Disney-style storyteller
+Tone Reference: optional but powerful Narration style similar to classic Disney narrators, with the warmth of a favorite teacher reading a bedtime story. , Add here: 
+Emotional Range: Curious, excited, gentle, suspenseful, heartwarming
+Pace Variations: Fast during the escape and party scene, Medium during the journey and meadow scene, Slow during the lantern scene and emotional reunion,
+Vocabulary Level:2nd-3rd grade U.S. reading level
+Cultural Neutrality: Yes - avoid slang, keep universal
 Interactive Level: Medium frequency of questions, direct address
 
-Hook style: Sensory and magical question
-Engagement Points: Include 3 audience questions e.g., What would YOU do?
+STRUCTURAL REQUIREMENTS--
+Opening Hook: Must grab attention in first 10 seconds with curiosity, magic, or sensory detail.
+Example starter: Have you ever seen hair that could glow like sunshine?
+Hook style: Magical sensory question
+Scene Density: New scene every 10-20 seconds, Emotional shift every 12 seconds, No monologue longer than 8 seconds
+Engagement Points: Include 3-4 audience questions e.g., What would YOU do?
 Sensory Anchors:
-Include 1 sensory detail per major scene- Sight: Tower tickling the clouds, Sound: The special song making hair sparkle, Touch: Soft grass under feet, Light/Motion: Hundreds of lanterns rising
-Character Voice Cues: Character 1: Radhita: Gentle, melodic, curious, Character 2: Eugene: Confident, playful, warm, Character 3: Mother Gothel: Sweet-sounding but sometimes sharp
+Include 1 sensory detail per major scene- Sight: Glowing golden hair, Sound: "Flower, gleam and glow" song, Touch: Soft grass under feet, Light/Motion: Floating lanterns rising
+Character Voice Cues: Character 1: Radhita: Sweet, curious, melodic, Character 2: Eugene: Confident, playful, warm, Character 3: Mother Gothel: Sweet-sounding but sometimes sharp
+Transitions: Use smooth, childfriendly transitions such as: But little did they know, Meanwhile, As the sun began to rise
 Required transition style: Gentle, storybook-style
-Educational Elements: Identifying emotions loneliness, joy, bravery, problem-solving making a deal, escaping, critical thinking understanding deception vs. true love
-Moral Reinforcement: Moderately obvious stated clearly at the end during the resolution e.g., moderately obvious line near the end
-Optional CTA: What was your favorite part of Radhita's adventure? Tell us in the comments! e.g., Tell us which moment you loved the most! optional
+Educational Elements: Identifying emotions, problem-solving, bravery, kindness, recognizing true love vs. selfish love
+Moral Reinforcement: Moderately obvious - stated clearly at the end
+Optional CTA: Tell us which magical moment you loved the most! - optional
