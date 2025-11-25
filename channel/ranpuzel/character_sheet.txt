@@ -1,94 +1,179 @@
-Of course. I will now process the narrative and generate rigid, modular Character Design Schemas according to the specified protocol.
+Of course. I will now analyze the story and extract all active entities, converting them into rigid image-generation schemas.
 
 Target Art Style Analysis: User provided no style. Defaulting to "Cinematic Photorealistic, 85mm lens, highly detailed textures."
 
 ---
 
- CHARACTER DESIGN SCHEMAS
+ ENTITY SCHEMAS
 
- RADHITA Role: Main
+Radhita Category: Human Role: Main
 
 1. Visual Data Breakdown:
-a Explicit Traits Canon: Girl, long golden hair that shimmers and sparkles with light when she sings, initially lives in a tower, wears a dress, uses a frying pan as an instrument, hair turns brown and loses its magic when cut.
-b Inferred Traits AI Casting: Age: young adult 18-20. Ethnicity: Caucasian. Eye Color: Vibrant green. Face: Heart-shaped face, delicate features, a small, straight nose, and a dusting of freckles across her nose and cheeks. Body: Slender, graceful build. Costume: Lavender-colored dress made of layered, lightweight cotton and satin, with lace trim at the sleeves and neckline. Barefoot.
+ a Explicit Traits Canon: Girl, long golden hair that shimmers and sparkles with light when she sings, lives in a tower, uses a frying pan as an instrument, hair turns brown and loses its magic when cut, feels grass with bare feet, paints pictures.
+ b Inferred Traits AI Casting: Age: young adult 18-20. Ethnicity: Caucasian. Eye Color: Vibrant green. Face: Heart-shaped face, delicate features, a small, straight nose, and a dusting of freckles. Body: Slender, graceful build. Costume: Lavender-colored dress made of layered, lightweight cotton and satin, with lace trim at the sleeves and neckline. Barefoot.
 
 2. Master Visual Definition Subject Only:
-young adult Caucasian female, heart-shaped face, delicate features, vibrant green eyes, long flowing golden hair, slender graceful build, barefoot, wearing a layered lavender dress, cotton and satin texture, lace trim, small straight nose, light freckles
+ young adult Caucasian female, heart-shaped face, delicate features, vibrant green eyes, long flowing golden hair, slender graceful build, barefoot, wearing a layered lavender dress, cotton and satin texture, lace trim, small straight nose, light freckles
 
 3. Personality/Vibe Keywords:
-Innocent, Curious, Joyful
+ Innocent, Curious, Joyful
 
 4. Dynamic Prompt Template:
-Cinematic Photorealistic, 85mm lens, highly detailed textures :: young adult Caucasian female, heart-shaped face, delicate features, vibrant green eyes, long flowing golden hair, slender graceful build, barefoot, wearing a layered lavender dress, cotton and satin texture, lace trim, small straight nose, light freckles :: Innocent, Curious, Joyful, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
+ Cinematic Photorealistic, 85mm lens, highly detailed textures :: young adult Caucasian female, heart-shaped face, delicate features, vibrant green eyes, long flowing golden hair, slender graceful build, barefoot, wearing a layered lavender dress, cotton and satin texture, lace trim, small straight nose, light freckles :: Innocent, Curious, Joyful, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
 
 ---
 
- EUGENE FITZHERBERT FLYNN RIDER Role: Main
+Eugene Fitzherbert Flynn Rider Category: Human Role: Main
 
 1. Visual Data Breakdown:
-a Explicit Traits Canon: Young man, a thief, has a sparkly crown, climbs the tower, secret real name is Eugene, has a smolder, is a true hero.
-b Inferred Traits AI Casting: Age: young adult mid-20s. Ethnicity: Caucasian. Eye Color: Hazel brown. Face: Square jawline, strong chin, a defined aquiline nose, and a roguish smirk. Hair: Dark brown, short, tousled. Body: Athletic, lean-muscled build. Costume: Brown leather vest over a white linen poet shirt, dark tan trousers, worn leather boots. A single gold earring. Slight stubble.
+ a Explicit Traits Canon: Young man, a thief, has a sparkly crown, climbs the tower, secret real name is Eugene, has a smolder, is a true hero.
+ b Inferred Traits AI Casting: Age: young adult mid-20s. Ethnicity: Caucasian. Eye Color: Hazel brown. Face: Square jawline, strong chin, a defined aquiline nose, and a roguish smirk. Hair: Dark brown, short, tousled. Body: Athletic, lean-muscled build. Costume: Brown leather vest over a white linen poet shirt, dark tan trousers, worn leather boots. A single gold earring. Slight stubble.
 
 2. Master Visual Definition Subject Only:
-young adult Caucasian male, square jawline, strong chin, aquiline nose, hazel brown eyes, dark brown tousled hair, slight stubble, athletic lean-muscled build, wearing a brown leather vest, white linen poet shirt, dark tan trousers, worn leather boots, single gold earring
+ young adult Caucasian male, square jawline, strong chin, aquiline nose, hazel brown eyes, dark brown tousled hair, slight stubble, athletic lean-muscled build, wearing a brown leather vest, white linen poet shirt, dark tan trousers, worn leather boots, single gold earring
 
 3. Personality/Vibe Keywords:
-Roguish, Charming, Heroic
+ Roguish, Charming, Heroic
 
 4. Dynamic Prompt Template:
-Cinematic Photorealistic, 85mm lens, highly detailed textures :: young adult Caucasian male, square jawline, strong chin, aquiline nose, hazel brown eyes, dark brown tousled hair, slight stubble, athletic lean-muscled build, wearing a brown leather vest, white linen poet shirt, dark tan trousers, worn leather boots, single gold earring :: Roguish, Charming, Heroic, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
+ Cinematic Photorealistic, 85mm lens, highly detailed textures :: young adult Caucasian male, square jawline, strong chin, aquiline nose, hazel brown eyes, dark brown tousled hair, slight stubble, athletic lean-muscled build, wearing a brown leather vest, white linen poet shirt, dark tan trousers, worn leather boots, single gold earring :: Roguish, Charming, Heroic, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
 
 ---
 
- MOTHER GOTHEL Role: Supporting
+Mother Gothel Category: Human Role: Supporting
 
 1. Visual Data Breakdown:
-a Explicit Traits Canon: Woman, keeps Radhita in the tower, says the world is dangerous, tricks Radhita, villain.
-b Inferred Traits AI Casting: Age: Middle-aged to elderly 50s-60s but vainly well-preserved. Ethnicity: Caucasian. Eye Color: Dark, piercing brown. Face: Sharp, high cheekbones, a prominent nose, thin lips, and a calculating expression. Hair: Voluminous, dark curly hair streaked with silver, piled high. Body: Tall, imposing stature. Costume: Rich, dark burgundy velvet gown, high collar, intricate silver brocade patterns.
+ a Explicit Traits Canon: Woman, keeps Radhita in the tower, says the world is dangerous, tricks Radhita, villain.
+ b Inferred Traits AI Casting: Age: Middle-aged to elderly 50s-60s but vainly well-preserved. Ethnicity: Caucasian. Eye Color: Dark, piercing brown. Face: Sharp, high cheekbones, a prominent nose, thin lips, and a calculating expression. Hair: Voluminous, dark curly hair streaked with silver, piled high. Body: Tall, imposing stature. Costume: Rich, dark burgundy velvet gown, high collar, intricate silver brocade patterns.
 
 2. Master Visual Definition Subject Only:
-middle-aged Caucasian female, sharp features, high cheekbones, prominent nose, thin lips, dark piercing brown eyes, voluminous dark curly hair with silver streaks, tall imposing stature, wearing a burgundy velvet gown, high collar, silver brocade texture
+ middle-aged Caucasian female, sharp features, high cheekbones, prominent nose, thin lips, dark piercing brown eyes, voluminous dark curly hair with silver streaks, tall imposing stature, wearing a burgundy velvet gown, high collar, silver brocade texture
 
 3. Personality/Vibe Keywords:
-Manipulative, Regal, Sinister
+ Manipulative, Regal, Sinister
 
 4. Dynamic Prompt Template:
-Cinematic Photorealistic, 85mm lens, highly detailed textures :: middle-aged Caucasian female, sharp features, high cheekbones, prominent nose, thin lips, dark piercing brown eyes, voluminous dark curly hair with silver streaks, tall imposing stature, wearing a burgundy velvet gown, high collar, silver brocade texture :: Manipulative, Regal, Sinister, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
+ Cinematic Photorealistic, 85mm lens, highly detailed textures :: middle-aged Caucasian female, sharp features, high cheekbones, prominent nose, thin lips, dark piercing brown eyes, voluminous dark curly hair with silver streaks, tall imposing stature, wearing a burgundy velvet gown, high collar, silver brocade texture :: Manipulative, Regal, Sinister, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
 
 ---
 
- THE KING Role: Background
+The King Category: Human Role: Background
 
 1. Visual Data Breakdown:
-a Explicit Traits Canon: Radhita's real father, a king.
-b Inferred Traits AI Casting: Age: Middle-aged 50s. Ethnicity: Caucasian. Face: Kind eyes, strong brow, a full, well-groomed beard with hints of gray, warm smile. Hair: Thick, brown hair receding at the temples. Body: Solid, fatherly build. Costume: Formal royal attire; a deep blue tunic with a fur-lined cloak, a simple gold crown.
+ a Explicit Traits Canon: Radhita's real father, a king.
+ b Inferred Traits AI Casting: Age: Middle-aged 50s. Ethnicity: Caucasian. Face: Kind eyes, strong brow, a full, well-groomed beard with hints of gray, warm smile. Hair: Thick, brown hair receding at the temples. Body: Solid, fatherly build. Costume: Formal royal attire; a deep blue tunic with a fur-lined cloak, a simple gold crown.
 
 2. Master Visual Definition Subject Only:
-middle-aged Caucasian male, strong brow, kind eyes, full well-groomed beard with gray streaks, thick brown hair, solid fatherly build, wearing a deep blue royal tunic, fur-lined cloak, simple gold crown
+ middle-aged Caucasian male, strong brow, kind eyes, full well-groomed beard with gray streaks, thick brown hair, solid fatherly build, wearing a deep blue royal tunic, fur-lined cloak, simple gold crown
 
 3. Personality/Vibe Keywords:
-Authoritative, Paternal, Kind
+ Authoritative, Paternal, Kind
 
 4. Dynamic Prompt Template:
-Cinematic Photorealistic, 85mm lens, highly detailed textures :: middle-aged Caucasian male, strong brow, kind eyes, full well-groomed beard with gray streaks, thick brown hair, solid fatherly build, wearing a deep blue royal tunic, fur-lined cloak, simple gold crown :: Authoritative, Paternal, Kind, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
+ Cinematic Photorealistic, 85mm lens, highly detailed textures :: middle-aged Caucasian male, strong brow, kind eyes, full well-groomed beard with gray streaks, thick brown hair, solid fatherly build, wearing a deep blue royal tunic, fur-lined cloak, simple gold crown :: Authoritative, Paternal, Kind, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
 
 ---
 
- THE QUEEN Role: Background
+The Queen Category: Human Role: Background
 
 1. Visual Data Breakdown:
-a Explicit Traits Canon: Radhita's real mother, a queen.
-b Inferred Traits AI Casting: Age: Middle-aged 40s-50s. Ethnicity: Caucasian. Face: Soft, gentle features, high cheekbones, a resemblance to Radhita, soulful brown eyes. Hair: Long, golden-brown hair styled in an elegant braided crown. Body: Graceful, slender build. Costume: Elegant gown in a soft cream or silver silk, a more elaborate, delicate crown.
+ a Explicit Traits Canon: Radhita's real mother, a queen.
+ b Inferred Traits AI Casting: Age: Middle-aged 40s-50s. Ethnicity: Caucasian. Face: Soft, gentle features, high cheekbones, a resemblance to Radhita, soulful brown eyes. Hair: Long, golden-brown hair styled in an elegant braided crown. Body: Graceful, slender build. Costume: Elegant gown in a soft cream or silver silk, a more elaborate, delicate crown.
 
 2. Master Visual Definition Subject Only:
-middle-aged Caucasian female, soft gentle features, high cheekbones, soulful brown eyes, long golden-brown hair in braided crown, graceful slender build, wearing an elegant cream silk gown, delicate silver crown
+ middle-aged Caucasian female, soft gentle features, high cheekbones, soulful brown eyes, long golden-brown hair in braided crown, graceful slender build, wearing an elegant cream silk gown, delicate silver crown
 
 3. Personality/Vibe Keywords:
-Elegant, Sorrowful, Loving
+ Elegant, Sorrowful, Loving
 
 4. Dynamic Prompt Template:
-Cinematic Photorealistic, 85mm lens, highly detailed textures :: middle-aged Caucasian female, soft gentle features, high cheekbones, soulful brown eyes, long golden-brown hair in braided crown, graceful slender build, wearing an elegant cream silk gown, delicate silver crown :: Elegant, Sorrowful, Loving, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
+ Cinematic Photorealistic, 85mm lens, highly detailed textures :: middle-aged Caucasian female, soft gentle features, high cheekbones, soulful brown eyes, long golden-brown hair in braided crown, graceful slender build, wearing an elegant cream silk gown, delicate silver crown :: Elegant, Sorrowful, Loving, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
 
 ---
 
-I have defined the visual assets. Please check the 'Inferred Traits' for accuracy. If satisfied, provide a SCENE description e.g., 'fighting in the rain', and I will assemble the final prompts.
+Tiny Color-Changing Chameleon Category: Creature Role: Background
+
+1. Visual Data Breakdown:
+ a Explicit Traits Canon: Tiny, color-changing chameleon, friend to Radhita.
+ b Inferred Traits AI Casting: Species: Veiled Chameleon. Anatomy: Curled prehensile tail, independently rotating eyes, zygodactylous feet. Skin Texture: Granular, textured skin capable of vibrant color shifts greens, blues, yellows. Markings: Subtle striping patterns along its body.
+
+2. Master Visual Definition Subject Only:
+ tiny veiled chameleon, curled prehensile tail, independently rotating eyes, zygodactylous feet, granular textured skin, vibrant color-shifting skin, subtle striping patterns
+
+3. Personality/Vibe Keywords:
+ Observant, Camouflaged, Loyal
+
+4. Dynamic Prompt Template:
+ Cinematic Photorealistic, 85mm lens, highly detailed textures :: tiny veiled chameleon, curled prehensile tail, independently rotating eyes, zygodactylous feet, granular textured skin, vibrant color-shifting skin, subtle striping patterns :: Observant, Camouflaged, Loyal, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
+
+---
+
+Brave Loyal Horse Category: Creature Role: Background
+
+1. Visual Data Breakdown:
+ a Explicit Traits Canon: Brave, loyal horse, friend to Radhita.
+ b Inferred Traits AI Casting: Species: Andalusian horse. Anatomy: Powerful build, arched neck, thick flowing mane and tail. Skin/Fur Texture: Short, sleek grey or white coat. Markings: Intelligent, dark eyes, a strong and noble profile.
+
+2. Master Visual Definition Subject Only:
+ Andalusian horse, powerful build, arched neck, thick flowing mane and tail, sleek grey coat, intelligent dark eyes, strong noble profile
+
+3. Personality/Vibe Keywords:
+ Noble, Steadfast, Powerful
+
+4. Dynamic Prompt Template:
+ Cinematic Photorealistic, 85mm lens, highly detailed textures :: Andalusian horse, powerful build, arched neck, thick flowing mane and tail, sleek grey coat, intelligent dark eyes, strong noble profile :: Noble, Steadfast, Powerful, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
+
+---
+
+Sparkly Crown Category: Sentient Object Role: Background
+
+1. Visual Data Breakdown:
+ a Explicit Traits Canon: Sparkly crown, owned by Flynn Rider.
+ b Inferred Traits AI Casting: Material: Polished gold and silver. Shape: Elaborate, with multiple points and intricate filigree. Surface Detail: Inlaid with numerous clear, faceted crystals and diamonds that catch the light. Magical Effects: No inherent magic, but highly reflective and brilliant.
+
+2. Master Visual Definition Subject Only:
+ royal crown, polished gold and silver, elaborate multi-pointed shape, intricate metal filigree, inlaid with faceted clear crystals and diamonds, highly reflective surface
+
+3. Personality/Vibe Keywords:
+ Opulent, Desirable, Iconic
+
+4. Dynamic Prompt Template:
+ Cinematic Photorealistic, 85mm lens, highly detailed textures :: royal crown, polished gold and silver, elaborate multi-pointed shape, intricate metal filigree, inlaid with faceted clear crystals and diamonds, highly reflective surface :: Opulent, Desirable, Iconic, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
+
+---
+
+Frying Pan Category: Sentient Object Role: Background
+
+1. Visual Data Breakdown:
+ a Explicit Traits Canon: Used by Radhita as a musical instrument/drum.
+ b Inferred Traits AI Casting: Material: Cast iron. Shape: Classic round frying pan with a long handle. Surface Detail: Well-used, with a patina of cooking oil and minor scratches, but not rusty. The base is smooth from use. Magical Effects: None, a simple, sturdy object.
+
+2. Master Visual Definition Subject Only:
+ cast iron frying pan, classic round shape, long handle, well-used surface, patina of cooking oil, minor scratches, smooth base
+
+3. Personality/Vibe Keywords:
+ Utilitarian, Trusty, Unassuming
+
+4. Dynamic Prompt Template:
+ Cinematic Photorealistic, 85mm lens, highly detailed textures :: cast iron frying pan, classic round shape, long handle, well-used surface, patina of cooking oil, minor scratches, smooth base :: Utilitarian, Trusty, Unassuming, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
+
+---
+
+Hundreds of Golden Lanterns Category: Group Role: Background
+
+1. Visual Data Breakdown:
+ a Explicit Traits Canon: Hundreds of golden lanterns, floating into the sky.
+ b Inferred Traits AI Casting: Uniformity: Simple paper lanterns with candle light sources. Number: Hundreds, forming a large, dense cloud. Collective Mood: Ethereal, celebratory, hopeful.
+
+2. Master Visual Definition Subject Only:
+ A dense cloud of hundreds of simple paper lanterns, golden candlelight glowing through paper, floating in a collective mass
+
+3. Personality/Vibe Keywords:
+ Ethereal, Hopeful, Celebratory
+
+4. Dynamic Prompt Template:
+ Cinematic Photorealistic, 85mm lens, highly detailed textures :: A dense cloud of hundreds of simple paper lanterns, golden candlelight glowing through paper, floating in a collective mass :: Ethereal, Hopeful, Celebratory, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
+
+---
+
+I have extracted the visual assets for all entities. Please check the 'Inferred Traits' for accuracy. If satisfied, provide a SCENE description, and I will assemble the final prompts.
