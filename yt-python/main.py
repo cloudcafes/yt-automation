@@ -4,83 +4,48 @@ import httpx
 from openai import OpenAI
 import datetime
 from pathlib import Path
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Any
 import logging
 import time
 import chardet
 import re
+import json
+import argparse
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # ===== CONFIGURATION VARIABLES =====
 BASE_PROJECT = "yt-automation"
 CHANNEL_FOLDER = "channel"
 STORY_FOLDER = "ranpuzel"
 
-# Step control - enable/disable each step independently
-RUN_STEP1_NARRATION = False  # Already completed
-RUN_STEP2_NARRATION = False  # Already completed  
-RUN_STEP3_NARRATION = False  # Already completed
-RUN_STEP4_NARRATION = False  # Already completed
-RUN_STEP5_NARRATION = True   # Current step - Image prompts
-
 DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY', 'sk-df60b28326444de6859976f6e603fd9c')
 DEEPSEEK_MODEL = "deepseek-chat"
 DEEPSEEK_MAX_TOKENS = 4000
 DEEPSEEK_TEMPERATURE = 0.7
 
-# Step-specific prompt files
-STEP1_PROMPT = "step-1_narration_framework_prompt.txt"
-STEP2_PROMPT = "step-2_narration_prompt.txt"
-STEP3_PROMPT = "step-3_charactersheet_prompt.txt"
-STEP4_PROMPT = "step-4_scene_prompt.txt"
-STEP5_PROMPT = "step-5_image_prompt.txt"  # Current step
-
-HISTORY_FILE = "ai_history.txt"
-
-# Step configuration with proper input/output mapping
-STEP_CONFIG = {
-    1: {
-        'enabled': RUN_STEP1_NARRATION,
-        'prompt_file': 'step1_prompt_file',
-        'input_files': ['story_file'],  # Requires story.txt
-        'output_file': 'step1_output_file',  # Creates narration_framework.txt
-        'description': 'Narration Framework'
-    },
-    2: {
-        'enabled': RUN_STEP2_NARRATION,
-        'prompt_file': 'step2_prompt_file',
-        'input_files': ['story_file', 'narration_framework_file'],  # Requires story.txt + Step 1 output
-        'output_file': 'step2_output_file',  # Creates narration.txt
-        'description': 'Final Narration'
-    },
-    3: {
-        'enabled': RUN_STEP3_NARRATION,
-        'prompt_file': 'step3_prompt_file',
-        'input_files': ['step2_output_file'],  # Requires narration.txt (Step 2 output)
-        'output_file': 'step3_output_file',  # Creates character_sheet.txt
-        'description': 'Character Sheet'
-    },
-    4: {
-        'enabled': RUN_STEP4_NARRATION,
-        'prompt_file': 'step4_prompt_file',
-        'input_files': ['step2_output_file'],  # Requires narration.txt (Step 2 output)
-        'output_file': 'step4_output_file',  # Creates scenes.txt
-        'description': 'Scene Breakdown'
-    },
-    5: {
-        'enabled': RUN_STEP5_NARRATION,
-        'prompt_file': 'step5_prompt_file',
-        'input_files': ['step4_output_file'],  # Requires scenes.txt (Step 4 output)
-        'output_file': 'step5_output_file',  # Creates image_prompt.txt
-        'description': 'Image Prompts',
-        'processing_mode': 'scene_by_scene'  # Special processing mode
-    }
+# Prompt files
+STEP_FILES = {
+    1: {"prompt": "step-1_narration_framework_prompt.txt", "output": "narration_framework.txt", "desc": "Narration Framework"},
+    2: {"prompt": "step-2_narration_prompt.txt", "output": "narration.txt", "desc": "Final Narration"},
+    3: {"prompt": "step-3_charactersheet_prompt.txt", "output": "character_sheet.txt", "desc": "Character Sheet"},
+    4: {"prompt": "step-4_scene_prompt.txt", "output": "scenes.txt", "desc": "Scene Breakdown"},
+    5: {"prompt": "step-5_image_prompt.txt", "output": "image_prompt.txt", "desc": "Image Prompts"}
 }
+
+HISTORY_FILE = "ai_history.json"  # Changed to JSON
+
+# ===== LOGGING SETUP =====
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+logger = logging.getLogger(__name__)
 
 # ===== TEXT CLEANING =====
 def clean_text_preserve_punctuation(text: str) -> str:
-    """Clean text while preserving essential punctuation for narration"""
-    if not text:
-        return text
+    if not text: return text
     text = re.sub(r'[*#`~^_\\|@\[\]{}()<>]', '', text)
     text = re.sub(r' +', ' ', text)
     text = re.sub(r'\n\s*\n', '\n\n', text)
@@ -88,72 +53,26 @@ def clean_text_preserve_punctuation(text: str) -> str:
 
 # ===== PATH HANDLING =====
 def build_paths(base_project: str, channel_folder: str, story_folder: str) -> Dict[str, Path]:
-    """Build cross-platform paths with dependency awareness"""
     script_dir = Path(__file__).parent
-    
-    # Find project root (handles both yt-python and direct execution)
-    if script_dir.name == "yt-python":
-        project_root = script_dir.parent
-    else:
-        project_root = Path.cwd()
+    project_root = script_dir.parent if script_dir.name == "yt-python" else Path.cwd()
     
     channel_dir = project_root / channel_folder
     story_dir = channel_dir / story_folder
     
-    return {
+    paths = {
         'project_root': project_root,
         'channel_dir': channel_dir,
         'story_dir': story_dir,
-        
-        # Source files (independent)
         'story_file': story_dir / "story.txt",
-        
-        # Intermediate files (dependencies)
-        'narration_framework_file': story_dir / "narration_framework.txt",  # Step 1 output
-        
-        # Prompt files
-        'step1_prompt_file': channel_dir / STEP1_PROMPT,
-        'step2_prompt_file': channel_dir / STEP2_PROMPT,
-        'step3_prompt_file': channel_dir / STEP3_PROMPT,
-        'step4_prompt_file': channel_dir / STEP4_PROMPT,
-        'step5_prompt_file': channel_dir / STEP5_PROMPT,  # Current step
-        
-        # Output files
-        'step1_output_file': story_dir / "narration_framework.txt",
-        'step2_output_file': story_dir / "narration.txt",
-        'step3_output_file': story_dir / "character_sheet.txt",
-        'step4_output_file': story_dir / "scenes.txt",
-        'step5_output_file': story_dir / "image_prompt.txt",  # Current step output
-        
-        # History
         'history_file': channel_dir / HISTORY_FILE
     }
-
-# ===== ENCODING DETECTION =====
-def detect_encoding(file_path: Path) -> str:
-    """Detect file encoding automatically"""
-    try:
-        with open(file_path, 'rb') as f:
-            raw_data = f.read()
-            result = chardet.detect(raw_data)
-            encoding = result['encoding'] or 'utf-8'
-            if result['confidence'] < 0.7:
-                if any(char in raw_data for char in [b'\x96', b'\x97', b'\x91', b'\x92']):
-                    encoding = 'windows-1252'
-            return encoding
-    except Exception:
-        return 'utf-8'
-
-# ===== LOGGING SETUP =====
-def setup_logging():
-    logging.basicConfig(
-        level=logging.INFO, 
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S'
-    )
-
-setup_logging()
-logger = logging.getLogger(__name__)
+    
+    # Add step-specific paths
+    for step, data in STEP_FILES.items():
+        paths[f'step{step}_prompt'] = channel_dir / data['prompt']
+        paths[f'step{step}_output'] = story_dir / data['output']
+        
+    return paths
 
 # ===== DEEPSEEK CLIENT =====
 class DeepSeekNarrator:
@@ -162,513 +81,271 @@ class DeepSeekNarrator:
         self.history_file = history_file
         self.client = None
         self.is_available = False
+        self.lock = threading.Lock()  # For thread-safe file writing
         self._initialize_client()
+        self._migrate_legacy_history()
 
     def _initialize_client(self):
-        """Initialize DeepSeek API client with SSL disabled"""
         try:
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
             http_client = httpx.Client(verify=False, timeout=60.0)
-            
             self.client = OpenAI(
-                api_key=self.api_key,
-                base_url="https://api.deepseek.com",
-                http_client=http_client,
+                api_key=self.api_key, 
+                base_url="https://api.deepseek.com", 
+                http_client=http_client, 
                 max_retries=2
             )
-            
-            # Test connection
-            self.client.chat.completions.create(
-                model=DEEPSEEK_MODEL,
-                messages=[{"role": "user", "content": "Test"}],
-                max_tokens=5
-            )
-            
-            logger.info("✅ DeepSeek AI client initialized (SSL disabled)")
+            # Simple connection test
+            self.client.models.list()
+            logger.info("✅ DeepSeek AI client initialized")
             self.is_available = True
-            
         except Exception as e:
             logger.error(f"❌ DeepSeek client failed: {e}")
-            self.client = None
             self.is_available = False
 
-    def _log_interaction(self, prompt: str, story_content: str, narration: str = None):
-        """Log COMPLETE interaction to history file (APPEND only)"""
-        try:
-            self.history_file.parent.mkdir(parents=True, exist_ok=True)
-            
-            with open(self.history_file, "a", encoding="utf-8") as f:
-                f.write(f"\n{'='*80}\n")
-                f.write(f"TIMESTAMP: {datetime.datetime.now().isoformat()}\n")
-                f.write(f"STORY_FOLDER: {STORY_FOLDER}\n")
-                f.write(f"PROMPT:\n{prompt}\n")
-                f.write(f"STORY_CONTENT:\n{story_content}\n")
-                if narration:
-                    f.write(f"LLM_RESPONSE:\n{narration}\n")
-                else:
-                    f.write(f"LLM_RESPONSE: PENDING...\n")
-                f.write(f"{'='*80}\n")
-                
-            logger.debug("Interaction logged to history file")
-            
-        except Exception as e:
-            logger.error(f"⚠️ Failed to log interaction: {e}")
+    def _migrate_legacy_history(self):
+        """Handle migration from old .txt history to .json"""
+        txt_path = self.history_file.with_suffix('.txt')
+        if txt_path.exists() and not self.history_file.exists():
+            logger.warning("Found legacy history file. Archiving as .old and starting fresh JSON history.")
+            txt_path.rename(txt_path.with_suffix('.txt.old'))
 
-    def _update_pending_response(self, narration: str):
-        """Update only the PENDING response in the history file without overwriting"""
+    def _load_history(self) -> List[Dict]:
+        if not self.history_file.exists():
+            return []
         try:
-            if not self.history_file.exists():
-                return
-            
-            # Read entire file
             with open(self.history_file, 'r', encoding='utf-8') as f:
-                content = f.read()
-            
-            # Find the last "PENDING..." and replace only that part
-            if "LLM_RESPONSE: PENDING..." in content:
-                # Split by the separator to find entries
-                separator = '=' * 80
-                entries = content.split(separator)
-                
-                if len(entries) >= 2:
-                    # Find the index of the last entry with PENDING
-                    pending_index = -1
-                    for i in range(len(entries)-1, -1, -1):
-                        if "LLM_RESPONSE: PENDING..." in entries[i]:
-                            pending_index = i
-                            break
-                    
-                    if pending_index != -1:
-                        # Replace PENDING with actual response in this entry
-                        updated_entry = entries[pending_index].replace(
-                            "LLM_RESPONSE: PENDING...", 
-                            f"LLM_RESPONSE:\n{narration}"
-                        )
-                        
-                        # Rebuild content with updated entry
-                        entries[pending_index] = updated_entry
-                        updated_content = separator.join(entries)
-                        
-                        # Write back updated content
-                        with open(self.history_file, 'w', encoding='utf-8') as f:
-                            f.write(updated_content)
-                        
-                        logger.debug("✅ Updated pending response in history file")
-                        return
-            
-            logger.warning("No pending response found to update")
-                
-        except Exception as e:
-            logger.error(f"⚠️ Failed to update pending response: {e}")
+                return json.load(f)
+        except (json.JSONDecodeError, IOError):
+            logger.error("⚠️ History file corrupted, starting fresh.")
+            return []
 
-    def _get_conversation_history_for_llm(self) -> str:
-        """Get conversation history for LLM context"""
-        try:
-            if not self.history_file.exists():
-                return "No previous conversation history available."
+    def _save_interaction(self, prompt: str, story: str, response: str):
+        """Thread-safe JSON append"""
+        entry = {
+            "timestamp": datetime.datetime.now().isoformat(),
+            "folder": STORY_FOLDER,
+            "prompt": prompt,
+            "story_snippet": story[:200] + "..." if len(story) > 200 else story,
+            "response": response
+        }
+        with self.lock:
+            history = self._load_history()
+            history.append(entry)
+            # Keep file size manageable (last 50 entries)
+            if len(history) > 50:
+                history = history[-50:]
             
-            with open(self.history_file, 'r', encoding='utf-8') as f:
-                history_content = f.read()
-            
-            # Return recent history (excluding current pending request)
-            entries = history_content.split('=' * 80)
-            # Get entries that have complete responses (no PENDING)
-            complete_entries = [entry for entry in entries if "LLM_RESPONSE:" in entry and "PENDING..." not in entry]
-            recent_complete = complete_entries[-3:]  # Last 3 complete interactions
-            
-            return "\n".join(recent_complete) if recent_complete else "No complete conversation history available."
-            
-        except Exception as e:
-            logger.error(f"⚠️ Failed to read conversation history: {e}")
-            return "Error reading conversation history."
+            with open(self.history_file, 'w', encoding='utf-8') as f:
+                json.dump(history, f, indent=2, ensure_ascii=False)
 
-    def generate_narration(self, prompt: str, story_content: str) -> Optional[str]:
-        """Generate narration for the provided story"""
-        if not self.is_available:
-            logger.error("DeepSeek client not available")
-            return None
+    def generate_narration(self, prompt: str, story_content: str, use_history: bool = True) -> Optional[str]:
+        if not self.is_available: return None
 
         try:
-            # 1. Log FULL interaction with PENDING response (APPENDS)
-            self._log_interaction(prompt, story_content)
-            logger.info("Full prompt and story logged to history (appended)")
-
-            # 2. Get conversation history
-            conversation_history = self._get_conversation_history_for_llm()
-            logger.info(f"Loaded conversation history ({len(conversation_history)} chars)")
-
-            # 3. Build messages with history as clearly marked "attachment"
             messages = []
             
-            # Build the complete message with history clearly marked as attachment
-            user_content = f"""
+            # Inject history only if requested (Optimizes tokens for Step 5)
+            if use_history:
+                history_data = self._load_history()
+                # Get last 3 relevant exchanges
+                context_str = "\n".join([
+                    f"User: {h['prompt']}\nAI: {h['response']}" 
+                    for h in history_data[-3:]
+                ])
+                if context_str:
+                    messages.append({"role": "system", "content": f"Previous Context:\n{context_str}"})
 
-{prompt}
-
-=== CURRENT STORY: ===
-{story_content}
-
-=== AI LLM CONVERSATION HISTORY ===
-{conversation_history}
-
-"""
-
+            user_content = f"{prompt}\n\n=== STORY DATA ===\n{story_content}"
             messages.append({"role": "user", "content": user_content})
 
-            logger.info("Sending request to DeepSeek AI with history as attachment...")
-            
-            # 4. Call API
             response = self.client.chat.completions.create(
                 model=DEEPSEEK_MODEL,
                 messages=messages,
                 max_tokens=DEEPSEEK_MAX_TOKENS,
-                temperature=DEEPSEEK_TEMPERATURE,
-                stream=False
+                temperature=DEEPSEEK_TEMPERATURE
             )
             
-            narration = response.choices[0].message.content.strip()
+            narration = clean_text_preserve_punctuation(response.choices[0].message.content.strip())
             
-            # 5. Clean the narration
-            cleaned_narration = clean_text_preserve_punctuation(narration)
-            logger.info(f"Cleaned {len(narration) - len(cleaned_narration)} special chars")
-
-            # 6. Update the PENDING response with actual response
-            self._update_pending_response(cleaned_narration)
-            logger.info("LLM response updated in history file")
+            # Log successful interaction
+            self._save_interaction(prompt, story_content, narration)
             
-            logger.info(f"✅ Successfully generated narration ({len(cleaned_narration)} chars)")
-            return cleaned_narration
+            return narration
             
         except Exception as e:
-            logger.error(f"❌ Failed to generate narration: {e}")
+            logger.error(f"❌ Generation failed: {e}")
             return None
 
 # ===== FILE OPERATIONS =====
-def read_file(file_path: Path) -> Optional[str]:
-    """Read file content with encoding detection"""
+def read_file(path: Path) -> Optional[str]:
+    if not path.exists(): return None
     try:
-        if not file_path.exists():
-            raise FileNotFoundError(f"File not found: {file_path}")
-            
-        encoding = detect_encoding(file_path)
-        with open(file_path, 'r', encoding=encoding) as f:
-            content = f.read().strip()
-            
-        logger.info(f"Read {len(content)} chars from {file_path.name}")
-        return content
-        
+        # Try simple utf-8 first
+        with open(path, 'r', encoding='utf-8') as f: return f.read().strip()
     except UnicodeDecodeError:
-        fallback_encodings = ['windows-1252', 'latin-1', 'cp1252', 'iso-8859-1']
-        for encoding in fallback_encodings:
-            try:
-                with open(file_path, 'r', encoding=encoding) as f:
-                    content = f.read().strip()
-                    logger.info(f"Read {len(content)} chars from {file_path.name} (encoding: {encoding})")
-                    return content
-            except UnicodeDecodeError:
-                continue
-        logger.error(f"❌ All encoding attempts failed for {file_path}")
-        return None
-    except Exception as e:
-        logger.error(f"❌ Error reading {file_path}: {e}")
-        return None
+        # Fallback using chardet
+        try:
+            raw = path.read_bytes()
+            enc = chardet.detect(raw)['encoding'] or 'utf-8'
+            return raw.decode(enc).strip()
+        except Exception:
+            return None
 
-def write_file(file_path: Path, content: str) -> bool:
-    """Write content to file (overwrite or create)"""
+def write_file(path: Path, content: str) -> bool:
     try:
-        file_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(file_path, 'w', encoding='utf-8') as f:
-            f.write(content)
-        logger.info(f"Wrote {len(content)} chars to {file_path.name}")
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, 'w', encoding='utf-8') as f: f.write(content)
         return True
     except Exception as e:
-        logger.error(f"❌ Error writing to {file_path}: {e}")
+        logger.error(f"❌ Write error {path.name}: {e}")
         return False
 
-# ===== SCENE PROCESSING FUNCTIONS =====
-def parse_scenes_from_file(scenes_content: str) -> List[Dict[str, str]]:
-    """Parse scenes.txt and extract individual scenes with robust pattern matching"""
+# ===== STEP LOGIC =====
+def parse_scenes(content: str) -> List[Dict]:
     scenes = []
-    
-    if not scenes_content:
-        return scenes
-    
-    # Multiple patterns to catch different scene formats
+    # Robust patterns for scene headers
     patterns = [
-        r'(SCENE\s+\d+.*?)(?=SCENE\s+\d+|$)',  # SCENE 1, SCENE 2, etc.
-        r'(Scene\s+\d+.*?)(?=Scene\s+\d+|$)',  # Scene 1, Scene 2, etc.
-        r'(## Scene \d+.*?)(?=## Scene \d+|$)', # Markdown style
-        r'(Scene\s+\d+.*?)(?=\n\s*\n|$)'        # Scene followed by blank lines
+        r'(SCENE\s+\d+.*?)(?=SCENE\s+\d+|$)',
+        r'(Scene\s+\d+.*?)(?=Scene\s+\d+|$)',
+        r'(##\s*Scene\s+\d+.*?)(?=##\s*Scene\s+\d+|$)'
     ]
     
     for pattern in patterns:
-        matches = re.finditer(pattern, scenes_content, re.DOTALL | re.IGNORECASE)
-        scenes_found = False
-        
-        for match in matches:
-            scene_text = match.group(1).strip()
-            # Minimum scene length check to avoid false positives
-            if scene_text and len(scene_text) > 20:
-                # Extract header (first line) and content
-                lines = scene_text.split('\n')
-                header = lines[0].strip() if lines else "Unknown Scene"
-                content = '\n'.join(lines[1:]).strip() if len(lines) > 1 else scene_text
-                
+        matches = list(re.finditer(pattern, content, re.DOTALL | re.IGNORECASE))
+        if matches:
+            for match in matches:
+                full_text = match.group(1).strip()
+                lines = full_text.split('\n')
                 scenes.append({
-                    'header': header,
-                    'content': content,
-                    'full_text': scene_text
+                    'header': lines[0].strip(),
+                    'full_text': full_text
                 })
-                scenes_found = True
-        
-        # If we found scenes with this pattern, use them
-        if scenes_found:
-            logger.info(f"Found {len(scenes)} scenes using pattern: {pattern}")
-            break
-    
-    # If no scenes found with patterns, try to split by major separators
-    if not scenes and len(scenes_content) > 50:
-        logger.warning("No scenes found with patterns, attempting fallback parsing")
-        # Fallback: split by double newlines and look for scene indicators
-        sections = re.split(r'\n\s*\n', scenes_content)
-        scene_count = 0
-        for section in sections:
-            section = section.strip()
-            if section and len(section) > 20:
-                scene_count += 1
-                scenes.append({
-                    'header': f"SCENE {scene_count}",
-                    'content': section,
-                    'full_text': section
-                })
-    
+            return scenes
+
+    # Fallback: Double newline split if no headers found
+    if not scenes and content:
+        parts = re.split(r'\n\s*\n', content)
+        scenes = [{'header': f"Scene {i+1}", 'full_text': p.strip()} 
+                 for i, p in enumerate(parts) if len(p) > 20]
     return scenes
 
-# ===== STEP PROCESSING ENGINE =====
-def validate_step_paths(step_num: int, paths: Dict[str, Path]) -> bool:
-    """Validate all files required for a step exist"""
-    config = STEP_CONFIG[step_num]
-    required_files = {
-        f'Step {step_num} Prompt': paths[config['prompt_file']]
-    }
+def process_step_5_parallel(paths: Dict[str, Path]) -> bool:
+    """Optimized parallel processing for image prompts"""
+    narrator = DeepSeekNarrator(DEEPSEEK_API_KEY, paths['history_file'])
+    if not narrator.is_available: return False
     
-    # Add input files
-    for i, input_key in enumerate(config['input_files']):
-        required_files[f'Step {step_num} Input {i+1}'] = paths[input_key]
+    prompt_template = read_file(paths['step5_prompt'])
+    scenes_content = read_file(paths['step4_output'])
     
-    all_valid = True
-    for file_desc, file_path in required_files.items():
-        if not file_path.exists():
-            logger.error(f"❌ {file_desc} missing: {file_path.name}")
-            all_valid = False
-        else:
-            logger.info(f"✅ {file_desc}: {file_path.name}")
-    
-    return all_valid
-
-def validate_step_dependencies(step_num: int, paths: Dict[str, Path]) -> bool:
-    """Validate that all required dependencies for a step are available"""
-    config = STEP_CONFIG[step_num]
-    
-    # Check if this step depends on previous steps
-    dependency_steps = []
-    for input_key in config['input_files']:
-        if input_key.startswith('step') and 'output' in input_key:
-            # Extract step number from key like 'step2_output_file'
-            dep_step = int(''.join(filter(str.isdigit, input_key)))
-            if dep_step < step_num:
-                dependency_steps.append(dep_step)
-    
-    # Verify all dependency steps were completed (their output files exist)
-    for dep_step in dependency_steps:
-        dep_config = STEP_CONFIG[dep_step]
-        dep_output_file = paths[dep_config['output_file']]
-        if not dep_output_file.exists():
-            logger.error(f"❌ Step {step_num} requires Step {dep_step} output: {dep_output_file.name}")
-            logger.error(f"   Please run Step {dep_step} first or ensure the file exists")
-            return False
-        else:
-            logger.info(f"✅ Step {dep_step} dependency verified: {dep_output_file.name}")
-    
-    return True
-
-def build_step_content(step_num: int, prompt: str, inputs: List[str]) -> str:
-    """Build combined content for specific step requirements"""
-    if step_num == 1:
-        # Step 1: prompt + story
-        return f"{prompt}\n\n{inputs[0]}"
-    
-    elif step_num == 2:
-        # Step 2: prompt + story + framework
-        return f"{prompt}\n\n=== CURRENT STORY: ===\n{inputs[0]}\n\n=== NARRATION FRAMEWORK: ===\n{inputs[1]}"
-    
-    elif step_num == 3:
-        # Step 3: prompt + narration (Step 2 output)
-        return f"{prompt}\n\n{inputs[0]}"
-    
-    elif step_num == 4:
-        # Step 4: prompt + narration (Step 2 output)  
-        return f"{prompt}\n\n{inputs[0]}"
-    
-    elif step_num == 5:
-        # Step 5: prompt + scenes content (will be handled separately in scene processing)
-        return f"{prompt}\n\n{inputs[0]}"
-    
-    else:
-        # Default fallback
-        return f"{prompt}\n\n{inputs[0] if inputs else ''}"
-
-def process_step5_scene_by_scene(paths: Dict[str, Path]) -> bool:
-    """Process Step 5 by generating image prompts for each scene individually"""
-    
-    # 1. Read required files
-    step5_prompt = read_file(paths['step5_prompt_file'])
-    scenes_content = read_file(paths['step4_output_file'])  # scenes.txt
-    
-    if not all([step5_prompt, scenes_content]):
-        logger.error("❌ Missing required files for Step 5")
+    if not prompt_template or not scenes_content:
+        logger.error("❌ Missing inputs for Step 5")
         return False
-
-    # 2. Parse scenes from scenes.txt
-    scenes = parse_scenes_from_file(scenes_content)
+        
+    scenes = parse_scenes(scenes_content)
     if not scenes:
-        logger.error("❌ No scenes found in scenes.txt")
+        logger.error("❌ No scenes found to process")
         return False
+        
+    logger.info(f"🚀 Starting parallel generation for {len(scenes)} scenes...")
     
-    logger.info(f"️ Found {len(scenes)} scenes to process")
+    results = {}
     
-    # 3. Initialize narrator
+    def process_single_scene(scene):
+        """Worker function for threads"""
+        scene_input = f"{prompt_template}\n\n{scene['full_text']}"
+        # Critical: use_history=False saves tokens and context for purely visual tasks
+        result = narrator.generate_narration(prompt_template, scene_input, use_history=False)
+        return scene['header'], result
+
+    # Execute in parallel
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        future_to_scene = {executor.submit(process_single_scene, s): s for s in scenes}
+        
+        for future in as_completed(future_to_scene):
+            header, output = future.result()
+            if output:
+                results[header] = output
+                logger.info(f"✅ Finished {header}")
+            else:
+                results[header] = "[Generation Failed]"
+                logger.error(f"❌ Failed {header}")
+
+    # Reconstruct in original order
+    final_output = "IMAGE PROMPTS:\n\n"
+    for scene in scenes:
+        header = scene['header']
+        final_output += f"=== {header} ===\n{results.get(header, '')}\n\n"
+        
+    return write_file(paths['step5_output'], final_output)
+
+def run_standard_step(step_num: int, paths: Dict[str, Path]) -> bool:
     narrator = DeepSeekNarrator(DEEPSEEK_API_KEY, paths['history_file'])
-    if not narrator.is_available:
-        logger.error("❌ DeepSeek client unavailable")
+    if not narrator.is_available: return False
+
+    config = STEP_FILES[step_num]
+    prompt = read_file(paths[f'step{step_num}_prompt'])
+    
+    # Gather inputs based on step logic
+    inputs = ""
+    if step_num == 1:
+        inputs = read_file(paths['story_file'])
+    elif step_num == 2:
+        story = read_file(paths['story_file'])
+        framework = read_file(paths['step1_output'])
+        if not framework: return False
+        inputs = f"STORY:\n{story}\n\nFRAMEWORK:\n{framework}"
+    elif step_num in [3, 4]:
+        inputs = read_file(paths['step2_output']) # Needs narration
+        
+    if not prompt or not inputs:
+        logger.error(f"❌ Missing inputs for Step {step_num}")
         return False
 
-    # 4. Process each scene individually
-    all_image_prompts = []
-    successful_scenes = 0
-    
-    for i, scene in enumerate(scenes, 1):
-        logger.info(f" Processing {scene['header']} ({i}/{len(scenes)})")
-        
-        # Build scene-specific content
-        scene_content = f"""
-{step5_prompt}
-
-{scene['full_text']}
-"""
-        
-        # Generate image prompt for this scene
-        image_prompt = narrator.generate_narration(step5_prompt, scene_content)
-        
-        if image_prompt:
-            # Add scene identifier to the prompt
-            scene_prompt = f"=== {scene['header']} ===\n{image_prompt}\n\n"
-            all_image_prompts.append(scene_prompt)
-            successful_scenes += 1
-            logger.info(f"✅ Generated image prompt for {scene['header']}")
-        else:
-            logger.error(f"❌ Failed to generate image prompt for {scene['header']}")
-            # Continue with other scenes even if one fails
-            all_image_prompts.append(f"=== {scene['header']} ===\n[Failed to generate image prompt]\n\n")
-
-        # Add delay between API calls to avoid rate limiting (except for the last scene)
-        if i < len(scenes):
-            logger.info("⏳ Waiting 2 seconds before next scene...")
-            time.sleep(2)
-
-    # 5. Combine all scene prompts and write to file
-    if all_image_prompts:
-        final_output = "IMAGE PROMPTS BY SCENE:\n\n" + "".join(all_image_prompts)
-        success = write_file(paths['step5_output_file'], final_output)
-        if success:
-            logger.info(f"✅ All image prompts saved to {paths['step5_output_file'].name}")
-            logger.info(f" Successfully processed {successful_scenes}/{len(scenes)} scenes")
-            return True
-    
-    return False
-
-def process_step(step_num: int, paths: Dict[str, Path]) -> bool:
-    """Process a single step with dependency validation"""
-    config = STEP_CONFIG[step_num]
-    
-    logger.info(f"PROCESSING STEP {step_num}: {config['description']}")
-    logger.info("=" * 60)
-    
-    # Special handling for Step 5 (scene-by-scene processing)
-    if step_num == 5 and config.get('processing_mode') == 'scene_by_scene':
-        return process_step5_scene_by_scene(paths)
-    
-    # 1. Validate dependencies
-    if not validate_step_dependencies(step_num, paths):
-        return False
-    
-    # 2. Validate required files exist
-    if not validate_step_paths(step_num, paths):
-        return False
-        
-    # 3. Read all required content
-    prompt_content = read_file(paths[config['prompt_file']])
-    input_contents = []
-    for input_key in config['input_files']:
-        content = read_file(paths[input_key])
-        if content is None:
-            return False
-        input_contents.append(content)
-    
-    # 4. Build step-specific content
-    combined_content = build_step_content(step_num, prompt_content, input_contents)
-    logger.info(f"Combined content prepared: {len(combined_content)} chars")
-    
-    # 5. Generate output using AI
-    narrator = DeepSeekNarrator(DEEPSEEK_API_KEY, paths['history_file'])
-    if not narrator.is_available:
-        logger.error("❌ DeepSeek client unavailable")
-        return False
-        
-    logger.info(f"Generating {config['description']}...")
-    result = narrator.generate_narration(prompt_content, combined_content)
-    
-    if not result:
-        logger.error(f"❌ Failed to generate {config['description']}")
-        return False
-
-    # 6. Save output
-    success = write_file(paths[config['output_file']], result)
-    if success:
-        logger.info(f"✅ {config['description']} saved to {paths[config['output_file']].name}")
+    result = narrator.generate_narration(prompt, inputs, use_history=True)
+    if result:
+        write_file(paths[f'step{step_num}_output'], result)
+        logger.info(f"✅ Step {step_num} ({config['desc']}) Complete")
         return True
-    
     return False
 
 # ===== MAIN EXECUTION =====
 def main():
-    """Main execution with configuration-driven step processing"""
-    paths = build_paths(BASE_PROJECT, CHANNEL_FOLDER, STORY_FOLDER)
-    logger.info(" Starting YT Automation Pipeline...")
-    
-    # Log available files
-    logger.info(" File Status:")
-    for key, path in paths.items():
-        if 'file' in key and path.exists():
-            logger.info(f"   ✅ {key}: {path.name}")
-        elif 'file' in key:
-            logger.warning(f"   ❌ {key}: {path.name}")
+    parser = argparse.ArgumentParser(description="YouTube Automation Pipeline")
+    parser.add_argument('--step', type=int, nargs='+', help="Run specific steps (e.g., --step 1 2 5)")
+    parser.add_argument('--all', action='store_true', help="Run all steps 1-5")
+    args = parser.parse_args()
 
-    # Process all enabled steps using configuration
-    for step_num in sorted(STEP_CONFIG.keys()):
-        config = STEP_CONFIG[step_num]
-        if config['enabled']:
-            success = process_step(step_num, paths)
-            if not success:
-                logger.error(f"❌ Step {step_num} failed!")
-                return 1
-            logger.info(f"✅ Step {step_num} completed successfully!\n")
-        else:
-            logger.info(f"⏭️  Step {step_num} skipped: {config['description']}")
+    paths = build_paths(BASE_PROJECT, CHANNEL_FOLDER, STORY_FOLDER)
+    
+    # Determine steps to run
+    steps_to_run = []
+    if args.all:
+        steps_to_run = [1, 2, 3, 4, 5]
+    elif args.step:
+        steps_to_run = sorted(args.step)
+    else:
+        print("Usage: python main.py --all OR --step 1 2 5")
+        return
+
+    logger.info(f"📂 Project Root: {paths['project_root']}")
+    logger.info(f"📝 Story Folder: {STORY_FOLDER}")
+
+    for step in steps_to_run:
+        if step not in STEP_FILES:
+            logger.warning(f"⚠️ Skipping invalid step {step}")
+            continue
+            
+        logger.info(f"\n--- Running Step {step}: {STEP_FILES[step]['desc']} ---")
         
-    logger.info(" All enabled steps completed!")
-    return 0
+        if step == 5:
+            success = process_step_5_parallel(paths)
+        else:
+            success = run_standard_step(step, paths)
+            
+        if not success:
+            logger.error(f"⛔ Pipeline stopped at Step {step}")
+            break
 
 if __name__ == "__main__":
-    exit_code = main()
-    exit(exit_code)
+    main()

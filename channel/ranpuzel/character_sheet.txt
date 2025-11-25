@@ -1,19 +1,94 @@
-MAIN CHARACTERS
+Of course. I will now process the narrative and generate rigid, modular Character Design Schemas according to the specified protocol.
 
-Radhita is a vision of sunlit innocence, with a delicate frame and wide, expressive eyes that hold a universe of curiosity and longing. Her most breathtaking feature is the impossibly long, flowing hair that cascades around her like a river of spun gold, shimmering with a soft, internal light that pulses gently when she sings, releasing floating particles of sunshine that illuminate her cozy tower room. She is often dressed in a simple, lavender dress of soft, worn cotton that speaks of her secluded life, her movements a blend of graceful caution and sudden, joyful bursts of energy as she paints her dreams onto the walls, her entire being a portrait of hopeful isolation waiting to bloom.
+Target Art Style Analysis: User provided no style. Defaulting to "Cinematic Photorealistic, 85mm lens, highly detailed textures."
 
-Eugene, who first appears as the roguish Flynn Rider, carries the confident swagger of a charming adventurer, with a lean, agile build, rakishly disheveled chestnut hair, and a playful smirk that easily softens into a look of genuine warmth. His practical, earth-toned tunic and leather vest are subtly accented by the stolen crown he carries, a sparkly, ornate piece that catches the light, reflecting his hidden desire for a more meaningful life beyond his thieving persona. His movement is a fluid combination of agile climbing and theatrical gestures, but his true heroism shines through in his protective stance and the tender, unwavering gaze he reserves for Radhita, revealing the kind heart beneath the bravado.
+---
 
-Mother Gothel presents an imposing figure of false comfort, with a tall, commanding silhouette often wrapped in rich, velvet robes of deep plum and wine red that seem to absorb the light around her. Her dark, elaborately coiffed hair frames a face that can shift in an instant from a mask of sweet, matronly affection to sharp, calculating severity, her eyes gleaming with a possessive hunger she tries to hide. She moves with a deliberate, almost gliding grace, her gestures often clasping Radhita's magical hair not with love, but with a covetous desperation, her entire presence serving as a dark, elegant cage meant to keep the radiant magic of youth for herself.
+ CHARACTER DESIGN SCHEMAS
 
-SUPPORTING CHARACTERS
+ RADHITA Role: Main
 
-Pascal the chameleon is a tiny, vibrant companion whose scales constantly shift through a kaleidoscope of jewel tones—emerald green, sapphire blue, and amethyst purple—matching not just his surroundings but also his sassy, expressive moods. His bulbous, inquisitive eyes dart about with intelligent curiosity, and his slight, agile body can puff up with defiant bravery or blend seamlessly into Radhita's golden hair, a loyal speck of color and personality always perched on her shoulder, offering silent, steadfast friendship.
+1. Visual Data Breakdown:
+a Explicit Traits Canon: Girl, long golden hair that shimmers and sparkles with light when she sings, initially lives in a tower, wears a dress, uses a frying pan as an instrument, hair turns brown and loses its magic when cut.
+b Inferred Traits AI Casting: Age: young adult 18-20. Ethnicity: Caucasian. Eye Color: Vibrant green. Face: Heart-shaped face, delicate features, a small, straight nose, and a dusting of freckles across her nose and cheeks. Body: Slender, graceful build. Costume: Lavender-colored dress made of layered, lightweight cotton and satin, with lace trim at the sleeves and neckline. Barefoot.
 
-Maximus is a horse of noble and powerful stature, his sleek white coat gleaming like moonlit silver and his strong, muscular build conveying an air of unwavering duty and courage. His intelligent, dark eyes miss nothing, and his movements are a captivating mix of powerful, thunderous charges when in pursuit and surprisingly gentle, precise steps when comforting a friend, his loyalty and bravery making him a steadfast guardian on their journey, a living symbol of protective strength.
+2. Master Visual Definition Subject Only:
+young adult Caucasian female, heart-shaped face, delicate features, vibrant green eyes, long flowing golden hair, slender graceful build, barefoot, wearing a layered lavender dress, cotton and satin texture, lace trim, small straight nose, light freckles
 
-The King and Queen are a regal pair emanating a gentle, sorrowful grace, the King with a kind, weathered face and a short, well-kept beard, dressed in royal robes of deep azure and silver thread, while the Queen possesses a serene beauty, her elegant gowns in shades of ivory and gold, her eyes holding a profound, hopeful sadness. They are often seen standing together on a palace balcony, their postures united in a shared, decades-long vigil, their hands releasing glowing lanterns into the twilight sky, their very presence a symbol of a kingdom's enduring love and a family's patient, waiting heart.
+3. Personality/Vibe Keywords:
+Innocent, Curious, Joyful
 
-BACKGROUND CHARACTERS / GROUPS
+4. Dynamic Prompt Template:
+Cinematic Photorealistic, 85mm lens, highly detailed textures :: young adult Caucasian female, heart-shaped face, delicate features, vibrant green eyes, long flowing golden hair, slender graceful build, barefoot, wearing a layered lavender dress, cotton and satin texture, lace trim, small straight nose, light freckles :: Innocent, Curious, Joyful, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
 
-The Kingdom's Citizens form a vibrant and joyful tapestry of life, a diverse crowd of villagers and party-goers dressed in a cheerful riot of festival colors—sunflower yellows, berry reds, and meadow greens—their simple, comfortable clothing moving freely as they dance and sing. Their faces are alight with laughter and communal celebration, creating a whirl of motion and music at the grand party, where they welcome Radhita with open arms, their collective joy and acceptance representing the wonderfully un-scary world she had been promised was a lie, a community whose warmth instantly makes her feel at home.
+---
+
+ EUGENE FITZHERBERT FLYNN RIDER Role: Main
+
+1. Visual Data Breakdown:
+a Explicit Traits Canon: Young man, a thief, has a sparkly crown, climbs the tower, secret real name is Eugene, has a smolder, is a true hero.
+b Inferred Traits AI Casting: Age: young adult mid-20s. Ethnicity: Caucasian. Eye Color: Hazel brown. Face: Square jawline, strong chin, a defined aquiline nose, and a roguish smirk. Hair: Dark brown, short, tousled. Body: Athletic, lean-muscled build. Costume: Brown leather vest over a white linen poet shirt, dark tan trousers, worn leather boots. A single gold earring. Slight stubble.
+
+2. Master Visual Definition Subject Only:
+young adult Caucasian male, square jawline, strong chin, aquiline nose, hazel brown eyes, dark brown tousled hair, slight stubble, athletic lean-muscled build, wearing a brown leather vest, white linen poet shirt, dark tan trousers, worn leather boots, single gold earring
+
+3. Personality/Vibe Keywords:
+Roguish, Charming, Heroic
+
+4. Dynamic Prompt Template:
+Cinematic Photorealistic, 85mm lens, highly detailed textures :: young adult Caucasian male, square jawline, strong chin, aquiline nose, hazel brown eyes, dark brown tousled hair, slight stubble, athletic lean-muscled build, wearing a brown leather vest, white linen poet shirt, dark tan trousers, worn leather boots, single gold earring :: Roguish, Charming, Heroic, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
+
+---
+
+ MOTHER GOTHEL Role: Supporting
+
+1. Visual Data Breakdown:
+a Explicit Traits Canon: Woman, keeps Radhita in the tower, says the world is dangerous, tricks Radhita, villain.
+b Inferred Traits AI Casting: Age: Middle-aged to elderly 50s-60s but vainly well-preserved. Ethnicity: Caucasian. Eye Color: Dark, piercing brown. Face: Sharp, high cheekbones, a prominent nose, thin lips, and a calculating expression. Hair: Voluminous, dark curly hair streaked with silver, piled high. Body: Tall, imposing stature. Costume: Rich, dark burgundy velvet gown, high collar, intricate silver brocade patterns.
+
+2. Master Visual Definition Subject Only:
+middle-aged Caucasian female, sharp features, high cheekbones, prominent nose, thin lips, dark piercing brown eyes, voluminous dark curly hair with silver streaks, tall imposing stature, wearing a burgundy velvet gown, high collar, silver brocade texture
+
+3. Personality/Vibe Keywords:
+Manipulative, Regal, Sinister
+
+4. Dynamic Prompt Template:
+Cinematic Photorealistic, 85mm lens, highly detailed textures :: middle-aged Caucasian female, sharp features, high cheekbones, prominent nose, thin lips, dark piercing brown eyes, voluminous dark curly hair with silver streaks, tall imposing stature, wearing a burgundy velvet gown, high collar, silver brocade texture :: Manipulative, Regal, Sinister, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
+
+---
+
+ THE KING Role: Background
+
+1. Visual Data Breakdown:
+a Explicit Traits Canon: Radhita's real father, a king.
+b Inferred Traits AI Casting: Age: Middle-aged 50s. Ethnicity: Caucasian. Face: Kind eyes, strong brow, a full, well-groomed beard with hints of gray, warm smile. Hair: Thick, brown hair receding at the temples. Body: Solid, fatherly build. Costume: Formal royal attire; a deep blue tunic with a fur-lined cloak, a simple gold crown.
+
+2. Master Visual Definition Subject Only:
+middle-aged Caucasian male, strong brow, kind eyes, full well-groomed beard with gray streaks, thick brown hair, solid fatherly build, wearing a deep blue royal tunic, fur-lined cloak, simple gold crown
+
+3. Personality/Vibe Keywords:
+Authoritative, Paternal, Kind
+
+4. Dynamic Prompt Template:
+Cinematic Photorealistic, 85mm lens, highly detailed textures :: middle-aged Caucasian male, strong brow, kind eyes, full well-groomed beard with gray streaks, thick brown hair, solid fatherly build, wearing a deep blue royal tunic, fur-lined cloak, simple gold crown :: Authoritative, Paternal, Kind, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
+
+---
+
+ THE QUEEN Role: Background
+
+1. Visual Data Breakdown:
+a Explicit Traits Canon: Radhita's real mother, a queen.
+b Inferred Traits AI Casting: Age: Middle-aged 40s-50s. Ethnicity: Caucasian. Face: Soft, gentle features, high cheekbones, a resemblance to Radhita, soulful brown eyes. Hair: Long, golden-brown hair styled in an elegant braided crown. Body: Graceful, slender build. Costume: Elegant gown in a soft cream or silver silk, a more elaborate, delicate crown.
+
+2. Master Visual Definition Subject Only:
+middle-aged Caucasian female, soft gentle features, high cheekbones, soulful brown eyes, long golden-brown hair in braided crown, graceful slender build, wearing an elegant cream silk gown, delicate silver crown
+
+3. Personality/Vibe Keywords:
+Elegant, Sorrowful, Loving
+
+4. Dynamic Prompt Template:
+Cinematic Photorealistic, 85mm lens, highly detailed textures :: middle-aged Caucasian female, soft gentle features, high cheekbones, soulful brown eyes, long golden-brown hair in braided crown, graceful slender build, wearing an elegant cream silk gown, delicate silver crown :: Elegant, Sorrowful, Loving, SCENEACTIONANDLIGHTINGGOHERE --ar 16:9 --stylize 250
+
+---
+
+I have defined the visual assets. Please check the 'Inferred Traits' for accuracy. If satisfied, provide a SCENE description e.g., 'fighting in the rain', and I will assemble the final prompts.
