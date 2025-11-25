@@ -1,3 +1,4 @@
+import re
 import os
 import urllib3
 import httpx
@@ -202,80 +203,94 @@ def write_file(path: Path, content: str) -> bool:
         return False
 
 # ===== STEP LOGIC =====
-def parse_scenes(content: str) -> List[Dict]:
-    scenes = []
-    # Robust patterns for scene headers
-    patterns = [
-        r'(SCENE\s+\d+.*?)(?=SCENE\s+\d+|$)',
-        r'(Scene\s+\d+.*?)(?=Scene\s+\d+|$)',
-        r'(##\s*Scene\s+\d+.*?)(?=##\s*Scene\s+\d+|$)'
-    ]
+def parse_scenes_and_shots(content: str) -> List[Dict]:
+    """
+    Parses the new hierarchical format:
+    SCENE X -> Setting Visual Anchor -> SHOT 1, SHOT 2, etc.
+    """
+    structured_data = []
     
-    for pattern in patterns:
-        matches = list(re.finditer(pattern, content, re.DOTALL | re.IGNORECASE))
-        if matches:
-            for match in matches:
-                full_text = match.group(1).strip()
-                lines = full_text.split('\n')
-                scenes.append({
-                    'header': lines[0].strip(),
-                    'full_text': full_text
+    # Split by "SCENE" headers (using robust regex for "## SCENE 1" or "SCENE 1")
+    scene_blocks = re.split(r'(?=#{0,2}\s*SCENE\s+\d+)', content)
+    
+    for block in scene_blocks:
+        if not block.strip(): continue
+        
+        # 1. Extract Scene Header
+        header_match = re.search(r'(#{0,2}\s*SCENE\s+\d+.*)', block)
+        if not header_match: continue
+        scene_header = header_match.group(1).strip()
+        
+        # 2. Extract Visual Anchor (The constant background)
+        anchor_match = re.search(r'Setting Visual Anchor:\s*(.*?)(?=\*\*SHOT|\n\n|SHOT)', block, re.DOTALL | re.IGNORECASE)
+        visual_anchor = anchor_match.group(1).strip() if anchor_match else "A cinematic background."
+        
+        # 3. Extract Shots
+        # Split the block by "SHOT X" markers
+        shot_splits = re.split(r'(?=\*\*SHOT\s+\d+|\bSHOT\s+\d+)', block)
+        
+        for segment in shot_splits:
+            # Check if this segment is actually a shot
+            shot_header_match = re.search(r'(\*\*SHOT\s+\d+|SHOT\s+\d+).*', segment)
+            if shot_header_match:
+                shot_header = shot_header_match.group(0).strip().replace('*', '')
+                
+                # Create a composite input for the AI
+                # We combine the Scene Context + Visual Anchor + Specific Shot Details
+                composite_input = (
+                    f"CONTEXT: {scene_header}\n"
+                    f"VISUAL ANCHOR (BACKGROUND): {visual_anchor}\n"
+                    f"SPECIFIC SHOT DETAILS:\n{segment.strip()}"
+                )
+                
+                structured_data.append({
+                    'id': f"{scene_header} - {shot_header}",
+                    'full_text': composite_input
                 })
-            return scenes
-
-    # Fallback: Double newline split if no headers found
-    if not scenes and content:
-        parts = re.split(r'\n\s*\n', content)
-        scenes = [{'header': f"Scene {i+1}", 'full_text': p.strip()} 
-                 for i, p in enumerate(parts) if len(p) > 20]
-    return scenes
+                
+    return structured_data
 
 def process_step_5_parallel(paths: Dict[str, Path]) -> bool:
-    """Optimized parallel processing for image prompts"""
+    """Updated to handle Shot-level generation"""
     narrator = DeepSeekNarrator(DEEPSEEK_API_KEY, paths['history_file'])
     if not narrator.is_available: return False
     
     prompt_template = read_file(paths['step5_prompt'])
     scenes_content = read_file(paths['step4_output'])
     
-    if not prompt_template or not scenes_content:
-        logger.error("❌ Missing inputs for Step 5")
+    # USE THE NEW PARSER
+    shots_to_process = parse_scenes_and_shots(scenes_content)
+    
+    if not shots_to_process:
+        logger.error("❌ No shots found to process")
         return False
         
-    scenes = parse_scenes(scenes_content)
-    if not scenes:
-        logger.error("❌ No scenes found to process")
-        return False
-        
-    logger.info(f"🚀 Starting parallel generation for {len(scenes)} scenes...")
+    logger.info(f"🚀 Starting parallel generation for {len(shots_to_process)} shots...")
     
     results = {}
     
-    def process_single_scene(scene):
-        """Worker function for threads"""
-        scene_input = f"{prompt_template}\n\n{scene['full_text']}"
-        # Critical: use_history=False saves tokens and context for purely visual tasks
-        result = narrator.generate_narration(prompt_template, scene_input, use_history=False)
-        return scene['header'], result
+    def process_single_shot(shot_data):
+        # We send the specific prompt template + the specific shot data
+        prompt_input = f"{prompt_template}\n\n=== INPUT DATA ===\n{shot_data['full_text']}"
+        result = narrator.generate_narration(prompt_template, prompt_input, use_history=False)
+        return shot_data['id'], result
 
-    # Execute in parallel
     with ThreadPoolExecutor(max_workers=5) as executor:
-        future_to_scene = {executor.submit(process_single_scene, s): s for s in scenes}
+        future_to_shot = {executor.submit(process_single_shot, s): s for s in shots_to_process}
         
-        for future in as_completed(future_to_scene):
-            header, output = future.result()
+        for future in as_completed(future_to_shot):
+            shot_id, output = future.result()
             if output:
-                results[header] = output
-                logger.info(f"✅ Finished {header}")
+                results[shot_id] = output
+                logger.info(f"✅ Finished {shot_id}")
             else:
-                results[header] = "[Generation Failed]"
-                logger.error(f"❌ Failed {header}")
+                results[shot_id] = "[Generation Failed]"
 
-    # Reconstruct in original order
+    # Reconstruct Output
     final_output = "IMAGE PROMPTS:\n\n"
-    for scene in scenes:
-        header = scene['header']
-        final_output += f"=== {header} ===\n{results.get(header, '')}\n\n"
+    # Sort keys to ensure Scene 1 Shot 1 comes before Scene 1 Shot 2
+    for key in sorted(results.keys()): 
+        final_output += f"=== {key} ===\n{results[key]}\n\n"
         
     return write_file(paths['step5_output'], final_output)
 
@@ -295,7 +310,12 @@ def run_standard_step(step_num: int, paths: Dict[str, Path]) -> bool:
         framework = read_file(paths['step1_output'])
         if not framework: return False
         inputs = f"STORY:\n{story}\n\nFRAMEWORK:\n{framework}"
-    elif step_num in [3, 4]:
+    elif step_num == 4:
+        # Step 4 needs BOTH Narration and Character Sheets
+        narration = read_file(paths['step2_output'])
+        chars = read_file(paths['step3_output'])
+        inputs = f"STORY:\n{narration}\n\nCHARACTER DESIGNS (STRICT REFERENCE):\n{chars}"
+    elif step_num in [3]:
         inputs = read_file(paths['step2_output']) # Needs narration
         
     if not prompt or not inputs:
