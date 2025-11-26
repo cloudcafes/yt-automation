@@ -12,7 +12,6 @@ from elevenlabs.client import ElevenLabs
 # 1. CONFIGURATION
 # ==============================================================================
 
-# Load environment variables
 load_dotenv()
 
 # API Configuration
@@ -24,14 +23,7 @@ MODEL_ID = "eleven_flash_v2_5"
 OUTPUT_FORMAT = "mp3_44100_128"
 
 BASE_PROJECT_DIR = Path(__file__).parent.parent.resolve() 
-
 MAX_WORKERS = 5
-DEFAULT_SEED = 12345 
-
-# --- SAFETY: TESTING MODE ---
-# Set to True to generate only a few lines (saves credits)
-TESTING_MODE_FLAG = True 
-TEST_LIMIT = 3
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -58,10 +50,13 @@ def parse_audio_segments(text_file_path: Path, limit: Optional[int] = None) -> L
         
     segments = []
     
-    # 1. CLEANING THE TEXT
-    # This regex removes ANYTHING inside square brackets.
-    # It removes AND [brightly], [soft singing], etc.
-    content = re.sub(r'\[.*?\]', '', content)
+    # --- CLEANING STRATEGY ---
+    
+    # 1. Remove tags found in your data dump using Regex
+    content = content.replace('\\', '')
+    
+    # 2. Remove backslashes safely using standard replace (NO REGEX HERE)
+    content = content.replace('\\', '')
     
     # Split by lines
     lines = content.split('\n')
@@ -75,7 +70,7 @@ def parse_audio_segments(text_file_path: Path, limit: Optional[int] = None) -> L
         if not clean_text: 
             continue
             
-        # Skip file headers if present
+        # Skip file headers/separators if present in the data dump
         if "=====" in clean_text or "FILE:" in clean_text:
             continue
 
@@ -87,7 +82,7 @@ def parse_audio_segments(text_file_path: Path, limit: Optional[int] = None) -> L
             'original_index': valid_line_count
         })
             
-        # Apply Testing Limit within the loop for efficiency
+        # Apply Testing Limit
         if limit is not None and len(segments) >= limit:
             logger.info(f"🛑 Testing Limit Reached: Stopping parsing after {limit} segments.")
             break
@@ -103,6 +98,7 @@ def generate_single_audio(job_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         return None
 
     # --- CONSOLE PREVIEW ---
+    # Show first 100 chars so you can verify if tags like [brightly] are present
     print(f"\n🎙️ [PREVIEW] Generating {job_data['id']}:")
     print(f"   Text: {job_data['text'][:100]}...") 
     
@@ -141,17 +137,30 @@ def generate_single_audio(job_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
 # ==============================================================================
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--channel', type=str, default="channel", help="The channel folder name")
-    parser.add_argument('--story', type=str, default="ranpuzel", help="The story folder name")
-    parser.add_argument('--file', type=str, default="audio-text.txt", help="Input text filename")
+    parser = argparse.ArgumentParser(description="ElevenLabs Audio Generator")
+    
+    # REQUIRED Arguments (No defaults allowed to force explicit paths)
+    parser.add_argument('--channel', type=str, required=True, help="The channel folder name (REQUIRED)")
+    parser.add_argument('--story', type=str, required=True, help="The story folder name (REQUIRED)")
+    
+    # Optional Arguments
+    parser.add_argument('--file', type=str, default="audio-text.txt", help="Input text filename (Default: audio-text.txt)")
+    
+    # Runtime Parameters (Testing & Limits)
+    parser.add_argument('--test', action='store_true', help="Enable testing mode (limits generation)")
+    parser.add_argument('--limit', type=int, default=3, help="Number of lines to generate in test mode")
+    
     args = parser.parse_args()
 
     # 1. Path Setup
     story_dir = BASE_PROJECT_DIR / args.channel / args.story
     input_file = story_dir / args.file
     
-    # Fallback logic
+    if not story_dir.exists():
+        logger.error(f"❌ Story directory not found: {story_dir}")
+        return
+
+    # Fallback Logic
     if not input_file.exists():
         logger.warning(f"⚠️ {input_file.name} not found. Checking narration.txt...")
         fallback_file = story_dir / "narration.txt"
@@ -168,12 +177,15 @@ def main():
         logger.info(f"📁 Creating directory: {output_dir}")
         output_dir.mkdir(parents=True, exist_ok=True)
     
-    # 2. Determine Limit
-    job_limit = TEST_LIMIT if TESTING_MODE_FLAG else None
-    if TESTING_MODE_FLAG:
-        logger.warning(f"🧪 TESTING MODE ACTIVE: Only generating first {TEST_LIMIT} lines.")
+    # 2. Determine Logic based on Runtime Flags
+    if args.test:
+        logger.warning(f"🧪 TESTING MODE ACTIVE: Generating only first {args.limit} lines.")
+        job_limit = args.limit
+    else:
+        logger.info("🎬 FULL PRODUCTION MODE: Generating all lines.")
+        job_limit = None
     
-    # 3. Parse with Limit
+    # 3. Parse Jobs
     jobs = parse_audio_segments(input_file, limit=job_limit)
     
     if not jobs:
@@ -189,14 +201,14 @@ def main():
         for future in as_completed(future_to_job):
             if future.result(): results.append(future.result())
 
-    # 5. Save
+    # 5. Save Results
     results.sort(key=lambda x: x['original_index'])
     
     for result in results:
         if not result.get('success'): continue
         
         # Create filename: L001_TheFirstMove.mp3
-        # Clean text for filename (take first 20 chars, alphanumeric only)
+        # Use simple alphanumeric cleaning for filename, but keep original text for API
         snippet = re.sub(r'[^a-zA-Z0-9]', '', result['text'][:20])
         filename = f"{result['id']}_{snippet}.mp3"
         
