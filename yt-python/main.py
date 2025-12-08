@@ -176,9 +176,9 @@ def enhance_image_prompts_with_negative(image_prompts_content: str) -> str:
     lines = image_prompts_content.split('\n')
     
     for line in lines:
-        # Check if this is an image prompt line (starts with the style weighting)
-        if line.strip().startswith("Disney Pixar 3D style:0.9"):
-            # Extract the existing prompt
+        # FIX: Check for just the start of the style, not the specific ":0.9" weight
+        if line.strip().startswith("Disney Pixar 3D style"): 
+            
             existing_prompt = line.strip()
             
             # Add negative prompt instruction

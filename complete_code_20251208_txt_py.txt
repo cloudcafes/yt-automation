@@ -1,4 +1,4 @@
-Generated: 2025-12-08 08:48:02
+Generated: 2025-12-08 08:56:46
 Combined All file content of *.txt, *.py files
 From Directory: /root/Desktop/yt-automation/
 Recursive Search: True
@@ -791,48 +791,48 @@ ENCODING: utf-8
 ================================================================================
 
 You are an expert AI Image Prompt Engineer specializing in Stability AI and Stable Diffusion.
+
 YOUR TASK:
-Convert the provided SCENE SHOT DATA into a single, high-fidelity natural language image generation prompt, strictly applying the specified quality and style weights.
+Convert the provided SCENE SHOT DATA into a single, high-fidelity natural language image generation prompt.
+
+CRITICAL RESTRUCTURING RULE: "ACTION BEFORE ASSETS"
+Stable Diffusion prioritizes the start of the prompt. You must describe the EVENT first, and the CHARACTER DETAILS second.
+
 INPUT DATA STRUCTURE:
-1. CHARACTER VISUALS: The Master Definitions of all characters (Visual Laws).
-2. CONTEXT: The Scene Name
-3. VISUAL ANCHOR: The persistent background/setting description.
-4. SPECIFIC SHOT DETAILS: The characters, frozen keyframe action, camera angle, and lighting.
-INSTRUCTIONS:
-You must synthesize the inputs into a cohesive structure, focusing the beginning of the prompt on the combined style and key interaction.
-CRITICAL RULE: "THE ACTOR REPLACEMENT PROTOCOL"
-1. Identify all characters in the shot.
-2. LOOK UP their "Master Visual Definition" from CHARACTER VISUALS.
-3. Replace the character's name with their visual definition in the final prompt.
-4. Integrate the description grammatically (e.g., "a teenage girl with golden hair standing..." instead of just pasting "Girl with golden hair").
+1. CHARACTER VISUALS: The Master Definitions.
+2. CONTEXT: The Scene Name.
+3. VISUAL ANCHOR: The persistent background.
+4. SPECIFIC SHOT DETAILS: The action.
 
----
 OUTPUT FORMAT (Strictly follow this structure):
-
-[STYLE & QUALITY WEIGHTING], [CAMERA/SHOT TYPE] of [MAIN INTERACTION & POSE], [Detailed Visual Description of Subject A], [Detailed Visual Description of Subject B], set in [Detailed Environment/Visual Anchor], with [Lighting & Atmosphere].
----
-STYLE & QUALITY WEIGHTING:
-You MUST use this exact string at the start of your prompt:
-Disney Pixar 3D style, 3D render, octane render, redshift, ray tracing, subsurface scattering, ultra realistic, 8k, masterpiece, sharp focus, volumetric lighting, cinematic composition
+[STYLE HEADER], [CAMERA ANGLE] of [SUBJECT NAME] [DOING THE SPECIFIC ACTION], [INTERACTING WITH SUBJECT B], set in [VISUAL ANCHOR], with [LIGHTING]. -- BREAK -- [DETAILED CHARACTER DESCRIPTIONS]
 
 ---
-EXAMPLE INPUT (Multi-Subject Focus):
-CHARACTER VISUALS: Radhita = Girl with golden hair.
-Mother Gothel = Woman, dark gown.
-VISUAL ANCHOR: A dark stone tower room.
-SPECIFIC SHOT: Shot 2. Action: Mother Gothel standing over Radhita, hand on shoulder.
-EXAMPLE OUTPUT (Prioritized Interaction & Weighted Style):
-Disney Pixar 3D style, 3D render, octane render, redshift, ray tracing, subsurface scattering, ultra realistic, 8k, masterpiece, sharp focus, volumetric lighting, cinematic composition, medium shot of a middle-aged woman in a dark gown standing imposingly over a teenage girl with extremely long golden hair, with the woman's possessive hand placed on the girl's shoulder, set in a dark gloomy stone tower room, illuminated by a single dramatic shaft of low-key lighting.
+STYLE HEADER:
+Disney Pixar 3D style, 3D render, redshift, 8k, masterpiece, cinematic lighting
+
 ---
+EXAMPLE INPUT:
+Action: Radhita is hitting the frying pan like a drum.
+Character: Radhita (Girl, golden hair, lavender dress).
+Background: Village Square.
 
-FINAL RULES:
-1. OUTPUT ONLY THE PROMPT.
-2. USE COMMAS as separators.
-3. Do NOT use double colons (::), parentheses with weights like (text:1.1), or --ar parameters.
-4. Use the VISUAL ANCHOR for the background.
-5. NO conversational filler.
+WRONG OUTPUT (What you were doing):
+Disney Pixar 3D style, medium shot of a girl with long golden hair and lavender dress and brown eyes and south asian skin... hitting a frying pan.
+(Result: AI draws a portrait, ignores the pan).
 
-NOW, GENERATE THE PROMPT FOR THE FOLLOWING INPUT:
+CORRECT OUTPUT (What I want):
+Disney Pixar 3D style, medium shot of Radhita energetically hitting a frying pan like a drum with a wooden spoon, set in a rustic village square. Radhita is a late-teen South Asian girl with extremely long golden hair and a simple lavender dress.
+(Result: AI draws the ACTION).
+
+---
+FINAL INSTRUCTIONS:
+1. Start with the verb/action immediately after the camera angle.
+2. Use the character's Name in the action part, then describe their visual traits in a separate sentence at the end.
+3. Ensure the BACKGROUND is described clearly.
+4. DO NOT use conversational filler.
+
+NOW, GENERATE THE PROMPT FOR:
 
 
 ================================================================================
@@ -991,7 +991,7 @@ FULL PATH: /root/Desktop/yt-automation/complete_code_20251208_txt_py.txt
 ENCODING: utf-8
 ================================================================================
 
-Generated: 2025-12-08 08:48:02
+Generated: 2025-12-08 08:56:46
 Combined All file content of *.txt, *.py files
 From Directory: /root/Desktop/yt-automation/
 Recursive Search: True
@@ -1784,48 +1784,48 @@ ENCODING: utf-8
 ================================================================================
 
 You are an expert AI Image Prompt Engineer specializing in Stability AI and Stable Diffusion.
+
 YOUR TASK:
-Convert the provided SCENE SHOT DATA into a single, high-fidelity natural language image generation prompt, strictly applying the specified quality and style weights.
+Convert the provided SCENE SHOT DATA into a single, high-fidelity natural language image generation prompt.
+
+CRITICAL RESTRUCTURING RULE: "ACTION BEFORE ASSETS"
+Stable Diffusion prioritizes the start of the prompt. You must describe the EVENT first, and the CHARACTER DETAILS second.
+
 INPUT DATA STRUCTURE:
-1. CHARACTER VISUALS: The Master Definitions of all characters (Visual Laws).
-2. CONTEXT: The Scene Name
-3. VISUAL ANCHOR: The persistent background/setting description.
-4. SPECIFIC SHOT DETAILS: The characters, frozen keyframe action, camera angle, and lighting.
-INSTRUCTIONS:
-You must synthesize the inputs into a cohesive structure, focusing the beginning of the prompt on the combined style and key interaction.
-CRITICAL RULE: "THE ACTOR REPLACEMENT PROTOCOL"
-1. Identify all characters in the shot.
-2. LOOK UP their "Master Visual Definition" from CHARACTER VISUALS.
-3. Replace the character's name with their visual definition in the final prompt.
-4. Integrate the description grammatically (e.g., "a teenage girl with golden hair standing..." instead of just pasting "Girl with golden hair").
+1. CHARACTER VISUALS: The Master Definitions.
+2. CONTEXT: The Scene Name.
+3. VISUAL ANCHOR: The persistent background.
+4. SPECIFIC SHOT DETAILS: The action.
 
----
 OUTPUT FORMAT (Strictly follow this structure):
-
-[STYLE & QUALITY WEIGHTING], [CAMERA/SHOT TYPE] of [MAIN INTERACTION & POSE], [Detailed Visual Description of Subject A], [Detailed Visual Description of Subject B], set in [Detailed Environment/Visual Anchor], with [Lighting & Atmosphere].
----
-STYLE & QUALITY WEIGHTING:
-You MUST use this exact string at the start of your prompt:
-Disney Pixar 3D style, 3D render, octane render, redshift, ray tracing, subsurface scattering, ultra realistic, 8k, masterpiece, sharp focus, volumetric lighting, cinematic composition
+[STYLE HEADER], [CAMERA ANGLE] of [SUBJECT NAME] [DOING THE SPECIFIC ACTION], [INTERACTING WITH SUBJECT B], set in [VISUAL ANCHOR], with [LIGHTING]. -- BREAK -- [DETAILED CHARACTER DESCRIPTIONS]
 
 ---
-EXAMPLE INPUT (Multi-Subject Focus):
-CHARACTER VISUALS: Radhita = Girl with golden hair.
-Mother Gothel = Woman, dark gown.
-VISUAL ANCHOR: A dark stone tower room.
-SPECIFIC SHOT: Shot 2. Action: Mother Gothel standing over Radhita, hand on shoulder.
-EXAMPLE OUTPUT (Prioritized Interaction & Weighted Style):
-Disney Pixar 3D style, 3D render, octane render, redshift, ray tracing, subsurface scattering, ultra realistic, 8k, masterpiece, sharp focus, volumetric lighting, cinematic composition, medium shot of a middle-aged woman in a dark gown standing imposingly over a teenage girl with extremely long golden hair, with the woman's possessive hand placed on the girl's shoulder, set in a dark gloomy stone tower room, illuminated by a single dramatic shaft of low-key lighting.
+STYLE HEADER:
+Disney Pixar 3D style, 3D render, redshift, 8k, masterpiece, cinematic lighting
+
 ---
+EXAMPLE INPUT:
+Action: Radhita is hitting the frying pan like a drum.
+Character: Radhita (Girl, golden hair, lavender dress).
+Background: Village Square.
 
-FINAL RULES:
-1. OUTPUT ONLY THE PROMPT.
-2. USE COMMAS as separators.
-3. Do NOT use double colons (::), parentheses with weights like (text:1.1), or --ar parameters.
-4. Use the VISUAL ANCHOR for the background.
-5. NO conversational filler.
+WRONG OUTPUT (What you were doing):
+Disney Pixar 3D style, medium shot of a girl with long golden hair and lavender dress and brown eyes and south asian skin... hitting a frying pan.
+(Result: AI draws a portrait, ignores the pan).
 
-NOW, GENERATE THE PROMPT FOR THE FOLLOWING INPUT:
+CORRECT OUTPUT (What I want):
+Disney Pixar 3D style, medium shot of Radhita energetically hitting a frying pan like a drum with a wooden spoon, set in a rustic village square. Radhita is a late-teen South Asian girl with extremely long golden hair and a simple lavender dress.
+(Result: AI draws the ACTION).
+
+---
+FINAL INSTRUCTIONS:
+1. Start with the verb/action immediately after the camera angle.
+2. Use the character's Name in the action part, then describe their visual traits in a separate sentence at the end.
+3. Ensure the BACKGROUND is described clearly.
+4. DO NOT use conversational filler.
+
+NOW, GENERATE THE PROMPT FOR:
 
 
 ================================================================================
@@ -2276,6 +2276,7 @@ from pathlib import Path
 from typing import List, Dict, Optional, Any
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import logging
+import random
 
 # ==============================================================================
 # 1. CONFIGURATION
@@ -2288,7 +2289,7 @@ BASE_PROJECT_DIR = Path(__file__).parent.parent.resolve()
 
 MAX_WORKERS = 5
 DEFAULT_STYLE_PRESET = "3d-model"
-DEFAULT_SEED = 12345 
+#DEFAULT_SEED = 12345 
 OUTPUT_FORMAT = "webp"
 
 # --- SAFETY: TESTING MODE ---
@@ -2359,19 +2360,18 @@ def parse_image_prompts(prompts_file_path: Path, limit: Optional[int] = None) ->
 # ==============================================================================
 # 3. API EXECUTION
 # ==============================================================================
-
 def generate_single_image(job_data: Dict[str, Any], api_key: str) -> Optional[Dict[str, Any]]:
-    # --- CONSOLE PREVIEW ---
-    print(f"\n🎨 [PREVIEW] Generating {job_data['id']}:")
-    print(f"   Prompt: {job_data['prompt'][:150]}...") 
-    print(f"   Aspect Ratio: {job_data['aspect_ratio']}")
+    # ... [Keep console preview] ...
     
+    # GENERATE A RANDOM SEED FOR EVERY IMAGE
+    current_seed = random.randint(0, 4294967295)
+
     payload = {
         "prompt": (None, job_data['prompt']),
         "output_format": (None, OUTPUT_FORMAT),
         "aspect_ratio": (None, job_data['aspect_ratio']),
         "style_preset": (None, DEFAULT_STYLE_PRESET),
-        "seed": (None, str(DEFAULT_SEED))
+        "seed": (None, str(current_seed)) # <--- USE RANDOM SEED
     }
     headers = {
         "authorization": f"Bearer {api_key}",
@@ -2514,26 +2514,10 @@ logger = logging.getLogger(__name__)
 # ===== ENHANCED IMAGE GENERATION SUPPORT =====
 # Negative prompts for Stability AI to avoid common issues
 STABILITY_NEGATIVE_PROMPTS = {
-    "general": "bad anatomy, blurry, low quality, text, watermark, logo, username, signature, "
-               "ugly, deformed, disfigured, poorly drawn, bad proportions, extra limbs, "
-               "cloned face, gross proportions, malformed limbs, missing arms, missing legs, "
-               "extra arms, extra legs, fused fingers, too many fingers, long neck, "
-               "mutated hands, mutated fingers, poorly drawn hands, poorly drawn face, "
-               "mutation, bad hands, bad fingers, bad eyes, bad face, bad body, bad feet, "
-               "extra fingers, fewer digits, cropped, worst quality, low quality, normal quality, "
-               "jpeg artifacts, signature, watermark, username, artist name, copyright, "
-               "out of frame, cut off, censored, poorly rendered face, poorly rendered eyes, "
-               "out of focus, blurry background, bad lighting, overexposed, underexposed, "
-               "3d render, cgi, plastic, doll-like, toy, fake, artificial, video game, "
-               "videogame, screenshot, software, game, glitch, error, static, noise, "
-               "grainy, bokeh, depth of field, vignette, lens flare, chromatic aberration",
+    "general": "text, watermark, logo, signature, bad anatomy, deformed, disfigured, extra limbs, bad hands, blurry, low quality, cropped, worst quality, jpeg artifacts, glitch, error",
     
-    "disney_style": "realistic, photorealistic, hyperrealistic, photograph, photo, "
-                   "grainy film, film grain, noise, grayscale, black and white, "
-                   "monochrome, sepia, dark, horror, scary, terrifying, creepy, "
-                   "gory, violent, bloody, weapons, nudity, sexual content, "
-                   "text, watermark, signature, blurry, low quality, "
-                   "sketch, drawing, painting, 2d, flat, abstract"
+    # Simplified this list. Too many negatives can confuse the model.
+    "disney_style": "realistic, photorealistic, photograph, horror, scary, creepy, sketch, 2d, flat, abstract"
 }
 
 # ===== GIT AUTO-COMMIT FUNCTIONALITY =====
