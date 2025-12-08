@@ -36,7 +36,61 @@ except Exception as e:
     client = None
 
 # ==============================================================================
-# 2. DATA PARSING
+# 2. FILE CLEANUP FUNCTIONS
+# ==============================================================================
+
+def cleanup_output_directory(output_dir: Path) -> bool:
+    """
+    Clean up the output directory before generating new audio files.
+    Removes all existing audio files in the directory.
+    Returns True if successful, False on error.
+    """
+    try:
+        if output_dir.exists():
+            # Count existing files
+            existing_files = list(output_dir.glob("*.mp3"))
+            existing_count = len(existing_files)
+            
+            if existing_count > 0:
+                logger.info(f"🗑️  Cleaning {existing_count} existing audio files...")
+                
+                # Delete all existing audio files
+                for file_path in existing_files:
+                    try:
+                        file_path.unlink()
+                    except Exception as e:
+                        logger.warning(f"⚠️ Could not delete {file_path.name}: {e}")
+                
+                logger.info(f"✅ Cleaned {existing_count} existing audio files")
+            else:
+                logger.info("📭 No existing audio files to clean")
+        
+        return True
+    except Exception as e:
+        logger.error(f"❌ Failed to clean output directory: {e}")
+        return False
+
+def cleanup_single_audio_file(output_dir: Path, file_pattern: str) -> bool:
+    """
+    Clean up a specific audio file before generating it.
+    Returns True if file was deleted or didn't exist, False on error.
+    """
+    try:
+        # Look for any file with this pattern
+        existing_files = list(output_dir.glob(file_pattern))
+        
+        if existing_files:
+            for file_path in existing_files:
+                file_path.unlink()
+                logger.debug(f"🗑️  Deleted existing: {file_path.name}")
+        
+        return True
+    except Exception as e:
+        logger.warning(f"⚠️ Could not clean up files for {file_pattern}: {e}")
+        return False
+
+# ==============================================================================
+# 3. DATA PARSING
 # ==============================================================================
 
 def parse_audio_segments(text_file_path: Path, limit: Optional[int] = None) -> List[Dict[str, Any]]:
@@ -79,7 +133,8 @@ def parse_audio_segments(text_file_path: Path, limit: Optional[int] = None) -> L
         segments.append({
             'id': f"L{valid_line_count:03d}", # L001, L002...
             'text': clean_text,
-            'original_index': valid_line_count
+            'original_index': valid_line_count,
+            'line_number': valid_line_count
         })
             
         # Apply Testing Limit
@@ -90,13 +145,20 @@ def parse_audio_segments(text_file_path: Path, limit: Optional[int] = None) -> L
     return segments
 
 # ==============================================================================
-# 3. API EXECUTION
+# 4. API EXECUTION
 # ==============================================================================
 
-def generate_single_audio(job_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+def generate_single_audio(job_data: Dict[str, Any], output_dir: Path) -> Optional[Dict[str, Any]]:
     if not client:
         return None
 
+    # Generate filename pattern for cleanup
+    snippet = re.sub(r'[^a-zA-Z0-9]', '', job_data['text'][:20])
+    filename_pattern = f"{job_data['id']}_*.mp3"
+    
+    # Clean up existing file for this job
+    cleanup_single_audio_file(output_dir, filename_pattern)
+    
     # --- CONSOLE PREVIEW ---
     # Show first 100 chars so you can verify if tags like [brightly] are present
     print(f"\n🎙️ [PREVIEW] Generating {job_data['id']}:")
@@ -133,7 +195,7 @@ def generate_single_audio(job_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         return job_data
 
 # ==============================================================================
-# 4. MAIN
+# 5. MAIN
 # ==============================================================================
 
 def main():
@@ -146,9 +208,10 @@ def main():
     # Optional Arguments
     parser.add_argument('--file', type=str, default="audio-text.txt", help="Input text filename (Default: audio-text.txt)")
     
-    # Runtime Parameters (Testing & Limits)
+    # Runtime Parameters (Testing, Limits, and Cleanup)
     parser.add_argument('--test', action='store_true', help="Enable testing mode (limits generation)")
     parser.add_argument('--limit', type=int, default=3, help="Number of lines to generate in test mode")
+    parser.add_argument('--no-clean', action='store_true', help="Disable cleaning of output directory before generation")
     
     args = parser.parse_args()
 
@@ -176,8 +239,14 @@ def main():
     if not output_dir.exists():
         logger.info(f"📁 Creating directory: {output_dir}")
         output_dir.mkdir(parents=True, exist_ok=True)
+    elif not args.no_clean:
+        # 2. Clean up output directory before generation
+        logger.info("🧹 Cleaning output directory before generation...")
+        cleanup_output_directory(output_dir)
+    else:
+        logger.info("🔒 Output directory cleaning disabled (--no-clean flag)")
     
-    # 2. Determine Logic based on Runtime Flags
+    # 3. Determine Logic based on Runtime Flags
     if args.test:
         logger.warning(f"🧪 TESTING MODE ACTIVE: Generating only first {args.limit} lines.")
         job_limit = args.limit
@@ -185,23 +254,23 @@ def main():
         logger.info("🎬 FULL PRODUCTION MODE: Generating all lines.")
         job_limit = None
     
-    # 3. Parse Jobs
+    # 4. Parse Jobs
     jobs = parse_audio_segments(input_file, limit=job_limit)
     
     if not jobs:
         logger.warning("No text segments found.")
         return
 
-    # 4. Execute
+    # 5. Execute
     logger.info(f"🚀 Starting generation for {len(jobs)} audio segments...")
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        future_to_job = {executor.submit(generate_single_audio, job): job for job in jobs}
+        future_to_job = {executor.submit(generate_single_audio, job, output_dir): job for job in jobs}
         
         results = []
         for future in as_completed(future_to_job):
             if future.result(): results.append(future.result())
 
-    # 5. Save Results
+    # 6. Save Results
     results.sort(key=lambda x: x['original_index'])
     
     for result in results:
@@ -215,10 +284,18 @@ def main():
         try:
             with open(output_dir / filename, 'wb') as f:
                 f.write(result['audio_bytes'])
+            logger.info(f"💾 Saved: {filename}")
         except Exception as e:
             logger.error(f"❌ Save Error: {e}")
-            
-    logger.info(f"✅ Pipeline Complete. Check {output_dir}")
+    
+    # 7. Summary
+    success_count = sum(1 for r in results if r.get('success'))
+    fail_count = len(results) - success_count
+    
+    logger.info(f"✅ Pipeline Complete. {success_count}/{len(results)} audio segments generated successfully")
+    if fail_count > 0:
+        logger.warning(f"⚠️ {fail_count} audio segments failed to generate")
+    logger.info(f"📁 Check {output_dir}")
 
 if __name__ == "__main__":
     main()
