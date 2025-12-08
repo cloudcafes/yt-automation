@@ -38,7 +38,7 @@ d) Group: Collective description (e.g., "Horde of skeletal warriors, rusted iron
 [3-5 visual adjectives, e.g., Ancient, Glitchy, Ferocious, Divine]
 
 4. Visual Schema for Pipeline:
-[ENTITY NAME] = "[Insert Master Visual Definition Here], [Insert Personality Keywords Here]"
+[ENTITY NAME] = "Disney style 3D render of [Name], a [Age] [Ethnicity] [Role], wearing [Costume], [Key Physical Feature]"
 
 5. PROCESS
 a) Read the User Story.

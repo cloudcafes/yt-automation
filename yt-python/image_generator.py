@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import List, Dict, Optional, Any
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import logging
+import random
 
 # ==============================================================================
 # 1. CONFIGURATION
@@ -17,8 +18,8 @@ STABILITY_API_URL = "https://api.stability.ai/v2beta/stable-image/generate/core"
 BASE_PROJECT_DIR = Path(__file__).parent.parent.resolve() 
 
 MAX_WORKERS = 5
-DEFAULT_STYLE_PRESET = "cinematic"
-DEFAULT_SEED = 12345 
+DEFAULT_STYLE_PRESET = "3d-model"
+#DEFAULT_SEED = 12345 
 OUTPUT_FORMAT = "webp"
 
 # --- SAFETY: TESTING MODE ---
@@ -89,19 +90,18 @@ def parse_image_prompts(prompts_file_path: Path, limit: Optional[int] = None) ->
 # ==============================================================================
 # 3. API EXECUTION
 # ==============================================================================
-
 def generate_single_image(job_data: Dict[str, Any], api_key: str) -> Optional[Dict[str, Any]]:
-    # --- CONSOLE PREVIEW ---
-    print(f"\n🎨 [PREVIEW] Generating {job_data['id']}:")
-    print(f"   Prompt: {job_data['prompt'][:150]}...") 
-    print(f"   Aspect Ratio: {job_data['aspect_ratio']}")
+    # ... [Keep console preview] ...
     
+    # GENERATE A RANDOM SEED FOR EVERY IMAGE
+    current_seed = random.randint(0, 4294967295)
+
     payload = {
         "prompt": (None, job_data['prompt']),
         "output_format": (None, OUTPUT_FORMAT),
         "aspect_ratio": (None, job_data['aspect_ratio']),
         "style_preset": (None, DEFAULT_STYLE_PRESET),
-        "seed": (None, str(DEFAULT_SEED))
+        "seed": (None, str(current_seed)) # <--- USE RANDOM SEED
     }
     headers = {
         "authorization": f"Bearer {api_key}",

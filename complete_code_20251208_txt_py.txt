@@ -1,4 +1,4 @@
-Generated: 2025-12-08 08:29:24
+Generated: 2025-12-08 08:48:02
 Combined All file content of *.txt, *.py files
 From Directory: /root/Desktop/yt-automation/
 Recursive Search: True
@@ -726,7 +726,7 @@ d) Group: Collective description (e.g., "Horde of skeletal warriors, rusted iron
 [3-5 visual adjectives, e.g., Ancient, Glitchy, Ferocious, Divine]
 
 4. Visual Schema for Pipeline:
-[ENTITY NAME] = "[Insert Master Visual Definition Here], [Insert Personality Keywords Here]"
+[ENTITY NAME] = "Disney style 3D render of [Name], a [Age] [Ethnicity] [Role], wearing [Costume], [Key Physical Feature]"
 
 5. PROCESS
 a) Read the User Story.
@@ -991,7 +991,7 @@ FULL PATH: /root/Desktop/yt-automation/complete_code_20251208_txt_py.txt
 ENCODING: utf-8
 ================================================================================
 
-Generated: 2025-12-08 08:29:24
+Generated: 2025-12-08 08:48:02
 Combined All file content of *.txt, *.py files
 From Directory: /root/Desktop/yt-automation/
 Recursive Search: True
@@ -1719,7 +1719,7 @@ d) Group: Collective description (e.g., "Horde of skeletal warriors, rusted iron
 [3-5 visual adjectives, e.g., Ancient, Glitchy, Ferocious, Divine]
 
 4. Visual Schema for Pipeline:
-[ENTITY NAME] = "[Insert Master Visual Definition Here], [Insert Personality Keywords Here]"
+[ENTITY NAME] = "Disney style 3D render of [Name], a [Age] [Ethnicity] [Role], wearing [Costume], [Key Physical Feature]"
 
 5. PROCESS
 a) Read the User Story.
@@ -2287,14 +2287,14 @@ STABILITY_API_URL = "https://api.stability.ai/v2beta/stable-image/generate/core"
 BASE_PROJECT_DIR = Path(__file__).parent.parent.resolve() 
 
 MAX_WORKERS = 5
-DEFAULT_STYLE_PRESET = "cinematic"
+DEFAULT_STYLE_PRESET = "3d-model"
 DEFAULT_SEED = 12345 
 OUTPUT_FORMAT = "webp"
 
 # --- SAFETY: TESTING MODE ---
 # Set to True to generate only a few images (saves credits)
 # Set to False to generate the whole story
-TESTING_MODE_FLAG = True 
+TESTING_MODE_FLAG = False 
 TEST_LIMIT = 2 
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -2454,6 +2454,7 @@ if __name__ == "__main__":
     main()
 
 
+
 ================================================================================
 FILE: yt-python/main.py
 EXTENSION: .py
@@ -2530,24 +2531,9 @@ STABILITY_NEGATIVE_PROMPTS = {
     "disney_style": "realistic, photorealistic, hyperrealistic, photograph, photo, "
                    "grainy film, film grain, noise, grayscale, black and white, "
                    "monochrome, sepia, dark, horror, scary, terrifying, creepy, "
-                   "gory, violent, bloody, weapons, guns, knives, fighting, "
-                   "nudity, sexual content, explicit, adult content, inappropriate, "
-                   "political, religious, controversial, hate speech, offensive, "
-                   "cartoonish, anime, manga, chibi, webtoon, comic book, "
-                   "sketch, drawing, painting, watercolor, oil painting, abstract, "
-                   "modern art, contemporary art, surreal, dreamlike, fantasy art, "
-                   "dungeons and dragons, d&d, tabletop game, board game, "
-                   "low poly, pixel art, 8-bit, 16-bit, retro, vintage, "
-                   "claymation, stop motion, puppet, marionette, "
-                   "vector art, clip art, stock photo, stock image, "
-                   "advertisement, commercial, logo, branding, "
-                   "border, frame, watermark, signature, text, letters, words, "
-                   "multiple heads, multiple faces, two heads, two faces, "
-                   "floating objects, objects floating in air, "
-                   "asymmetrical, unbalanced composition, "
-                   "busy background, cluttered, messy, chaotic, "
-                   "low contrast, high contrast, oversaturated, undersaturated, "
-                   "haze, fog, smoke, mist, rain, snow, weather effects"
+                   "gory, violent, bloody, weapons, nudity, sexual content, "
+                   "text, watermark, signature, blurry, low quality, "
+                   "sketch, drawing, painting, 2d, flat, abstract"
 }
 
 # ===== GIT AUTO-COMMIT FUNCTIONALITY =====

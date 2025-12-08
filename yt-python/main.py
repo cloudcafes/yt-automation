@@ -50,41 +50,10 @@ logger = logging.getLogger(__name__)
 # ===== ENHANCED IMAGE GENERATION SUPPORT =====
 # Negative prompts for Stability AI to avoid common issues
 STABILITY_NEGATIVE_PROMPTS = {
-    "general": "bad anatomy, blurry, low quality, text, watermark, logo, username, signature, "
-               "ugly, deformed, disfigured, poorly drawn, bad proportions, extra limbs, "
-               "cloned face, gross proportions, malformed limbs, missing arms, missing legs, "
-               "extra arms, extra legs, fused fingers, too many fingers, long neck, "
-               "mutated hands, mutated fingers, poorly drawn hands, poorly drawn face, "
-               "mutation, bad hands, bad fingers, bad eyes, bad face, bad body, bad feet, "
-               "extra fingers, fewer digits, cropped, worst quality, low quality, normal quality, "
-               "jpeg artifacts, signature, watermark, username, artist name, copyright, "
-               "out of frame, cut off, censored, poorly rendered face, poorly rendered eyes, "
-               "out of focus, blurry background, bad lighting, overexposed, underexposed, "
-               "3d render, cgi, plastic, doll-like, toy, fake, artificial, video game, "
-               "videogame, screenshot, software, game, glitch, error, static, noise, "
-               "grainy, bokeh, depth of field, vignette, lens flare, chromatic aberration",
+    "general": "text, watermark, logo, signature, bad anatomy, deformed, disfigured, extra limbs, bad hands, blurry, low quality, cropped, worst quality, jpeg artifacts, glitch, error",
     
-    "disney_style": "realistic, photorealistic, hyperrealistic, photograph, photo, "
-                   "grainy film, film grain, noise, grayscale, black and white, "
-                   "monochrome, sepia, dark, horror, scary, terrifying, creepy, "
-                   "gory, violent, bloody, weapons, guns, knives, fighting, "
-                   "nudity, sexual content, explicit, adult content, inappropriate, "
-                   "political, religious, controversial, hate speech, offensive, "
-                   "cartoonish, anime, manga, chibi, webtoon, comic book, "
-                   "sketch, drawing, painting, watercolor, oil painting, abstract, "
-                   "modern art, contemporary art, surreal, dreamlike, fantasy art, "
-                   "dungeons and dragons, d&d, tabletop game, board game, "
-                   "low poly, pixel art, 8-bit, 16-bit, retro, vintage, "
-                   "claymation, stop motion, puppet, marionette, "
-                   "vector art, clip art, stock photo, stock image, "
-                   "advertisement, commercial, logo, branding, "
-                   "border, frame, watermark, signature, text, letters, words, "
-                   "multiple heads, multiple faces, two heads, two faces, "
-                   "floating objects, objects floating in air, "
-                   "asymmetrical, unbalanced composition, "
-                   "busy background, cluttered, messy, chaotic, "
-                   "low contrast, high contrast, oversaturated, undersaturated, "
-                   "haze, fog, smoke, mist, rain, snow, weather effects"
+    # Simplified this list. Too many negatives can confuse the model.
+    "disney_style": "realistic, photorealistic, photograph, horror, scary, creepy, sketch, 2d, flat, abstract"
 }
 
 # ===== GIT AUTO-COMMIT FUNCTIONALITY =====
