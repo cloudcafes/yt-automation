@@ -47,14 +47,20 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# ===== ENHANCED IMAGE GENERATION SUPPORT =====
-# Negative prompts for Stability AI to avoid common issues
-STABILITY_NEGATIVE_PROMPTS = {
-    "general": "text, watermark, logo, signature, bad anatomy, deformed, disfigured, extra limbs, bad hands, blurry, low quality, cropped, worst quality, jpeg artifacts, glitch, error",
-    
-    # Simplified this list. Too many negatives can confuse the model.
-    "disney_style": "realistic, photorealistic, photograph, horror, scary, creepy, sketch, 2d, flat, abstract"
-}
+# ===== FILE CLEANUP FUNCTION =====
+def cleanup_output_file(file_path: Path) -> bool:
+    """
+    Delete the output file before generating new content.
+    Returns True if file was deleted or didn't exist, False on error.
+    """
+    try:
+        if file_path.exists():
+            file_path.unlink()
+            logger.info(f"🗑️  Deleted existing file: {file_path.name}")
+        return True
+    except Exception as e:
+        logger.error(f"❌ Failed to delete {file_path.name}: {e}")
+        return False
 
 # ===== GIT AUTO-COMMIT FUNCTIONALITY =====
 def git_auto_commit(story_folder: str, steps_run: List[int]) -> bool:
@@ -162,36 +168,6 @@ def git_auto_commit(story_folder: str, steps_run: List[int]) -> bool:
     except Exception as e:
         logger.warning(f"⚠️ Git auto-commit error (non-critical): {str(e)[:100]}")
         return False
-
-# ===== ENHANCED IMAGE PROMPT GENERATION =====
-def enhance_image_prompts_with_negative(image_prompts_content: str) -> str:
-    """
-    Enhance the generated image prompts by adding negative prompt instructions.
-    This ensures better quality from Stability AI by avoiding common issues.
-    """
-    if not image_prompts_content:
-        return image_prompts_content
-    
-    enhanced_content = []
-    lines = image_prompts_content.split('\n')
-    
-    for line in lines:
-        # FIX: Check for just the start of the style, not the specific ":0.9" weight
-        if line.strip().startswith("Disney Pixar 3D style"): 
-            
-            existing_prompt = line.strip()
-            
-            # Add negative prompt instruction
-            enhanced_prompt = (
-                f"{existing_prompt}, "
-                f"negative_prompt: \"{STABILITY_NEGATIVE_PROMPTS['general']}\", "
-                f"avoiding: {STABILITY_NEGATIVE_PROMPTS['disney_style']}"
-            )
-            enhanced_content.append(enhanced_prompt)
-        else:
-            enhanced_content.append(line)
-    
-    return '\n'.join(enhanced_content)
 
 # ===== TEXT CLEANING =====
 def clean_text_preserve_punctuation(text: str) -> str:
@@ -421,11 +397,16 @@ def parse_scenes_robust(content: str) -> List[Dict]:
     
     return structured_data
 
-# ===== ENHANCED STEP 5 LOGIC WITH NEGATIVE PROMPT SUPPORT =====
+# ===== STEP 5 LOGIC (FIXED) =====
 def process_step_5_parallel(paths: Dict[str, Path]) -> bool:
-    """Updated to handle Shot-level generation with Character Consistency Injection and Negative Prompts"""
+    """Updated to handle Shot-level generation with Character Consistency Injection"""
     narrator = DeepSeekNarrator(DEEPSEEK_API_KEY, paths['history_file'])
     if not narrator.is_available: return False
+    
+    # Clean up output file before generation
+    output_path = paths['step5_output']
+    if not cleanup_output_file(output_path):
+        logger.warning(f"⚠️ Could not clean up {output_path.name}, continuing...")
     
     prompt_template = read_file(paths['step5_prompt'])
     scenes_content = read_file(paths['step4_output'])
@@ -448,24 +429,16 @@ def process_step_5_parallel(paths: Dict[str, Path]) -> bool:
     results = {}
     
     def process_single_shot(shot_data):
-        # CRITICAL FIX 3: Inject Character Data AND negative prompt guidance into the prompt
-        enhanced_prompt_template = (
+        # CRITICAL FIX 3: Inject Character Data into the prompt
+        prompt_input = (
             f"{prompt_template}\n\n"
-            f"=== IMPORTANT: ADD NEGATIVE PROMPT GUIDANCE ===\n"
-            f"When generating the final image prompt, include a 'negative_prompt' section that avoids:\n"
-            f"1. Bad anatomy, extra limbs, mutated hands, deformed faces\n"
-            f"2. Text artifacts, watermarks, logos, signatures\n"
-            f"3. Low quality, blurry, grainy images\n"
-            f"4. Realistic/photographic style (keep it Disney Pixar 3D)\n"
-            f"5. Inappropriate or adult content\n"
-            f"6. Text in the image (letters, words, signatures)\n\n"
             f"=== REFERENCE: CHARACTER VISUALS (STRICT ADHERENCE) ===\n"
             f"{character_sheet}\n\n"
             f"=== INPUT DATA (SCENE & SHOT) ===\n"
             f"{shot_data['full_text']}"
         )
-        
-        result = narrator.generate_narration(enhanced_prompt_template, "", use_history=False)
+        # We assume the Prompt Template instructs the AI to use this data
+        result = narrator.generate_narration(prompt_template, prompt_input, use_history=False)
         return shot_data['id'], result
 
     with ThreadPoolExecutor(max_workers=5) as executor:
@@ -484,17 +457,19 @@ def process_step_5_parallel(paths: Dict[str, Path]) -> bool:
     # Sort keys to ensure Scene 1 Shot 1 comes before Scene 1 Shot 2
     for key in sorted(results.keys()): 
         final_output += f"=== {key} ===\n{results[key]}\n\n"
-    
-    # Enhance the generated prompts with negative prompt instructions
-    enhanced_output = enhance_image_prompts_with_negative(final_output)
         
-    return write_file(paths['step5_output'], enhanced_output)
+    return write_file(output_path, final_output)
 
 # ===== STEP 6 LOGIC =====
 def process_step_6_metadata(paths: Dict[str, Path]) -> bool:
     """Process Step 6: Generate YouTube metadata from narration script"""
     narrator = DeepSeekNarrator(DEEPSEEK_API_KEY, paths['history_file'])
     if not narrator.is_available: return False
+    
+    # Clean up output file before generation
+    output_path = paths['step6_output']
+    if not cleanup_output_file(output_path):
+        logger.warning(f"⚠️ Could not clean up {output_path.name}, continuing...")
     
     # Read the prompt template for Step 6
     prompt_template = read_file(paths['step6_prompt'])
@@ -527,7 +502,7 @@ def process_step_6_metadata(paths: Dict[str, Path]) -> bool:
         return False
     
     # Save the output
-    success = write_file(paths['step6_output'], metadata)
+    success = write_file(output_path, metadata)
     if success:
         logger.info("✅ Step 6 (YouTube Metadata) Complete")
     return success
@@ -540,6 +515,11 @@ def run_standard_step(step_num: int, paths: Dict[str, Path]) -> bool:
 
     config = STEP_FILES[step_num]
     prompt = read_file(paths[f'step{step_num}_prompt'])
+    
+    # Clean up output file before generation
+    output_path = paths[f'step{step_num}_output']
+    if not cleanup_output_file(output_path):
+        logger.warning(f"⚠️ Could not clean up {output_path.name}, continuing...")
     
     # Gather inputs based on step logic
     inputs = ""
@@ -568,7 +548,7 @@ def run_standard_step(step_num: int, paths: Dict[str, Path]) -> bool:
 
     result = narrator.generate_narration(prompt, inputs, use_history=True)
     if result:
-        write_file(paths[f'step{step_num}_output'], result)
+        write_file(output_path, result)
         logger.info(f"✅ Step {step_num} ({config['desc']}) Complete")
         return True
     return False
@@ -580,8 +560,6 @@ def main():
     parser.add_argument('--all', action='store_true', help="Run all steps 1-6")
     parser.add_argument('--story', type=str, default=STORY_FOLDER, help=f"Story folder name (default: {STORY_FOLDER})")
     parser.add_argument('--no-git', action='store_true', help="Disable automatic git commit")
-    parser.add_argument('--enhance-negative', action='store_true', 
-                       help="Enhance image prompts with negative prompts for Stability AI")
     args = parser.parse_args()
 
     # Use provided story folder or default
@@ -606,12 +584,6 @@ def main():
 
     logger.info(f"📂 Project Root: {paths['project_root']}")
     logger.info(f"📝 Story Folder: {story_folder}")
-    
-    # Show negative prompt enhancement status
-    if args.enhance_negative or 5 in steps_to_run:
-        logger.info("🛡️  Negative prompt enhancement: ENABLED")
-        logger.info(f"   General negatives: {len(STABILITY_NEGATIVE_PROMPTS['general'].split(','))} items")
-        logger.info(f"   Style-specific negatives: {len(STABILITY_NEGATIVE_PROMPTS['disney_style'].split(','))} items")
 
     # Track successful steps
     successful_steps = []
@@ -623,23 +595,9 @@ def main():
             
         logger.info(f"\n--- Running Step {step}: {STEP_FILES[step]['desc']} ---")
         
-        # Special handling for Step 5 with negative prompt enhancement
+        # Special handling for Step 5
         if step == 5:
             success = process_step_5_parallel(paths)
-            
-            # If negative prompt enhancement flag is set, re-read and enhance the prompts
-            if success and args.enhance_negative:
-                try:
-                    # Read the generated prompts
-                    prompts_content = read_file(paths['step5_output'])
-                    if prompts_content:
-                        # Enhance with negative prompts
-                        enhanced_content = enhance_image_prompts_with_negative(prompts_content)
-                        # Write back enhanced version
-                        write_file(paths['step5_output'], enhanced_content)
-                        logger.info("✅ Image prompts enhanced with negative prompts")
-                except Exception as e:
-                    logger.warning(f"⚠️ Failed to enhance negative prompts: {e}")
         else:
             success = run_standard_step(step, paths)
             
@@ -657,14 +615,6 @@ def main():
     if successful_steps:
         logger.info(f"📊 Pipeline completed {len(successful_steps)}/{len(steps_to_run)} steps successfully")
         logger.info(f"✅ Successful steps: {', '.join([f'Step {s}' for s in successful_steps])}")
-        
-        # Show negative prompt stats if Step 5 was successful
-        if 5 in successful_steps:
-            logger.info("🎨 Image prompts include Stability AI negative prompts for:")
-            logger.info(f"   - Bad anatomy/limb avoidance: ✓")
-            logger.info(f"   - Text/watermark prevention: ✓")
-            logger.info(f"   - Style consistency (Disney Pixar): ✓")
-            logger.info(f"   - Quality control: ✓")
     else:
         logger.info("📊 No steps were completed successfully")
     

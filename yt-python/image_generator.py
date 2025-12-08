@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import List, Dict, Optional, Any
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import logging
-import random
+import shutil
 
 # ==============================================================================
 # 1. CONFIGURATION
@@ -18,21 +18,76 @@ STABILITY_API_URL = "https://api.stability.ai/v2beta/stable-image/generate/core"
 BASE_PROJECT_DIR = Path(__file__).parent.parent.resolve() 
 
 MAX_WORKERS = 5
-DEFAULT_STYLE_PRESET = "3d-model"
-#DEFAULT_SEED = 12345 
+DEFAULT_STYLE_PRESET = "cinematic"
+DEFAULT_SEED = 12345 
 OUTPUT_FORMAT = "webp"
 
 # --- SAFETY: TESTING MODE ---
 # Set to True to generate only a few images (saves credits)
 # Set to False to generate the whole story
-TESTING_MODE_FLAG = False 
+TESTING_MODE_FLAG = True 
 TEST_LIMIT = 2 
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 # ==============================================================================
-# 2. DATA PARSING
+# 2. FILE CLEANUP FUNCTIONS
+# ==============================================================================
+
+def cleanup_output_directory(output_dir: Path) -> bool:
+    """
+    Clean up the output directory before generating new images.
+    Removes all existing image files in the directory.
+    Returns True if successful, False on error.
+    """
+    try:
+        if output_dir.exists():
+            # Count existing files
+            existing_files = list(output_dir.glob(f"*.{OUTPUT_FORMAT}"))
+            existing_count = len(existing_files)
+            
+            if existing_count > 0:
+                logger.info(f"🗑️  Cleaning {existing_count} existing image files...")
+                
+                # Delete all existing image files
+                for file_path in existing_files:
+                    try:
+                        file_path.unlink()
+                    except Exception as e:
+                        logger.warning(f"⚠️ Could not delete {file_path.name}: {e}")
+                
+                logger.info(f"✅ Cleaned {existing_count} existing image files")
+            else:
+                logger.info("📭 No existing image files to clean")
+        
+        return True
+    except Exception as e:
+        logger.error(f"❌ Failed to clean output directory: {e}")
+        return False
+
+def cleanup_single_image_file(output_dir: Path, job_id: str) -> bool:
+    """
+    Clean up a specific image file before generating it.
+    Returns True if file was deleted or didn't exist, False on error.
+    """
+    try:
+        # Look for any file with this job_id pattern
+        pattern = f"{job_id}_*.{OUTPUT_FORMAT}"
+        existing_files = list(output_dir.glob(pattern))
+        
+        if existing_files:
+            for file_path in existing_files:
+                file_path.unlink()
+                logger.debug(f"🗑️  Deleted existing: {file_path.name}")
+        
+        return True
+    except Exception as e:
+        logger.warning(f"⚠️ Could not clean up files for {job_id}: {e}")
+        return False
+
+# ==============================================================================
+# 3. DATA PARSING
 # ==============================================================================
 
 def parse_image_prompts(prompts_file_path: Path, limit: Optional[int] = None) -> List[Dict[str, str]]:
@@ -88,20 +143,24 @@ def parse_image_prompts(prompts_file_path: Path, limit: Optional[int] = None) ->
     return prompts_list
 
 # ==============================================================================
-# 3. API EXECUTION
+# 4. API EXECUTION
 # ==============================================================================
-def generate_single_image(job_data: Dict[str, Any], api_key: str) -> Optional[Dict[str, Any]]:
-    # ... [Keep console preview] ...
-    
-    # GENERATE A RANDOM SEED FOR EVERY IMAGE
-    current_seed = random.randint(0, 4294967295)
 
+def generate_single_image(job_data: Dict[str, Any], api_key: str, output_dir: Path) -> Optional[Dict[str, Any]]:
+    # --- Clean up existing file for this job ---
+    cleanup_single_image_file(output_dir, job_data['id'])
+    
+    # --- CONSOLE PREVIEW ---
+    print(f"\n🎨 [PREVIEW] Generating {job_data['id']}:")
+    print(f"   Prompt: {job_data['prompt'][:150]}...") 
+    print(f"   Aspect Ratio: {job_data['aspect_ratio']}")
+    
     payload = {
         "prompt": (None, job_data['prompt']),
         "output_format": (None, OUTPUT_FORMAT),
         "aspect_ratio": (None, job_data['aspect_ratio']),
         "style_preset": (None, DEFAULT_STYLE_PRESET),
-        "seed": (None, str(current_seed)) # <--- USE RANDOM SEED
+        "seed": (None, str(DEFAULT_SEED))
     }
     headers = {
         "authorization": f"Bearer {api_key}",
@@ -125,13 +184,14 @@ def generate_single_image(job_data: Dict[str, Any], api_key: str) -> Optional[Di
         return job_data
 
 # ==============================================================================
-# 4. MAIN
+# 5. MAIN
 # ==============================================================================
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--channel', type=str, default="channel", help="The channel folder name")
     parser.add_argument('--story', type=str, default="ranpuzel", help="The story folder name")
+    parser.add_argument('--no-clean', action='store_true', help="Disable cleaning of output directory before generation")
     args = parser.parse_args()
 
     # 1. Path Setup
@@ -142,29 +202,35 @@ def main():
     if not output_dir.exists():
         logger.info(f"📁 Creating directory: {output_dir}")
         output_dir.mkdir(parents=True, exist_ok=True)
+    elif not args.no_clean:
+        # 2. Clean up output directory before generation
+        logger.info("🧹 Cleaning output directory before generation...")
+        cleanup_output_directory(output_dir)
+    else:
+        logger.info("🔒 Output directory cleaning disabled (--no-clean flag)")
     
-    # 2. Determine Limit
+    # 3. Determine Limit
     job_limit = TEST_LIMIT if TESTING_MODE_FLAG else None
     if TESTING_MODE_FLAG:
         logger.warning(f"🧪 TESTING MODE ACTIVE: Only generating first {TEST_LIMIT} images.")
     
-    # 3. Parse with Limit
+    # 4. Parse with Limit
     jobs = parse_image_prompts(prompts_file, limit=job_limit)
     
     if not jobs:
         logger.warning("No jobs found.")
         return
 
-    # 4. Execute
+    # 5. Execute
     logger.info(f"🚀 Starting generation for {len(jobs)} images...")
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        future_to_job = {executor.submit(generate_single_image, job, STABILITY_API_KEY): job for job in jobs}
+        future_to_job = {executor.submit(generate_single_image, job, STABILITY_API_KEY, output_dir): job for job in jobs}
         
         results = []
         for future in as_completed(future_to_job):
             if future.result(): results.append(future.result())
 
-    # 5. Save
+    # 6. Save
     results.sort(key=lambda x: x['original_index'])
     
     for result in results:
@@ -175,10 +241,18 @@ def main():
         try:
             with open(output_dir / filename, 'wb') as f:
                 f.write(result['image_bytes'])
+            logger.info(f"💾 Saved: {filename}")
         except Exception as e:
             logger.error(f"❌ Save Error: {e}")
-            
-    logger.info(f"✅ Pipeline Complete. Check {output_dir}")
+    
+    # 7. Summary
+    success_count = sum(1 for r in results if r.get('success'))
+    fail_count = len(results) - success_count
+    
+    logger.info(f"✅ Pipeline Complete. {success_count}/{len(results)} images generated successfully")
+    if fail_count > 0:
+        logger.warning(f"⚠️ {fail_count} images failed to generate")
+    logger.info(f"📁 Check {output_dir}")
 
 if __name__ == "__main__":
     main()

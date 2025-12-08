@@ -1,153 +1,101 @@
 Radhita
 Category: Human
 Role: Main
-
 1. Visual Data Breakdown:
- a Explicit Traits Canon: Girl, long golden hair that shimmers/glows with light when she sings.
+ a Explicit Traits Canon: Girl, long golden hair, hair glows/sparkles with magic when she sings.
  b Inferred Traits AI Casting: Late teens, South Asian ethnicity, facial structure resembling a mix of young Aishwarya Rai and Naomi Scott, expressive large brown eyes, slender build, wearing a simple lavender dress.
-
-2. Master Visual Definition Subject Only:
- Late-teen girl, South Asian ethnicity, face anchor: facial structure resembling a mix of young Aishwarya Rai and Naomi Scott, with large, expressive brown eyes and a hopeful expression. Slender build. Wearing a simple, ankle-length lavender dress.
-
-3. Personality/Vibe Keywords:
- Hopeful, Curious, Innocent, Luminous, Kind
-
-4. Visual Schema for Pipeline:
- RADHITA = "Late-teen South Asian girl, facial structure resembling a mix of young Aishwarya Rai and Naomi Scott, with large expressive brown eyes, slender build, wearing a simple lavender dress, Hopeful, Curious, Innocent, Luminous, Kind"
-
----
+2. Master Visual Definition Subject Only: Late-teen girl, South Asian ethnicity, face anchor: facial structure resembling a mix of young Aishwarya Rai and Naomi Scott, with large, expressive brown eyes and a hopeful expression. Slender build. Wearing a simple, ankle-length lavender dress.
+3. Personality/Vibe Keywords: Hopeful, Curious, Innocent, Luminous, Kind
+4. Visual Schema for Pipeline: RADHITA = "Disney style 3D render of Radhita, a late-teen South Asian girl, wearing a simple lavender dress, with long golden hair that glows with magic"
 
 Mother Gothel
 Category: Human
 Role: Supporting
-
 1. Visual Data Breakdown:
- a Explicit Traits Canon: Woman, voice described as smooth and sweet like honey, later sharp and angry.
- b Inferred Traits AI Casting: Middle-aged, ambiguous European ethnicity, face anchor: facial structure resembling a mix of Catherine Zeta-Jones and Tilda Swinton, sharp features, calculating eyes, elegant but slightly outdated dark burgundy gown.
-
-2. Master Visual Definition Subject Only:
- Middle-aged woman, ambiguous European ethnicity, face anchor: facial structure resembling a mix of Catherine Zeta-Jones and Tilda Swinton, with sharp cheekbones, a poised smile that doesn't reach her calculating eyes. Voluminous dark hair. Wearing an elegant, floor-length dark burgundy gown with a high collar.
-
-3. Personality/Vibe Keywords:
- Manipulative, Elegant, Deceptive, Commanding, Sharp
-
-4. Visual Schema for Pipeline:
- MOTHER GOTHEL = "Middle-aged woman, ambiguous European ethnicity, facial structure resembling a mix of Catherine Zeta-Jones and Tilda Swinton, sharp cheekbones, calculating eyes, voluminous dark hair, wearing an elegant dark burgundy high-collared gown, Manipulative, Elegant, Deceptive, Commanding, Sharp"
-
----
+ a Explicit Traits Canon: Woman, voice described as smooth and sweet, later sharp and angry.
+ b Inferred Traits AI Casting: Middle-aged, ambiguous European ethnicity, facial structure resembling a mix of Catherine Zeta-Jones and Tilda Swinton, sharp features, calculating eyes, elegant but slightly outdated dark burgundy gown.
+2. Master Visual Definition Subject Only: Middle-aged woman, ambiguous European ethnicity, face anchor: facial structure resembling a mix of Catherine Zeta-Jones and Tilda Swinton, with sharp cheekbones, a poised smile that doesn't reach her calculating eyes. Voluminous dark hair. Wearing an elegant, floor-length dark burgundy gown with a high collar.
+3. Personality/Vibe Keywords: Manipulative, Elegant, Deceptive, Commanding, Sharp
+4. Visual Schema for Pipeline: MOTHER GOTHEL = "Disney style 3D render of Mother Gothel, a middle-aged woman, wearing an elegant dark burgundy high-collared gown, with sharp features and voluminous dark hair"
 
 Eugene / Flynn Rider
 Category: Human
 Role: Main
-
 1. Visual Data Breakdown:
  a Explicit Traits Canon: Young man, playful grin, has a sparkly crown.
- b Inferred Traits AI Casting: Mid-20s, Caucasian ethnicity, face anchor: facial structure resembling a mix of young John Stamos and Chris Pine, charming smirk, athletic build, wearing a white poet shirt, brown vest, and dark trousers.
-
-2. Master Visual Definition Subject Only:
- Man in his mid-20s, Caucasian ethnicity, face anchor: facial structure resembling a mix of young John Stamos and Chris Pine, with a charming smirk and warm brown eyes. Athletic build. Wearing a white billowy poet shirt, a brown leather vest, and dark fitted trousers.
-
-3. Personality/Vibe Keywords:
- Charming, Roguish, Playful, Loyal, Warm
-
-4. Visual Schema for Pipeline:
- EUGENE = "Man in his mid-20s, Caucasian ethnicity, facial structure resembling a mix of young John Stamos and Chris Pine, charming smirk, warm brown eyes, athletic build, wearing a white poet shirt, brown leather vest, and dark trousers, Charming, Roguish, Playful, Loyal, Warm"
-
----
+ b Inferred Traits AI Casting: Mid-20s, Caucasian ethnicity, facial structure resembling a mix of young John Stamos and Chris Pine, charming smirk, athletic build, wearing a white poet shirt, brown vest, and dark trousers.
+2. Master Visual Definition Subject Only: Man in his mid-20s, Caucasian ethnicity, face anchor: facial structure resembling a mix of young John Stamos and Chris Pine, with a charming smirk and warm brown eyes. Athletic build. Wearing a white billowy poet shirt, a brown leather vest, and dark fitted trousers.
+3. Personality/Vibe Keywords: Charming, Roguish, Playful, Loyal, Warm
+4. Visual Schema for Pipeline: EUGENE = "Disney style 3D render of Eugene, a man in his mid-20s, wearing a white poet shirt and brown leather vest, with a charming smirk and athletic build"
 
 The Crown
 Category: Sentient Object
 Role: Supporting
-
 1. Visual Data Breakdown:
  a Explicit Traits Canon: Sparkly crown.
  b Inferred Traits AI Casting: Made of polished gold and silver, set with numerous clear gemstones diamonds/quartz, intricate filigree design, slightly worn in spots indicating it's been handled.
-
-2. Master Visual Definition Subject Only:
- A royal crown, crafted from polished gold and silver with intricate swirling filigree patterns. Set with dozens of clear, faceted gemstones that catch the light. Shows slight wear and scratches on the metal bands.
-
-3. Personality/Vibe Keywords:
- Regal, Ornate, Valuable, Sparkling, Historic
-
-4. Visual Schema for Pipeline:
- THE CROWN = "A royal crown of polished gold and silver with intricate filigree, set with dozens of faceted clear gemstones, showing slight wear on the bands, Regal, Ornate, Valuable, Sparkling, Historic"
-
----
+2. Master Visual Definition Subject Only: A royal crown, crafted from polished gold and silver with intricate swirling filigree patterns. Set with dozens of clear, faceted gemstones that catch the light. Shows slight wear and scratches on the metal bands.
+3. Personality/Vibe Keywords: Regal, Ornate, Valuable, Sparkling, Historic
+4. Visual Schema for Pipeline: THE CROWN = "Disney style 3D render of a Crown, a royal object made of polished gold and silver with intricate filigree, set with dozens of faceted clear gemstones"
 
 The Frying Pan
 Category: Sentient Object
 Role: Background
-
 1. Visual Data Breakdown:
  a Explicit Traits Canon: Used to make music at a party.
  b Inferred Traits AI Casting: Cast iron, classic round shape with a long handle, well-used surface with a patina from cooking, no magical effects.
-
-2. Master Visual Definition Subject Only:
- A classic cast-iron frying pan, round with a long, straight handle. The cooking surface has a dark, well-seasoned patina, and the exterior shows minor scratches and wear from use.
-
-3. Personality/Vibe Keywords:
- Utilitarian, Rustic, Durable, Simple, Familiar
-
-4. Visual Schema for Pipeline:
- THE FRYING PAN = "A classic cast-iron frying pan with a round body and long handle, showing a dark seasoned patina and minor scratches, Utilitarian, Rustic, Durable, Simple, Familiar"
-
----
+2. Master Visual Definition Subject Only: A classic cast-iron frying pan, round with a long, straight handle. The cooking surface has a dark, well-seasoned patina, and the exterior shows minor scratches and wear from use.
+3. Personality/Vibe Keywords: Utilitarian, Rustic, Durable, Simple, Familiar
+4. Visual Schema for Pipeline: THE FRYING PAN = "Disney style 3D render of a Frying Pan, a cast-iron object with a round body and long handle, showing a dark seasoned patina"
 
 The Lanterns
 Category: Group
 Role: Background
-
 1. Visual Data Breakdown:
  a Explicit Traits Canon: Hundreds, golden, floating lights that rise into the sky.
  b Inferred Traits AI Casting: Paper lanterns with bamboo frames, glowing with a warm golden candlelight from within, uniform in their simple, elegant design.
-
-2. Master Visual Definition Subject Only:
- A collective of hundreds of simple paper lanterns. Each has a thin bamboo frame covered in golden paper, glowing warmly from a candle light source within. They are identical in design, creating a uniform sea of light.
-
-3. Personality/Vibe Keywords:
- Ethereal, Hopeful, Warm, Gentle, Celebratory
-
-4. Visual Schema for Pipeline:
- THE LANTERNS = "A collective of hundreds of identical golden paper lanterns with bamboo frames, glowing with warm candlelight from within, Ethereal, Hopeful, Warm, Gentle, Celebratory"
-
----
+2. Master Visual Definition Subject Only: A collective of hundreds of simple paper lanterns. Each has a thin bamboo frame covered in golden paper, glowing warmly from a candle light source within. They are identical in design, creating a uniform sea of light.
+3. Personality/Vibe Keywords: Ethereal, Hopeful, Warm, Gentle, Celebratory
+4. Visual Schema for Pipeline: THE LANTERNS = "Disney style 3D render of Lanterns, a collective of hundreds of identical golden paper lanterns with bamboo frames, glowing with warm candlelight"
 
 The King and Queen
 Category: Group
 Role: Background
-
 1. Visual Data Breakdown:
  a Explicit Traits Canon: Radhita's real family, in a grand castle.
- b Inferred Traits AI Casting: A pair, middle-aged, regal bearing, wearing matching royal attire of rich fabrics velvet, silk in complementary colors deep blue and purple, crowns similar to "The Crown".
-
-2. Master Visual Definition Subject Only:
- A pair of middle-aged monarchs. The King has a kind face and a short, neat beard, wearing deep blue velvet robes embroidered with silver. The Queen has gentle features and long hair, wearing rich purple silk gowns embroidered with gold. Both wear smaller versions of the ornate crown.
-
-3. Personality/Vibe Keywords:
- Regal, Kind, Authoritative, Loving, Noble
-
-4. Visual Schema for Pipeline:
- THE KING AND QUEEN = "A pair of middle-aged monarchs; the King with a kind face and short beard in deep blue velvet robes, the Queen with gentle features in purple silk gowns, both wearing ornate smaller crowns, Regal, Kind, Authoritative, Loving, Noble"
-
----
+ b Inferred Traits AI Casting: A pair, middle-aged, regal bearing, wearing matching royal attire velvet, silk in complementary colors deep blue and purple, crowns similar to "The Crown".
+2. Master Visual Definition Subject Only: A pair of middle-aged monarchs. The King has a kind face and a short, neat beard, wearing deep blue velvet robes embroidered with silver. The Queen has gentle features and long hair, wearing rich purple silk gowns embroidered with gold. Both wear smaller versions of the ornate crown.
+3. Personality/Vibe Keywords: Regal, Kind, Authoritative, Loving, Noble
+4. Visual Schema for Pipeline: THE KING AND QUEEN = "Disney style 3D render of the King and Queen, a pair of middle-aged monarchs; the King in deep blue velvet robes, the Queen in purple silk gowns, both wearing ornate crowns"
 
 Party People
 Category: Group
 Role: Background
-
 1. Visual Data Breakdown:
  a Explicit Traits Canon: People dancing at a joyful party.
  b Inferred Traits AI Casting: A diverse crowd of common-folk villagers of various ages and ethnicities, wearing simple, colorful, and slightly rustic festival clothing linen, cotton. Collective mood is jubilant and carefree.
+2. Master Visual Definition Subject Only: A diverse crowd of village commoners. They wear simple, rustic festival clothing in bright, cheerful colors—linen shirts, cotton dresses, vests, and sashes. Their collective expression is one of jubilant celebration and carefree dancing.
+3. Personality/Vibe Keywords: Jubilant, Rustic, Lively, Colorful, Communal
+4. Visual Schema for Pipeline: THE PARTY PEOPLE = "Disney style 3D render of Party People, a diverse crowd of village commoners in simple, bright-colored rustic festival clothing, with expressions of jubilant celebration"
 
-2. Master Visual Definition Subject Only:
- A diverse crowd of village commoners. They wear simple, rustic festival clothing in bright, cheerful colors—linen shirts, cotton dresses, vests, and sashes. Their collective expression is one of jubilant celebration and carefree dancing.
+Pascal
+Category: Creature
+Role: Background
+1. Visual Data Breakdown:
+ a Explicit Traits Canon: Named as Radhita's best friend implied to be the chameleon from Tangled.
+ b Inferred Traits AI Casting: Small green chameleon, large expressive eyes, capable of changing color to match surroundings, often perched on Radhita's shoulder or nearby.
+2. Master Visual Definition Subject Only: A small, bright green chameleon. Has large, curious eyes that can look in different directions independently. Skin has a slightly textured, granular appearance. Often depicted with a friendly, alert expression.
+3. Personality/Vibe Keywords: Loyal, Expressive, Playful, Observant, Cute
+4. Visual Schema for Pipeline: PASCAL = "Disney style 3D render of Pascal, a small bright green chameleon, with large expressive eyes and textured skin"
 
-3. Personality/Vibe Keywords:
- Jubilant, Rustic, Lively, Colorful, Communal
-
-4. Visual Schema for Pipeline:
- THE PARTY PEOPLE = "A diverse crowd of village commoners in simple, bright-colored rustic festival clothing linen, cotton, expressions of jubilant celebration, Jubilant, Rustic, Lively, Colorful, Communal"
-
----
+Maximus
+Category: Creature
+Role: Background
+1. Visual Data Breakdown:
+ a Explicit Traits Canon: Named as Radhita's best friend implied to be the horse from Tangled.
+ b Inferred Traits AI Casting: Large, white stallion, wearing royal guard tack bridle, saddle, highly expressive and intelligent face, often determined or stubborn-looking.
+2. Master Visual Definition Subject Only: A majestic white stallion. Wears a polished leather bridle and saddle indicative of a royal guard horse. Has a muscular, powerful build, a flowing white mane and tail, and large, intelligent eyes that convey a wide range of human-like emotions.
+3. Personality/Vibe Keywords: Majestic, Determined, Intelligent, Loyal, Expressive
+4. Visual Schema for Pipeline: MAXIMUS = "Disney style 3D render of Maximus, a majestic white stallion, wearing royal guard tack, with an intelligent and expressive face"
 
 I have extracted the visual assets for all entities. Please check the 'Inferred Traits' for accuracy. If satisfied, provide a SCENE description, and I will assemble the final prompts.

@@ -1,224 +1,44 @@
 IMAGE PROMPTS:
 
-===  SCENE 1: The Tower Room - SHOT 1 ESTABLISHING ===
-### ASSET VALIDATION
-The inferred visual traits for all characters and objects are accurate and highly detailed. They provide excellent, specific visual anchors e.g., "mix of young Aishwarya Rai and Naomi Scott" that will ensure character consistency in the Disney Pixar 3D style. The schemas are ready for pipeline use.
+===  SCENE 1: Radhita's Tower - SHOT 1 ESTABLISHING ===
+Disney Pixar 3D style, medium shot of Radhita SITTING curled on the floor with her knees drawn up, set in the interior of a tall, circular stone tower with warm afternoon sunlight streaming through a single large window. Radhita is a late-teen South Asian girl with a wistful expression, large expressive brown eyes, and long golden hair pooling around her, wearing a simple lavender dress.
 
-### FINAL IMAGE PROMPT
-
-prompt: Disney Pixar 3D style, medium side-profile shot of Radhita GAZING LONGINGLY out a large stone window, set in a circular tower room with walls covered in colorful naive paintings. Warm volumetric afternoon sunlight streams in, illuminating dust motes and creating a soft glow on her hair and face. Radhita is a late-teen South Asian girl with a facial structure resembling a mix of young Aishwarya Rai and Naomi Scott, with large expressive brown eyes and a wistful expression. She has long golden hair cascading down her back, wears a simple lavender dress, and is sitting on the window sill with her chin resting on her knee.
-
-negativeprompt: bad anatomy, deformed, mutated, extra limbs, missing limbs, disfigured hands, poorly drawn face, blurry, grainy, low quality, low resolution, watermark, signature, text, letters, username, artist name, logo, realistic, photographic, photorealistic, adult content, inappropriate content, ugly, boring, dull
-
-===  SCENE 1: The Tower Room - SHOT 2 ACTION/REACTION ===
-SCENE 1: The Tower Room - Prompt Analysis & Generation
-
-1. VERB/ACTION IDENTIFICATION: The key action is not a dynamic movement, but a deceptive interaction. The verb is "MANIPULATING" or "DECEIVING". The frozen keyframe shows the act of manipulation through a false gesture of comfort.
-
-2. PROMPT ASSEMBLY Following STRICT "VERB FIRST" Rule:
-
- Camera Angle: Close up, three-quarter angle
- Subject Name: Mother Gothel and Radhita
- THE VERB/ACTION First 5 Words: MANIPULATING her with a false gesture of comfort,
- Setting/Visual Anchor: set in a high circular stone tower room with colorful naive paintings on the walls and warm volumetric sunlight streaming through a large window.
- Character Description At End: Mother Gothel is a middle-aged woman with sharp cheekbones, calculating eyes, and voluminous dark hair, wearing an elegant dark burgundy gown. Radhita is a late-teen South Asian girl with large expressive brown eyes and long golden hair, wearing a simple lavender dress, looking up with a trusting, sad expression.
-
-3. FINAL IMAGE PROMPT:
-
-positiveprompt: Disney Pixar 3D style, close up three-quarter angle of Mother Gothel MANIPULATING Radhita with a false comforting hand on her shoulder, set in a high circular stone tower room with colorful naive paintings on the walls and warm volumetric afternoon sunlight streaming through a large window, illuminating dust motes. Mother Gothel is a middle-aged woman with a facial structure resembling a mix of Catherine Zeta-Jones and Tilda Swinton, sharp cheekbones, calculating eyes, and voluminous dark hair, wearing an elegant dark burgundy high-collared gown. Radhita is a late-teen South Asian girl with a facial structure resembling a mix of young Aishwarya Rai and Naomi Scott, large expressive brown eyes, long golden hair, and a trusting sad expression, wearing a simple lavender dress. Dramatic chiaroscuro lighting, sharp focus on the duality of their expressions, highly detailed, cinematic, emotional.
-
-negativeprompt: portrait, standing still, static pose, symmetrical face, bad anatomy, extra limbs, mutated hands, deformed faces, text, watermark, signature, logo, blurry, grainy, low quality, low resolution, realistic, photographic, photorealistic, anime, sketch, drawing, 2D, text in image, letters, words, inappropriate, adult, nude, naked.
+===  SCENE 1: Radhita's Tower - SHOT 2 ACTION/REACTION ===
+Disney Pixar 3D style, over-the-shoulder shot from behind Mother Gothel as she STANDS behind Radhita with a hand on her shoulder, set in the interior of a tall, circular stone tower room with warm dusty sunlight. Mother Gothel is a middle-aged woman in an elegant dark burgundy gown with sharp features; Radhita is a late-teen South Asian girl in a lavender dress looking up with a trusting, sad expression.
 
 ===  SCENE 2: The Intruder & The Deal - SHOT 1 ESTABLISHING ===
-### AI Casting & Visual Asset Review
-
-Your inferred traits are excellent and perfectly capture the essence of each character for the Disney Pixar 3D style. The facial anchors Aishwarya/Naomi Scott, Zeta-Jones/Swinton, Stamos/Pine are inspired choices that provide clear, generative guidance. All visual schemas are ready for pipeline use.
-
----
-
-### SCENE 2 PROMPT: "The Intruder & The Deal"
-
-prompt:
-Disney Pixar 3D animation style, wide shot of Eugene LANDING in a crouch on the tower floor as Radhita STANDS FROZEN in defensive alarm, set in a sun-drenched tower room with a tapestry askew and dust motes swirling in strong golden-hour light. Eugene is a man in his mid-20s with the facial structure of a mix of young John Stamos and Chris Pine, wearing a white poet shirt and brown leather vest, smirking upward. Radhita is a late-teen South Asian girl with the facial structure of a mix of young Aishwarya Rai and Naomi Scott, holding a heavy book like a shield, wearing a simple lavender dress, her long golden hair illuminated by the window light.
-
-negativeprompt:
-deformed, distorted, disfigured:1.3, poorly drawn, bad anatomy, wrong anatomy, extra limb, missing limb, floating limbs, mutated hands and fingers:1.4, disconnected limbs, mutation, mutated, ugly, disgusting, blurry, amputation, watermark, signature, text, username, error, sketch, duplicate, monochrome, photo, photograph, realistic, live action:1.5, 2D, flat, cartoon, bad proportions, long neck, logo, title, mature, adult, sensual:1.3, extra heads, fused fingers, too many fingers
-
----
-
-### Prompt Breakdown Rule Adherence:
-
-1. Camera Angle: Wide shot
-2. Subject Name: Eugene
-3. THE VERB/ACTION Word 4: LANDING
-4. Setting/Visual Anchor: in a crouch on the tower floor as Radhita STANDS FROZEN in defensive alarm, set in a sun-drenched tower room with a tapestry askew and dust motes swirling in strong golden-hour light.
-5. Character Description At End: Eugene is a man... Radhita is a late-teen South Asian girl...
-
-Why this works: The action LANDING and STANDS FROZEN is forced into the core scene description immediately after the subject, locking the composition into a specific, dynamic keyframe. The character visuals are provided as essential but secondary details at the end, preventing the AI from defaulting to a generic portrait.
+Disney Pixar 3D style, wide shot of Eugene LANDING in a low crouch after climbing through a window, set in a high tower room during golden hour. Eugene is a man in his mid-20s wearing a white poet shirt and brown leather vest, looking up with wide-eyed surprise. Radhita stands several feet away, holding a heavy book like a shield, her body tense and her mouth open in a gasp. She is a late-teen South Asian girl with long golden hair, wearing a simple lavender dress.
 
 ===  SCENE 2: The Intruder & The Deal - SHOT 2 ACTION/REACTION ===
-### AI Casting & Visual Asset Review
-Your inferred traits are excellent and perfectly align with the character archetypes for a Disney Pixar 3D style. The facial anchors Aishwarya/Naomi Scott, Zeta-Jones/Swinton, Stamos/Pine are inspired choices that provide clear, generative guidance. All visual schemas are ready for pipeline use.
+Disney Pixar 3D style, medium shot of Radhita ASSERTIVELY HOLDING a sparkling crown towards Eugene, set in a sunlit tower room during golden hour. Radhita is a late-teen South Asian girl with long golden hair and a lavender dress; Eugene is a man in his mid-20s with a charming smirk, wearing a white poet shirt and brown vest.
 
----
+===  SCENE 3: The Meadow of Firsts - SHOT 1 ESTABLISHING ===
+Disney Pixar 3D style, low angle shot of Radhita CROUCHING and gently touching the tall grass with a look of pure wonder, set in a vast, sun-drenched meadow dotted with wildflowers at the forest's edge. Radhita is a late-teen South Asian girl with a face resembling a mix of young Aishwarya Rai and Naomi Scott, wearing a simple lavender dress, her long golden hair slightly messy.
 
-### Final Image Prompt Verb-First Structure
+===  SCENE 3: The Meadow of Firsts - SHOT 2 ACTION/REACTION ===
+Disney Pixar 3D style, wide shot of Radhita TWIRLING with her arms spread wide and her head thrown back in joyful laughter, set in a vast sun-drenched meadow at the forest's edge with wildflowers. Eugene leans against a tree nearby, watching with a warm smile. Radhita is a late-teen South Asian girl with long golden hair and a flaring lavender dress; Eugene is a man in his mid-20s wearing a white poet shirt and brown vest.
 
-prompt: Disney Pixar 3D style, medium shot of Radhita NEGOTIATING while holding a sparkling crown behind her back, set in a tall stone tower room during golden hour. Eugene stands in the soft foreground, hands raised in a 'fair enough' gesture. Radhita is a late-teen South Asian girl with a face resembling a mix of young Aishwarya Rai and Naomi Scott, large expressive brown eyes, slender build, wearing a simple lavender dress, with a clever, determined expression. Eugene is a man in his mid-20s with a face resembling a mix of young John Stamos and Chris Pine, a charming smirk, wearing a white poet shirt and brown leather vest. The ornate crown in her hand catches the light and sparkles brilliantly. The room has a tapestry askew, bathed in warm, late afternoon light.
+===  SCENE 4: The Village Party - SHOT 1 ESTABLISHING ===
+Disney Pixar 3D style, wide shot of the Party People DANCING and CELEBRATING jubilantly, set in a rustic village square at dusk with strings of warm lanterns between timber-framed buildings. In the foreground, Radhita stands clutching a cast-iron frying pan, looking on with wide, curious eyes; Eugene stands beside her, gesturing toward the party with an encouraging grin. Radhita is a late-teen South Asian girl with long golden hair and a lavender dress; Eugene is a man in his mid-20s wearing a white poet shirt and brown leather vest.
 
-negativeprompt: bad anatomy, deformed, mutated, extra limbs, disfigured hands, text, watermark, signature, logo, blurry, grainy, low quality, lowres, photorealistic, realistic, photograph, adult content, nsfw, ugly, boring, dull, letters, words
-
-===  SCENE 3: First Taste of Freedom The Meadow - SHOT 1 ESTABLISHING ===
-Excellent. The visual assets are comprehensive and accurate. The "Inferred Traits AI Casting" provides the perfect, specific visual anchors needed for a consistent Disney Pixar 3D style.
-
-Here is the final prompt, engineered to force the action, based on your input data.
-
-Final Image Prompt:
-
-positiveprompt: Disney Pixar 3D style, low angle shot of Radhita TWIRLING ecstatically with her arms outstretched, set in a vast sun-drenched meadow at the forest's edge. Eugene watches fondly from nearby. Radhita is a late-teen South Asian girl with a face resembling a mix of young Aishwarya Rai and Naomi Scott, her long golden hair and simple lavender dress fanning out as she spins, eyes closed in joyful abandon, under a bright blue sky with puffy clouds. Eugene is a man in his mid-20s with a face resembling a mix of young John Stamos and Chris Pine, wearing a white poet shirt and brown vest, leaning against a tree with a warm, charming smile. Lush green grass and wildflowers. Bright, cheerful midday sun with soft subsurface scattering. Cinematic, vibrant, high detail, 3D render, Unreal Engine 5, volumetric lighting.
-
-negativeprompt: bad anatomy, deformed, distorted faces:1.2, extra limbs, mutated hands, poorly drawn hands:1.3, text, watermark, signature, logo:1.5, blurry, grainy, low quality, low resolution:1.2, photorealistic, realistic, photograph, adult content, inappropriate, portrait, static, standing still:1.4, sad, serious, angry expression:1.2
-
----
-
-Prompt Breakdown Following the Strict Rule:
-
-1. Camera Angle: low angle shot
-2. Subject Name: of Radhita
-3. THE VERB/ACTION: TWIRLING ecstatically Verb in Position 3
-4. Setting/Visual Anchor: set in a vast sun-drenched meadow at the forest's edge. Eugene watches fondly from nearby.
-5. Character Description: Radhita is a late-teen South Asian girl... Placed at the end of the core sentence, as per rule
-
-Why This Works:
- The primary action "TWIRLING" is the third word of the descriptive core, immediately following the subject. This forces the AI to prioritize the dynamic motion.
- The camera angle low angle and setting sun-drenched meadow are established first to frame the action.
- The detailed character descriptions for both Radhita and Eugene are provided after the key action and scene are set, ensuring they inform the characters within the active pose, rather than defining a static portrait.
- The negative prompt explicitly discourages portrait, static, standing still and reinforces the desired 3D animated style while avoiding common AI artifacts.
-
-===  SCENE 3: First Taste of Freedom The Meadow - SHOT 2 ACTION/REACTION ===
-### AI Image Generation Prompt
-
-positiveprompt:
-Disney Pixar 3D style, extreme close-up shot of bare feet PLANTED FIRMLY in the deep, cool grass, set in a vast, sun-drenched meadow at the forest's edge. Several blades of lush green grass are curled between her toes, her feet are slightly dirty from the earth. Dappled sunlight and soft shadows play across the skin and grass, highlighting the intimate sensory detail. The feet belong to Radhita, a late-teen South Asian girl., negative_prompt: "text, watermark, logo, signature, bad anatomy, deformed, disfigured, extra limbs, bad hands, blurry, low quality, cropped, worst quality, jpeg artifacts, glitch, error", avoiding: realistic, photorealistic, photograph, horror, scary, creepy, sketch, 2d, flat, abstract
-
-negativeprompt:
-bad anatomy, extra limbs, mutated hands, deformed feet, missing toes, text, watermark, signature, logo, letters, words, blurry, grainy, low quality, low resolution, photographic, realistic, photorealistic, adult content, inappropriate, shoes, sandals, footwear, portrait, face, upper body, full body, standing still, static.
-
-===  SCENE 4: The Village Celebration - SHOT 1 ESTABLISHING ===
-### SCENE PROMPT ASSEMBLY
-
-1. VERIFIED VISUAL ASSETS Inferred Traits Accuracy Check:
-All inferred traits are accurate, well-defined, and consistent with the provided canon. The "AI Casting" face anchors e.g., Aishwarya Rai/Naomi Scott for Radhita, Catherine Zeta-Jones/Tilda Swinton for Mother Gothel are excellent for guiding a consistent 3D style. The visual schemas are clear and ready for pipeline use.
-
-2. FINAL IMAGE PROMPT Following the STRICT "VERB FIRST" Rule:
-
-prompt: Disney Pixar 3D style, wide high-angle shot of Radhita HITTING a cast-iron frying pan with a wooden spoon like a drum, set in a rustic village square at dusk with glowing paper lanterns and a jubilant crowd of dancing villagers. Radhita is a late-teen South Asian girl with a facial structure resembling a mix of young Aishwarya Rai and Naomi Scott, with large expressive brown eyes and a delighted, concentrated expression, wearing a simple lavender dress. The Party People are a diverse crowd in simple, bright-colored rustic festival clothing, frozen mid-dance and clapping. Warm, cozy lantern light casts long shadows.
-
-negativeprompt: bad anatomy, deformed, mutated, extra limbs, missing limbs, disfigured hands, malformed fingers, text, watermark, signature, logo, letters, words, blurry, grainy, low quality, low resolution, photographic, realistic, photorealistic, adult content, nudity, inappropriate, ugly, boring, static portrait, standing still, no motion
-
-===  SCENE 4: The Village Celebration - SHOT 2 ACTION/REACTION ===
-### ASSET VALIDATION
-The inferred visual traits for all entities are accurate and comprehensive. They provide excellent, specific AI-casting anchors and clear visual schemas for the pipeline. Proceeding with scene assembly.
-
----
-
-### FINAL IMAGE PROMPT Stability AI
-
-positiveprompt:
-Disney Pixar 3D style, medium close-up shot of Eugene OFFERING his hand to Radhita for a dance, set in a rustic village square at dusk with glowing paper lanterns. Eugene is a man in his mid-20s with a facial structure resembling a mix of young John Stamos and Chris Pine, wearing a white poet shirt and brown leather vest, with a charming, hopeful expression. Radhita is a late-teen South Asian girl with a facial structure resembling a mix of young Aishwarya Rai and Naomi Scott, looking from his hand to his face with a smile of happy disbelief, wearing a simple lavender dress. A classic cast-iron frying pan rests at her feet. Warm, intimate lighting from a nearby lantern highlights their faces and hands. Cinematic, emotionally resonant, high detail, 3D animation, stylized character design., negative_prompt: "text, watermark, logo, signature, bad anatomy, deformed, disfigured, extra limbs, bad hands, blurry, low quality, cropped, worst quality, jpeg artifacts, glitch, error", avoiding: realistic, photorealistic, photograph, horror, scary, creepy, sketch, 2d, flat, abstract
-
-negativeprompt:
-bad anatomy, extra limbs, mutated hands, deformed face, ugly, poorly drawn hands, poorly drawn face, mutation, disfigured, extra fingers, fused fingers, too many fingers, long neck, text, watermark, logo, signature, username, artist name, blurry, grainy, out of focus, jpeg artifacts, low quality, low resolution, photorealistic, realistic, photograph, adult content, inappropriate content, letters, words, signatures, portrait, static pose, standing still
-
----
-
-### PROMPT ENGINEER'S BREAKDOWN Verifying "Verb First" Rule
-
- 1. Camera Angle: medium close-up shot
- 2. Subject Name: of Eugene
- 3. THE VERB/ACTION Word 4: OFFERING his hand to Radhita for a dance
- 4. Setting/Visual Anchor: set in a rustic village square at dusk with glowing paper lanterns.
- 5. Character Description At the end: Eugene is a man... Radhita is a late-teen South Asian girl...
-
-✅ RULE ADHERENCE CONFIRMED: The core action "OFFERING his hand" is the fourth word of the prompt and the primary driver of the composition, forcing the AI to depict the specific moment of invitation, not a generic portrait.
+===  SCENE 4: The Village Party - SHOT 2 ACTION/REACTION ===
+Disney Pixar 3D style, low angle shot of Radhita BANGING a frying pan like a drum with a wooden spoon, set in a rustic village square at dusk with strings of lanterns and a circle of cheering villagers. Radhita is a late-teen South Asian girl with long golden hair and a lavender dress, her eyes closed in a huge, happy smile as lantern light glows on her face.
 
 ===  SCENE 5: The Lantern Lake - SHOT 1 ESTABLISHING ===
-Excellent. The visual assets are comprehensive and accurate. The inferred traits are well-reasoned and provide the perfect level of detail for AI image generation.
-
-Here is the final prompt, constructed according to the VERB FIRST rule and your detailed specifications.
-
-### Final Image Prompt
-
-prompt: Disney Pixar 3D style, wide low-angle shot from the water of Radhita and Eugene SITTING in awe in a small wooden rowboat, set on a perfectly calm, dark lake reflecting a starry sky and hundreds of floating golden lanterns. Radhita is a late-teen South Asian girl with a face resembling a mix of young Aishwarya Rai and Naomi Scott, large expressive brown eyes, long golden hair, wearing a simple lavender dress. Eugene is a man in his mid-20s with a face resembling a mix of young John Stamos and Chris Pine, a charming smirk, wearing a white poet shirt and brown vest. They look up, mouths agape, bathed in the warm, magical glow of the lanterns. Ethereal, hopeful atmosphere, cinematic lighting.
-
-negativeprompt: bad anatomy, deformed, mutated, extra limbs, missing limbs, disfigured hands, bad hands, text, words, logo, watermark, signature, blurry, grainy, low quality, lowres, ugly, realistic, photorealistic, photograph, adult, nsfw, 2D, painting, sketch
+Disney Pixar 3D style, extreme wide landscape shot of HUNDREDS OF GOLDEN LANTERNS FLOATING and RISING into the night sky, set on a perfectly still, dark lake that reflects the starry sky and the glowing lanterns. A small wooden rowboat with Radhita and Eugene is centered in the vast scene. Radhita is a South Asian girl with long golden hair in a lavender dress; Eugene is a man in a white poet shirt and brown vest.
 
 ===  SCENE 5: The Lantern Lake - SHOT 2 ACTION/REACTION ===
-### ASSET VERIFICATION
-The 'Inferred Traits AI Casting' for all entities is accurate, detailed, and perfectly aligned with the Disney Pixar 3D style. The visual schemas are clear and ready for prompt assembly.
+Disney Pixar 3D style, medium close-up of Radhita STANDING UP and REACHING OUT to touch a floating lantern, set on a perfectly still, dark lake reflecting hundreds of golden lanterns. Radhita is a late-teen South Asian girl with long golden hair and a lavender dress, her face tearful with wonder; Eugene sits behind her, a man in his mid-20s wearing a white poet shirt and brown vest, looking at her with a soft, affectionate expression.
 
----
+===  SCENE 6: The Rescue and The Cut - SHOT 1 ESTABLISHING ===
+Disney Pixar 3D style, Dutch angle shot of Mother Gothel GRIPPING Radhita's arm, her other wrist entangled in the glowing golden magic of Radhita's hair, set in the dark tower room lit by cold moonlight. Mother Gothel is a middle-aged woman with sharp features and voluminous dark hair, wearing an elegant dark burgundy gown; Radhita is a late-teen South Asian girl with long, magically-glowing golden hair and a lavender dress, her face turned away in fear.
 
-### FINAL IMAGE PROMPT
+===  SCENE 6: The Rescue and The Cut - SHOT 2 ACTION/REACTION ===
+Disney Pixar 3D style, extreme close-up of Eugene SLICING through Radhita's glowing hair with a shard of broken mirror, set in a dark tower room lit by cold moonlight. Eugene's face shows fierce determination; Radhita's eyes are wide with shock as her hair's glow fades to brown.
 
-prompt: Disney Pixar 3D style, extreme close-up of Radhita GAZING with a tear of joy tracing down her cheek, set on a perfectly calm, dark lake under a starry night sky. The warm glow from a golden paper lantern she holds illuminates her face from below. Radhita is a late-teen South Asian girl with a facial structure resembling a mix of young Aishwarya Rai and Naomi Scott, with large, expressive brown eyes and long golden hair, wearing a simple lavender dress, her expression is one of profound happiness and fulfillment.
+===  SCENE 7: The Reunion - SHOT 1 ESTABLISHING ===
+Disney Pixar 3D style, wide shot from behind of the King and Queen GAZING OUT over their waking kingdom, set on a grand castle balcony at sunrise with a pink and orange sky and stray lanterns visible. The King and Queen are a pair of middle-aged monarchs; the King wears deep blue velvet robes, the Queen wears purple silk gowns, and both wear ornate crowns, their postures regal but weary.
 
-negativeprompt: bad anatomy, extra limbs, mutated hands, deformed face, poorly drawn face, text, watermark, signature, logo, blurry, grainy, low quality, low resolution, photorealistic, realistic, photograph, adult content, inappropriate content, letters, words
-
-===  SCENE 6: The Final Confrontation - SHOT 1 ESTABLISHING ===
-Excellent. The visual assets are comprehensive and accurate. The "Inferred Traits AI Casting" provides perfect, specific face anchors and visual details that will ensure character consistency.
-
-Now, applying the STRICT RULE: "VERB FIRST" to your SCENE 6 input.
-
-Here is the assembled final prompt and its negative guidance.
-
----
-
-### Final Image Prompt
-
-prompt: Disney Pixar 3D style, Dutch angle close-up shot of Mother Gothel GRIPPING Radhita's wrist and PULLING her violently from a tower window, set in a dark, chaotic tower room lit by cold moonlight. Mother Gothel is a middle-aged woman with a mix of Catherine Zeta-Jones and Tilda Swinton's sharp features, her elegant face twisted in angry desperation, wearing a dark burgundy high-collared gown. Radhita is a late-teen South Asian girl with a mix of young Aishwarya Rai and Naomi Scott's features, her expression fearful yet determined as she struggles, her long golden hair flickering with a fading light, wearing a simple lavender dress.
-
-negativeprompt: bad anatomy, deformed, mutated, extra limbs, missing limbs, disfigured hands, malformed fingers, text, watermark, signature, logo, letters, words, blurry, grainy, low quality, low resolution, out of focus, photorealistic, realistic, photograph, live action, 2D, cartoon, anime, adult content, nsfw, static pose, portrait, standing still, calm expression, symmetrical angle.
-
-===  SCENE 6: The Final Confrontation - SHOT 2 ACTION/REACTION ===
-### ASSET CONFIRMATION
-The 'Inferred Traits' for all entities are accurate and provide a strong, consistent visual foundation for the Disney Pixar 3D style. The character schemas are clear and ready for pipeline use.
-
----
-
-### FINAL IMAGE PROMPT Verb-First Structure
-
-prompt: Disney Pixar 3D style, close-up low-angle shot of Radhita CRADLING Eugene's head and WEEPING a single, glowing tear, set in a dark, chaotic tower room lit by cold moonlight. Radhita is a late-teen South Asian girl with short brown hair splayed around her, large expressive brown eyes filled with sorrow, wearing a simple lavender dress. Eugene is a man in his mid-20s with a Caucasian ethnicity, eyes closed, head resting in her lap, wearing a white poet shirt and brown vest. A single, warm golden tear is frozen in mid-air, glowing with magical light as it falls towards his cheek, emanating a soft light that pushes back the cold blues of the room.
-
-negativeprompt: bad anatomy, deformed, mutated, extra limbs, missing limbs, disfigured hands, bad hands, fused fingers, too many fingers, long neck, bad face, ugly, text, watermark, signature, logo, letters, words, signature, username, blurry, grainy, out of focus, realistic, photographic, photorealistic, adult content, inappropriate, nude, naked, violence, gore
-
-===  SCENE 7: The Homecoming - SHOT 1 ESTABLISHING ===
-### AI Image Generation Prompt
-
-positiveprompt:
-Disney Pixar 3D style, wide shot of The King and Queen KNEELING and HUGGING Radhita tightly in a tearful reunion, set on a grand castle balcony at dawn with ornate stone railings and majestic purple banners against a sky of soft pink and orange hues. Eugene stands nearby, smiling softly. The King is a middle-aged man with a kind face and short beard, wearing deep blue velvet robes. The Queen is a middle-aged woman with gentle features, wearing a rich purple silk gown. Radhita is a late-teen South Asian girl with a facial structure resembling a mix of young Aishwarya Rai and Naomi Scott, with large expressive brown eyes and long golden hair, wearing a simple lavender dress. Eugene is a man in his mid-20s with a facial structure resembling a mix of young John Stamos and Chris Pine, wearing a white poet shirt and brown leather vest. Warm, gentle dawn light creates a heavenly glow., negative_prompt: "text, watermark, logo, signature, bad anatomy, deformed, disfigured, extra limbs, bad hands, blurry, low quality, cropped, worst quality, jpeg artifacts, glitch, error", avoiding: realistic, photorealistic, photograph, horror, scary, creepy, sketch, 2d, flat, abstract
-
-negativeprompt:
-bad anatomy, extra limbs, mutated hands, deformed face, poorly drawn face, text, watermark, signature, logo, blurry, grainy, low quality, low resolution, photorealistic, realistic, photograph, adult content, inappropriate content, letters, words, signatures, ugly, morbid, mutilated
-
-===  SCENE 7: The Homecoming - SHOT 2 ACTION/REACTION ===
-Excellent. The visual assets are comprehensive and accurate. The inferred traits are well-aligned with the provided canon and will serve as a strong foundation for the prompt.
-
-Here is the final image prompt, constructed according to the "VERB FIRST" rule and the provided format.
-
-Final Image Prompt:
-
-positiveprompt: Disney Pixar 3D style, extreme close-up shot of Eugene's hand REACHING towards Radhita's hand as their fingers are about to INTERLOCK, set on the ornate stone railing of a grand castle balcony at dawn, with a soft sunrise glowing in the background. Eugene's hand is masculine and slightly calloused, wearing a simple silver ring. Radhita's hand is slender and delicate.
-
-negativeprompt: Bad anatomy, extra limbs, mutated hands, deformed fingers, text artifacts, watermarks, logos, signatures, low quality, blurry, grainy, photographic, realistic, adult content, text in image, full body, full face, portrait, deformed balcony, night time, dark scene.
-
----
-
-### Prompt Breakdown & Rationale:
-
- Style & Camera: Disney Pixar 3D style, extreme close-up shot of – Immediately sets the artistic style and the very tight framing on the hands, as requested.
- Subject & VERB FIRST: Eugene's hand REACHING towards Radhita's hand as their fingers are about to INTERLOCK, – The action "REACHING... about to INTERLOCK" is the core of the prompt and is stated immediately after the subject. This forces the AI to depict the dynamic, anticipatory moment, not just two static hands.
- Setting/Visual Anchor: set on the ornate stone railing of a grand castle balcony at dawn, with a soft sunrise glowing in the background. – Places the action precisely within the described scene SCENE 7: The Homecoming, providing critical context about the location, time of day, and background element.
- Character Description at the end: Eugene's hand is masculine and slightly calloused, wearing a simple silver ring. Radhita's hand is slender and delicate. – The character visuals are appended last, providing specific, differentiating details for each hand based on their master definitions Eugene's "athletic build," Radhita's "slender build", reinforcing the "promise of their future together" through contrast.
- Negative Prompt: Explicitly blocks common AI failures bad hands, text, low quality, enforces the 3D style, and crucially removes elements that would contradict the shot full body, full face, portrait, night time. This guides the AI to focus solely on the intended, tightly framed moment.
+===  SCENE 7: The Reunion - SHOT 2 ACTION/REACTION ===
+Disney Pixar 3D style, medium shot of Radhita, the King, and the Queen LOCKED IN A TIGHT, TEARFUL GROUP HUG, set on a grand castle balcony at sunrise with a pink and orange sky and stray lanterns. Eugene watches from a step back with a soft smile as Maximus nuzzles his shoulder. Radhita is a late-teen South Asian girl with long golden hair in a lavender dress, her face buried in the Queen's shoulder. The King and Queen are a regal pair in deep blue and purple royal attire, kneeling.
 
