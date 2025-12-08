@@ -24,7 +24,7 @@ OUTPUT_FORMAT = "webp"
 # --- SAFETY: TESTING MODE ---
 # Set to True to generate only a few images (saves credits)
 # Set to False to generate the whole story
-TESTING_MODE_FLAG = True 
+TESTING_MODE_FLAG = False 
 TEST_LIMIT = 2 
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
