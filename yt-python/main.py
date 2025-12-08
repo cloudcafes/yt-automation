@@ -13,6 +13,8 @@ import json
 import argparse
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import subprocess
+import sys
 
 # ===== CONFIGURATION VARIABLES =====
 BASE_PROJECT = "yt-automation"
@@ -25,13 +27,14 @@ DEEPSEEK_MODEL = "deepseek-chat"
 DEEPSEEK_MAX_TOKENS = 4000
 DEEPSEEK_TEMPERATURE = 0.7
 
-# Prompt files mapping
+# Prompt files mapping - UPDATED WITH STEP 6
 STEP_FILES = {
     1: {"prompt": "step-1_narration_framework_prompt.txt", "output": "narration_framework.txt", "desc": "Narration Framework"},
     2: {"prompt": "step-2_narration_prompt.txt", "output": "narration.txt", "desc": "Final Narration"},
     3: {"prompt": "step-3_charactersheet_prompt.txt", "output": "character_sheet.txt", "desc": "Character Sheet"},
     4: {"prompt": "step-4_scene_prompt.txt", "output": "scenes.txt", "desc": "Scene Breakdown"},
-    5: {"prompt": "step-5_image_prompt.txt", "output": "image_prompt.txt", "desc": "Image Prompts"}
+    5: {"prompt": "step-5_image_prompt.txt", "output": "image_prompt.txt", "desc": "Image Prompts"},
+    6: {"prompt": "step-6_video_metadata.txt", "output": "video_metadata.txt", "desc": "YouTube Metadata"}
 }
 
 HISTORY_FILE = "ai_history.json"
@@ -43,6 +46,183 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 logger = logging.getLogger(__name__)
+
+# ===== ENHANCED IMAGE GENERATION SUPPORT =====
+# Negative prompts for Stability AI to avoid common issues
+STABILITY_NEGATIVE_PROMPTS = {
+    "general": "bad anatomy, blurry, low quality, text, watermark, logo, username, signature, "
+               "ugly, deformed, disfigured, poorly drawn, bad proportions, extra limbs, "
+               "cloned face, gross proportions, malformed limbs, missing arms, missing legs, "
+               "extra arms, extra legs, fused fingers, too many fingers, long neck, "
+               "mutated hands, mutated fingers, poorly drawn hands, poorly drawn face, "
+               "mutation, bad hands, bad fingers, bad eyes, bad face, bad body, bad feet, "
+               "extra fingers, fewer digits, cropped, worst quality, low quality, normal quality, "
+               "jpeg artifacts, signature, watermark, username, artist name, copyright, "
+               "out of frame, cut off, censored, poorly rendered face, poorly rendered eyes, "
+               "out of focus, blurry background, bad lighting, overexposed, underexposed, "
+               "3d render, cgi, plastic, doll-like, toy, fake, artificial, video game, "
+               "videogame, screenshot, software, game, glitch, error, static, noise, "
+               "grainy, bokeh, depth of field, vignette, lens flare, chromatic aberration",
+    
+    "disney_style": "realistic, photorealistic, hyperrealistic, photograph, photo, "
+                   "grainy film, film grain, noise, grayscale, black and white, "
+                   "monochrome, sepia, dark, horror, scary, terrifying, creepy, "
+                   "gory, violent, bloody, weapons, guns, knives, fighting, "
+                   "nudity, sexual content, explicit, adult content, inappropriate, "
+                   "political, religious, controversial, hate speech, offensive, "
+                   "cartoonish, anime, manga, chibi, webtoon, comic book, "
+                   "sketch, drawing, painting, watercolor, oil painting, abstract, "
+                   "modern art, contemporary art, surreal, dreamlike, fantasy art, "
+                   "dungeons and dragons, d&d, tabletop game, board game, "
+                   "low poly, pixel art, 8-bit, 16-bit, retro, vintage, "
+                   "claymation, stop motion, puppet, marionette, "
+                   "vector art, clip art, stock photo, stock image, "
+                   "advertisement, commercial, logo, branding, "
+                   "border, frame, watermark, signature, text, letters, words, "
+                   "multiple heads, multiple faces, two heads, two faces, "
+                   "floating objects, objects floating in air, "
+                   "asymmetrical, unbalanced composition, "
+                   "busy background, cluttered, messy, chaotic, "
+                   "low contrast, high contrast, oversaturated, undersaturated, "
+                   "haze, fog, smoke, mist, rain, snow, weather effects"
+}
+
+# ===== GIT AUTO-COMMIT FUNCTIONALITY =====
+def git_auto_commit(story_folder: str, steps_run: List[int]) -> bool:
+    """
+    Automatically add and commit changes to git repository.
+    Returns True if successful, False otherwise. Never raises exceptions.
+    """
+    try:
+        # Get the project root directory (should be /root/Desktop/yt-automation)
+        script_dir = Path(__file__).parent
+        project_root = script_dir.parent if script_dir.name == "yt-python" else Path.cwd()
+        
+        # Check if we're in a git repository
+        if not (project_root / ".git").exists():
+            logger.info("ℹ️ Not a git repository, skipping auto-commit")
+            return False
+        
+        # Change to project root directory
+        original_cwd = os.getcwd()
+        os.chdir(project_root)
+        
+        try:
+            # Check git status first
+            status_result = subprocess.run(
+                ["git", "status", "--porcelain"],
+                capture_output=True,
+                text=True,
+                timeout=10
+            )
+            
+            if status_result.returncode != 0:
+                logger.warning(f"⚠️ Git status check failed: {status_result.stderr[:100]}")
+                return False
+            
+            # Check if there are any changes
+            if not status_result.stdout.strip():
+                logger.info("📭 No changes to commit")
+                return True
+            
+            logger.info(f"📝 Found changes to commit:\n{status_result.stdout}")
+            
+            # Add all changes
+            add_result = subprocess.run(
+                ["git", "add", "."],
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+            
+            if add_result.returncode != 0:
+                logger.warning(f"⚠️ Git add failed: {add_result.stderr[:100]}")
+                return False
+            
+            logger.info("✅ Git add successful")
+            
+            # Create commit message
+            timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            steps_str = ", ".join([f"Step {s}" for s in steps_run])
+            commit_message = f"Auto-commit: {story_folder} - {steps_str} - {timestamp}"
+            
+            # Commit changes
+            commit_result = subprocess.run(
+                ["git", "commit", "-m", commit_message],
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+            
+            if commit_result.returncode != 0:
+                # This might happen if there are no actual changes after add
+                if "nothing to commit" in commit_result.stdout.lower():
+                    logger.info("📭 Nothing to commit (no actual changes)")
+                    return True
+                logger.warning(f"⚠️ Git commit failed: {commit_result.stderr[:100]}")
+                return False
+            
+            logger.info(f"✅ Git commit successful: {commit_message}")
+            
+            # Try to push (but don't fail if it doesn't work)
+            push_result = subprocess.run(
+                ["git", "push"],
+                capture_output=True,
+                text=True,
+                timeout=60
+            )
+            
+            if push_result.returncode == 0:
+                logger.info("✅ Git push successful")
+                return True
+            else:
+                logger.warning(f"⚠️ Git push failed (may need manual push): {push_result.stderr[:100]}")
+                # Still return True because commit was successful
+                return True
+                
+        finally:
+            # Always return to original directory
+            os.chdir(original_cwd)
+            
+    except subprocess.TimeoutExpired:
+        logger.warning("⏰ Git operation timed out")
+        return False
+    except FileNotFoundError:
+        logger.warning("🔧 Git command not found (git not installed)")
+        return False
+    except Exception as e:
+        logger.warning(f"⚠️ Git auto-commit error (non-critical): {str(e)[:100]}")
+        return False
+
+# ===== ENHANCED IMAGE PROMPT GENERATION =====
+def enhance_image_prompts_with_negative(image_prompts_content: str) -> str:
+    """
+    Enhance the generated image prompts by adding negative prompt instructions.
+    This ensures better quality from Stability AI by avoiding common issues.
+    """
+    if not image_prompts_content:
+        return image_prompts_content
+    
+    enhanced_content = []
+    lines = image_prompts_content.split('\n')
+    
+    for line in lines:
+        # Check if this is an image prompt line (starts with the style weighting)
+        if line.strip().startswith("Disney Pixar 3D style:0.9"):
+            # Extract the existing prompt
+            existing_prompt = line.strip()
+            
+            # Add negative prompt instruction
+            enhanced_prompt = (
+                f"{existing_prompt}, "
+                f"negative_prompt: \"{STABILITY_NEGATIVE_PROMPTS['general']}\", "
+                f"avoiding: {STABILITY_NEGATIVE_PROMPTS['disney_style']}"
+            )
+            enhanced_content.append(enhanced_prompt)
+        else:
+            enhanced_content.append(line)
+    
+    return '\n'.join(enhanced_content)
 
 # ===== TEXT CLEANING =====
 def clean_text_preserve_punctuation(text: str) -> str:
@@ -272,9 +452,9 @@ def parse_scenes_robust(content: str) -> List[Dict]:
     
     return structured_data
 
-# ===== STEP 5 LOGIC (FIXED) =====
+# ===== ENHANCED STEP 5 LOGIC WITH NEGATIVE PROMPT SUPPORT =====
 def process_step_5_parallel(paths: Dict[str, Path]) -> bool:
-    """Updated to handle Shot-level generation with Character Consistency Injection"""
+    """Updated to handle Shot-level generation with Character Consistency Injection and Negative Prompts"""
     narrator = DeepSeekNarrator(DEEPSEEK_API_KEY, paths['history_file'])
     if not narrator.is_available: return False
     
@@ -299,16 +479,24 @@ def process_step_5_parallel(paths: Dict[str, Path]) -> bool:
     results = {}
     
     def process_single_shot(shot_data):
-        # CRITICAL FIX 3: Inject Character Data into the prompt
-        prompt_input = (
+        # CRITICAL FIX 3: Inject Character Data AND negative prompt guidance into the prompt
+        enhanced_prompt_template = (
             f"{prompt_template}\n\n"
+            f"=== IMPORTANT: ADD NEGATIVE PROMPT GUIDANCE ===\n"
+            f"When generating the final image prompt, include a 'negative_prompt' section that avoids:\n"
+            f"1. Bad anatomy, extra limbs, mutated hands, deformed faces\n"
+            f"2. Text artifacts, watermarks, logos, signatures\n"
+            f"3. Low quality, blurry, grainy images\n"
+            f"4. Realistic/photographic style (keep it Disney Pixar 3D)\n"
+            f"5. Inappropriate or adult content\n"
+            f"6. Text in the image (letters, words, signatures)\n\n"
             f"=== REFERENCE: CHARACTER VISUALS (STRICT ADHERENCE) ===\n"
             f"{character_sheet}\n\n"
             f"=== INPUT DATA (SCENE & SHOT) ===\n"
             f"{shot_data['full_text']}"
         )
-        # We assume the Prompt Template instructs the AI to use this data
-        result = narrator.generate_narration(prompt_template, prompt_input, use_history=False)
+        
+        result = narrator.generate_narration(enhanced_prompt_template, "", use_history=False)
         return shot_data['id'], result
 
     with ThreadPoolExecutor(max_workers=5) as executor:
@@ -327,10 +515,57 @@ def process_step_5_parallel(paths: Dict[str, Path]) -> bool:
     # Sort keys to ensure Scene 1 Shot 1 comes before Scene 1 Shot 2
     for key in sorted(results.keys()): 
         final_output += f"=== {key} ===\n{results[key]}\n\n"
+    
+    # Enhance the generated prompts with negative prompt instructions
+    enhanced_output = enhance_image_prompts_with_negative(final_output)
         
-    return write_file(paths['step5_output'], final_output)
+    return write_file(paths['step5_output'], enhanced_output)
 
+# ===== STEP 6 LOGIC =====
+def process_step_6_metadata(paths: Dict[str, Path]) -> bool:
+    """Process Step 6: Generate YouTube metadata from narration script"""
+    narrator = DeepSeekNarrator(DEEPSEEK_API_KEY, paths['history_file'])
+    if not narrator.is_available: return False
+    
+    # Read the prompt template for Step 6
+    prompt_template = read_file(paths['step6_prompt'])
+    if not prompt_template:
+        logger.error("❌ Step 6 prompt template not found")
+        return False
+    
+    # Read the narration script (main input for Step 6)
+    narration_script = read_file(paths['step2_output'])  # narration.txt
+    if not narration_script:
+        logger.error("❌ Narration script not found for Step 6")
+        return False
+    
+    # Optionally read framework for audience context (not required but helpful)
+    framework_content = read_file(paths['step1_output'])
+    
+    # Prepare input for AI
+    if framework_content:
+        inputs = f"=== NARRATION SCRIPT ===\n{narration_script}\n\n=== AUDIENCE FRAMEWORK (for context) ===\n{framework_content}"
+    else:
+        inputs = f"=== NARRATION SCRIPT ===\n{narration_script}"
+    
+    logger.info("🚀 Starting Step 6: YouTube Metadata Generation...")
+    
+    # Generate metadata using AI
+    metadata = narrator.generate_narration(prompt_template, inputs, use_history=True)
+    
+    if not metadata:
+        logger.error("❌ Failed to generate metadata")
+        return False
+    
+    # Save the output
+    success = write_file(paths['step6_output'], metadata)
+    if success:
+        logger.info("✅ Step 6 (YouTube Metadata) Complete")
+    return success
+
+# ===== STANDARD STEP PROCESSING =====
 def run_standard_step(step_num: int, paths: Dict[str, Path]) -> bool:
+    """Handle standard steps (1-4, 6) that follow similar patterns"""
     narrator = DeepSeekNarrator(DEEPSEEK_API_KEY, paths['history_file'])
     if not narrator.is_available: return False
 
@@ -346,13 +581,17 @@ def run_standard_step(step_num: int, paths: Dict[str, Path]) -> bool:
         framework = read_file(paths['step1_output'])
         if not framework: return False
         inputs = f"STORY:\n{story}\n\nFRAMEWORK:\n{framework}"
+    elif step_num == 3:
+        inputs = read_file(paths['step2_output'])  # Needs narration
     elif step_num == 4:
         # Step 4 needs BOTH Narration and Character Sheets
         narration = read_file(paths['step2_output'])
         chars = read_file(paths['step3_output'])
+        if not narration or not chars: return False
         inputs = f"STORY:\n{narration}\n\nCHARACTER DESIGNS (STRICT REFERENCE):\n{chars}"
-    elif step_num in [3]:
-        inputs = read_file(paths['step2_output']) # Needs narration
+    elif step_num == 6:
+        # Handle Step 6 separately via process_step_6_metadata
+        return process_step_6_metadata(paths)
         
     if not prompt or not inputs:
         logger.error(f"❌ Missing inputs for Step {step_num}")
@@ -368,25 +607,46 @@ def run_standard_step(step_num: int, paths: Dict[str, Path]) -> bool:
 # ===== MAIN EXECUTION =====
 def main():
     parser = argparse.ArgumentParser(description="YouTube Automation Pipeline")
-    parser.add_argument('--step', type=int, nargs='+', help="Run specific steps (e.g., --step 1 2 5)")
-    parser.add_argument('--all', action='store_true', help="Run all steps 1-5")
+    parser.add_argument('--step', type=int, nargs='+', help="Run specific steps (e.g., --step 1 2 5 6)")
+    parser.add_argument('--all', action='store_true', help="Run all steps 1-6")
+    parser.add_argument('--story', type=str, default=STORY_FOLDER, help=f"Story folder name (default: {STORY_FOLDER})")
+    parser.add_argument('--no-git', action='store_true', help="Disable automatic git commit")
+    parser.add_argument('--enhance-negative', action='store_true', 
+                       help="Enhance image prompts with negative prompts for Stability AI")
     args = parser.parse_args()
 
-    paths = build_paths(BASE_PROJECT, CHANNEL_FOLDER, STORY_FOLDER)
+    # Use provided story folder or default
+    story_folder = args.story
+    paths = build_paths(BASE_PROJECT, CHANNEL_FOLDER, story_folder)
+    
+    # Validate story directory exists
+    if not paths['story_dir'].exists():
+        logger.error(f"❌ Story directory not found: {paths['story_dir']}")
+        return
     
     # Determine steps to run
     steps_to_run = []
     if args.all:
-        steps_to_run = [1, 2, 3, 4, 5]
+        steps_to_run = [1, 2, 3, 4, 5, 6]
     elif args.step:
-        steps_to_run = sorted(args.step)
+        steps_to_run = sorted(set(args.step))  # Remove duplicates
     else:
-        print("Usage: python main.py --all OR --step 1 2 5")
+        print("Usage: python main.py --all OR --step 1 2 5 6")
+        print(f"Available steps: {list(STEP_FILES.keys())}")
         return
 
     logger.info(f"📂 Project Root: {paths['project_root']}")
-    logger.info(f"📝 Story Folder: {STORY_FOLDER}")
+    logger.info(f"📝 Story Folder: {story_folder}")
+    
+    # Show negative prompt enhancement status
+    if args.enhance_negative or 5 in steps_to_run:
+        logger.info("🛡️  Negative prompt enhancement: ENABLED")
+        logger.info(f"   General negatives: {len(STABILITY_NEGATIVE_PROMPTS['general'].split(','))} items")
+        logger.info(f"   Style-specific negatives: {len(STABILITY_NEGATIVE_PROMPTS['disney_style'].split(','))} items")
 
+    # Track successful steps
+    successful_steps = []
+    
     for step in steps_to_run:
         if step not in STEP_FILES:
             logger.warning(f"⚠️ Skipping invalid step {step}")
@@ -394,14 +654,63 @@ def main():
             
         logger.info(f"\n--- Running Step {step}: {STEP_FILES[step]['desc']} ---")
         
+        # Special handling for Step 5 with negative prompt enhancement
         if step == 5:
             success = process_step_5_parallel(paths)
+            
+            # If negative prompt enhancement flag is set, re-read and enhance the prompts
+            if success and args.enhance_negative:
+                try:
+                    # Read the generated prompts
+                    prompts_content = read_file(paths['step5_output'])
+                    if prompts_content:
+                        # Enhance with negative prompts
+                        enhanced_content = enhance_image_prompts_with_negative(prompts_content)
+                        # Write back enhanced version
+                        write_file(paths['step5_output'], enhanced_content)
+                        logger.info("✅ Image prompts enhanced with negative prompts")
+                except Exception as e:
+                    logger.warning(f"⚠️ Failed to enhance negative prompts: {e}")
         else:
             success = run_standard_step(step, paths)
             
-        if not success:
+        if success:
+            successful_steps.append(step)
+        else:
             logger.error(f"⛔ Pipeline stopped at Step {step}")
             break
+        
+        # Brief pause between steps to avoid rate limiting
+        time.sleep(1)
+
+    # Summary of execution
+    logger.info("\n" + "="*50)
+    if successful_steps:
+        logger.info(f"📊 Pipeline completed {len(successful_steps)}/{len(steps_to_run)} steps successfully")
+        logger.info(f"✅ Successful steps: {', '.join([f'Step {s}' for s in successful_steps])}")
+        
+        # Show negative prompt stats if Step 5 was successful
+        if 5 in successful_steps:
+            logger.info("🎨 Image prompts include Stability AI negative prompts for:")
+            logger.info(f"   - Bad anatomy/limb avoidance: ✓")
+            logger.info(f"   - Text/watermark prevention: ✓")
+            logger.info(f"   - Style consistency (Disney Pixar): ✓")
+            logger.info(f"   - Quality control: ✓")
+    else:
+        logger.info("📊 No steps were completed successfully")
+    
+    # Auto git commit (if not disabled and we have successful steps)
+    if successful_steps and not args.no_git:
+        logger.info("\n📤 Attempting automatic git commit...")
+        git_success = git_auto_commit(story_folder, successful_steps)
+        if git_success:
+            logger.info("✅ Git auto-commit completed")
+        else:
+            logger.info("ℹ️ Git auto-commit had issues (check logs above)")
+    elif args.no_git:
+        logger.info("🔒 Git auto-commit disabled (--no-git flag)")
+    
+    logger.info("\n🎬 Pipeline execution finished!")
 
 if __name__ == "__main__":
     main()

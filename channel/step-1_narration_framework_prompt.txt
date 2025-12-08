@@ -1,4 +1,4 @@
-You Job is to fill the following relevant details which can be later used to generate the narration to use in youtube story video made specifically for  USA kids.
+You Job is to fill the following relevant details which can be later used to generate the narration to use in youtube story video made specifically for USA kids.
 You have to only fill the following exact asked details based on the given "=== CURRENT STORY ===" section.
 Also you will find below "=== ATTACHMENT: CONVERSATION HISTORY ===" for any previous requests regarding this work.
 (Do NOT describe what you’re doing. Output only the answer.)
@@ -20,38 +20,35 @@ Parent/Teacher Needs: [ ] (e.g., simple vocabulary, emotional development, kindn
 YOUTUBE OPTIMIZATION-->
 Platform Requirements-
 Primary Keywords: [ ]
-Retention Strategy: High engagement throughout, Emotional shifts every 1220 seconds, Scene change every 1020 seconds, Visual wow moments
+Retention Strategy: High engagement throughout, Emotional shifts every 12-20 seconds, Scene change every 10-20 seconds, Visual wow moments
 Shareability Factors: [ ], (e.g., strong visuals, heartwarming ending, exciting adventure moments)
-Series Potential: [Yes/No  if yes, how?]
+Series Potential: [Yes/No if yes, how?]
 Thumbnail Moment Indicators: Moment 1: [ ], Moment 2: [ ], Moment 3 (optional): [ ]
 
 NARRATION SPECIFICS-->
 Voice & Style-
-Narrator Persona: [ ], (e.g., warm storyteller, playful teacher, magical Disneystyle narrator)
-Tone Reference: (optional but powerful) Narration style similar to [show/character], with the warmth of [reference]. , Add here: [ ]
+Narrator Persona: [ ], (e.g., warm storyteller, playful teacher, magical Disney-style narrator)
+Tone Reference: (optional but powerful) Narration style similar to [show/character], with the warmth of [reference].
+, Add here: [ ]
 Emotional Range: [ ], (e.g., curious ? excited ? gentle ? suspenseful ? heartwarming)
 Pace Variations: Fast during [ ], Medium during [ ], Slow during [ ], 
-Vocabulary Level:[ ] (e.g., 2nd4th grade U.S. reading level)
-Cultural Neutrality: [Yes/No  avoid slang, keep universal]
+Vocabulary Level:[ ] (e.g., 2nd-4th grade U.S. reading level)
+Cultural Neutrality: [Yes/No avoid slang, keep universal]
 Interactive Level: [High/Medium/Low] (frequency of questions, direct address)
 
 STRUCTURAL REQUIREMENTS-->
-Opening Hook: Must grab attention in first 10 seconds with curiosity, magic, or sensory detail.
-Example starter: Have you ever?
+Opening Hook: Must grab attention in first 5 seconds.
+   - Audio Hook: (e.g., A provocative question or sound effect description)
+   - Visual Hook Concept: (Describe a high-contrast or fast-motion visual idea to match the audio)
 Hook style: [ ]
-Scene Density: New scene every 1020 seconds, Emotional shift every 12 seconds, No monologue longer than 8 seconds
+Scene Density: New scene every 10-20 seconds, Emotional shift every 12 seconds, No monologue longer than 8 seconds
 Engagement Points: Include [number] audience questions (e.g., What would YOU do?)
 Sensory Anchors: 
 Include 1 sensory detail per major scene- Sight: [ ], Sound: [ ], Touch: [ ], Light/Motion: [ ] 
 Character Voice Cues:  Character 1: [ ],  Character 2: [ ],  Character 3: [ ]
-Transitions: Use smooth, childfriendly transitions such as: But little did they know, Meanwhile, As the sun began to rise
+Transitions: Use smooth, child-friendly transitions such as: But little did they know, Meanwhile, As the sun began to rise
 Required transition style: [ ]
-Educational Elements: [ ] (e.g., emotions, problemsolving, bravery, kindness)
+Educational Elements: [ ] (e.g., emotions, problem-solving, bravery, kindness)
 Moral Reinforcement: [How obvious/subtle?] (e.g., moderately obvious line near the end)
-Optional CTA: [ ] (e.g., Tell us which moment you loved the most!  optional)
+Optional CTA: [ ] (e.g., Tell us which moment you loved the most! optional)
 (Do NOT describe what you’re doing. Output only the answer.)
-
-
-
-
-
