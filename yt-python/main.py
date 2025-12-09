@@ -27,14 +27,15 @@ DEEPSEEK_MODEL = "deepseek-chat"
 DEEPSEEK_MAX_TOKENS = 4000
 DEEPSEEK_TEMPERATURE = 0.7
 
-# Prompt files mapping - UPDATED WITH STEP 6
+# Prompt files mapping - UPDATED WITH STEP 7
 STEP_FILES = {
     1: {"prompt": "step-1_narration_framework_prompt.txt", "output": "narration_framework.txt", "desc": "Narration Framework"},
     2: {"prompt": "step-2_narration_prompt.txt", "output": "narration.txt", "desc": "Final Narration"},
     3: {"prompt": "step-3_charactersheet_prompt.txt", "output": "character_sheet.txt", "desc": "Character Sheet"},
     4: {"prompt": "step-4_scene_prompt.txt", "output": "scenes.txt", "desc": "Scene Breakdown"},
     5: {"prompt": "step-5_image_prompt.txt", "output": "image_prompt.txt", "desc": "Image Prompts"},
-    6: {"prompt": "step-6_video_metadata.txt", "output": "video_metadata.txt", "desc": "YouTube Metadata"}
+    6: {"prompt": "step-6_video_metadata.txt", "output": "video_metadata.txt", "desc": "YouTube Metadata"},
+    7: {"prompt": "step-7-narration-enhancement.txt", "output": "audio-text.txt", "desc": "Audio Enhanced Text"}
 }
 
 HISTORY_FILE = "ai_history.json"
@@ -507,9 +508,50 @@ def process_step_6_metadata(paths: Dict[str, Path]) -> bool:
         logger.info("✅ Step 6 (YouTube Metadata) Complete")
     return success
 
+# ===== STEP 7 LOGIC =====
+def process_step_7_audio_text(paths: Dict[str, Path]) -> bool:
+    """Process Step 7: Generate audio-enhanced text from narration"""
+    narrator = DeepSeekNarrator(DEEPSEEK_API_KEY, paths['history_file'])
+    if not narrator.is_available: return False
+    
+    # Clean up output file before generation
+    output_path = paths['step7_output']
+    if not cleanup_output_file(output_path):
+        logger.warning(f"⚠️ Could not clean up {output_path.name}, continuing...")
+    
+    # Read the prompt template for Step 7
+    prompt_template = read_file(paths['step7_prompt'])
+    if not prompt_template:
+        logger.error("❌ Step 7 prompt template not found")
+        return False
+    
+    # Read the narration script (main input for Step 7)
+    narration_script = read_file(paths['step2_output'])  # narration.txt
+    if not narration_script:
+        logger.error("❌ Narration script not found for Step 7")
+        return False
+    
+    # Prepare input for AI - using narration as the dialogue to enhance
+    inputs = f"=== NARRATION TO ENHANCE WITH AUDIO TAGS ===\n{narration_script}"
+    
+    logger.info("🚀 Starting Step 7: Audio Text Enhancement...")
+    
+    # Generate enhanced audio text using AI
+    enhanced_audio_text = narrator.generate_narration(prompt_template, inputs, use_history=True)
+    
+    if not enhanced_audio_text:
+        logger.error("❌ Failed to generate enhanced audio text")
+        return False
+    
+    # Save the output
+    success = write_file(output_path, enhanced_audio_text)
+    if success:
+        logger.info("✅ Step 7 (Audio Enhanced Text) Complete")
+    return success
+
 # ===== STANDARD STEP PROCESSING =====
 def run_standard_step(step_num: int, paths: Dict[str, Path]) -> bool:
-    """Handle standard steps (1-4, 6) that follow similar patterns"""
+    """Handle standard steps (1-4, 6, 7) that follow similar patterns"""
     narrator = DeepSeekNarrator(DEEPSEEK_API_KEY, paths['history_file'])
     if not narrator.is_available: return False
 
@@ -541,6 +583,9 @@ def run_standard_step(step_num: int, paths: Dict[str, Path]) -> bool:
     elif step_num == 6:
         # Handle Step 6 separately via process_step_6_metadata
         return process_step_6_metadata(paths)
+    elif step_num == 7:
+        # Handle Step 7 separately via process_step_7_audio_text
+        return process_step_7_audio_text(paths)
         
     if not prompt or not inputs:
         logger.error(f"❌ Missing inputs for Step {step_num}")
@@ -556,8 +601,8 @@ def run_standard_step(step_num: int, paths: Dict[str, Path]) -> bool:
 # ===== MAIN EXECUTION =====
 def main():
     parser = argparse.ArgumentParser(description="YouTube Automation Pipeline")
-    parser.add_argument('--step', type=int, nargs='+', help="Run specific steps (e.g., --step 1 2 5 6)")
-    parser.add_argument('--all', action='store_true', help="Run all steps 1-6")
+    parser.add_argument('--step', type=int, nargs='+', help="Run specific steps (e.g., --step 1 2 5 6 7)")
+    parser.add_argument('--all', action='store_true', help="Run all steps 1-7")
     parser.add_argument('--story', type=str, default=STORY_FOLDER, help=f"Story folder name (default: {STORY_FOLDER})")
     parser.add_argument('--no-git', action='store_true', help="Disable automatic git commit")
     args = parser.parse_args()
@@ -574,11 +619,11 @@ def main():
     # Determine steps to run
     steps_to_run = []
     if args.all:
-        steps_to_run = [1, 2, 3, 4, 5, 6]
+        steps_to_run = [1, 2, 3, 4, 5, 6, 7]
     elif args.step:
         steps_to_run = sorted(set(args.step))  # Remove duplicates
     else:
-        print("Usage: python main.py --all OR --step 1 2 5 6")
+        print("Usage: python main.py --all OR --step 1 2 5 6 7")
         print(f"Available steps: {list(STEP_FILES.keys())}")
         return
 

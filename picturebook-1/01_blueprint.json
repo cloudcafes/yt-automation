@@ -1,0 +1,11 @@
+{
+  "title": "The Silent Echo",
+  "protagonist": {
+    "name": "Aarav",
+    "consistent_char_prompt": "A 12-year-old Indian boy with short black hair, wearing a simple blue shirt and khaki pants, with determined brown eyes and a thoughtful expression"
+  },
+  "setting": "A small village in rural India, with traditional homes, bustling markets, and a backdrop of social tension",
+  "visual_style": "Realistic digital painting with muted earth tones, subtle lighting to convey mood, and detailed cultural elements like traditional clothing and architecture",
+  "plot_summary": "Aarav witnesses his older sister's struggle with dowry demands and domestic violence after her marriage. He learns about the legal rights and support systems available, and with the help of a local women's group, he courageously speaks out to seek justice and empower his family and community.",
+  "negative_prompt": "low quality, blurry, warped, extra fingers, text, watermark, bad anatomy, overly cartoonish, bright colors, unrealistic violence, explicit content, distorted faces"
+}
